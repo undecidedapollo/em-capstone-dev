@@ -1,0 +1,199 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Operations Version="1.0" xmlns="http://schemas.microsoft.com/sqlserver/dac/Serialization/2012/02">
+  <Operation Name="Rename Refactor" Key="596117cb-16b9-4983-a5d9-1ff3796370d5" ChangeDateTime="02/02/2017 18:42:05">
+    <Property Name="ElementName" Value="[dbo].[SiteWidePermission].[Id]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[SiteWidePermission]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="ID" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="f28c87ac-ae6d-4d6c-bcee-b84de218cabc" ChangeDateTime="02/02/2017 18:45:31">
+    <Property Name="ElementName" Value="[dbo].[Permission].[Id]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[Permission]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="ID" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="9c43e329-487a-4092-ac5e-b9562ab018e7" ChangeDateTime="02/02/2017 18:49:18">
+    <Property Name="ElementName" Value="[dbo].[CohortPermission].[Id]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[CohortPermission]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="ID" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="0412fce5-53bc-4543-99a1-326935de095c" ChangeDateTime="02/02/2017 18:50:28">
+    <Property Name="ElementName" Value="[dbo].[CohortPermission].[Surveys]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[CohortPermission]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="Survey" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="1d3c028e-14e9-4239-a378-c92421b6e511" ChangeDateTime="02/02/2017 18:50:32">
+    <Property Name="ElementName" Value="[dbo].[CohortPermission].[Users]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[CohortPermission]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="User" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="5371b563-2fb6-4df0-ba6a-f124da3bb25c" ChangeDateTime="02/02/2017 18:51:35">
+    <Property Name="ElementName" Value="[dbo].[ASPNetUsers].[Id]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[ASPNetUsers]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="ID" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="0a4da861-0907-4563-aa2a-cc736fce4a1d" ChangeDateTime="02/02/2017 18:53:40">
+    <Property Name="ElementName" Value="[dbo].[CohortUser].[Id]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[CohortUser]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="CohortID" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="d66231a5-f3f3-4c38-a67d-c65a4960da26" ChangeDateTime="02/02/2017 18:54:54">
+    <Property Name="ElementName" Value="[dbo].[Cohort].[Id]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[Cohort]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="ID" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="1f9d2259-be93-4f45-b3f0-fd609d8172dc" ChangeDateTime="02/02/2017 18:58:47">
+    <Property Name="ElementName" Value="[dbo].[SurveysAvailable].[Id]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[SurveysAvailable]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="ID" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="705acad5-78f0-4119-9230-e35c060cdf84" ChangeDateTime="02/02/2017 19:01:11">
+    <Property Name="ElementName" Value="[dbo].[SurveysAvailableTo].[Id]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[SurveysAvailableTo]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="SurveyAvailableID" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="dc8a0268-d48e-411d-8e96-73803ba4b6d9" ChangeDateTime="02/02/2017 19:41:06">
+    <Property Name="ElementName" Value="[dbo].[Survey].[Id]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[Survey]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="ID" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="e477cbaa-a2fd-4ca6-b094-9b46e3560a31" ChangeDateTime="02/02/2017 19:42:56">
+    <Property Name="ElementName" Value="[dbo].[Category].[Id]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[Category]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="ID" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="fb24a378-700a-441c-a5e1-81199d46203e" ChangeDateTime="02/02/2017 19:46:42">
+    <Property Name="ElementName" Value="[dbo].[Question].[Id]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[Question]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="ID" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="831123eb-98e4-4276-91a4-be38b4a8fb0c" ChangeDateTime="02/02/2017 19:48:02">
+    <Property Name="ElementName" Value="[dbo].[QuestionType].[Id]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[QuestionType]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="ID" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="b2d52e57-4685-4a45-a190-884d2458386b" ChangeDateTime="02/02/2017 19:49:36">
+    <Property Name="ElementName" Value="[dbo].[PendingSurvey].[Id]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[PendingSurvey]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="GuID" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="ab003317-03f5-48f5-9f00-a64c56c16ec4" ChangeDateTime="02/02/2017 19:52:22">
+    <Property Name="ElementName" Value="[dbo].[SurveyType].[Id]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[SurveyType]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="ID" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="acb5c088-0fa4-4a63-b6c4-99d84f3f4c5d" ChangeDateTime="02/02/2017 19:53:05">
+    <Property Name="ElementName" Value="[dbo].[UserTakenRole].[Id]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[UserTakenRole]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="ID" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="82c2fb9a-ec18-4ede-b2be-9206a4c1ebf2" ChangeDateTime="02/02/2017 19:54:44">
+    <Property Name="ElementName" Value="[dbo].[SurveyInstance].[Id]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[SurveyInstance]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="ID" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="3125b6a4-9105-4733-9eb5-1221b546396a" ChangeDateTime="02/02/2017 19:57:25">
+    <Property Name="ElementName" Value="[dbo].[AnswerInstance].[Id]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[AnswerInstance]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="ID" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="b9c565c2-3e0d-4ded-abb4-bbeb6b5d479f" ChangeDateTime="02/02/2017 22:57:33">
+    <Property Name="ElementName" Value="[dbo].[SurveyInstance].[SurveyType]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[SurveyInstance]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="SurveyTypeId" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="b8feab21-2333-4ac0-ab8c-0f1d38a8569d" ChangeDateTime="02/02/2017 23:00:25">
+    <Property Name="ElementName" Value="[dbo].[CohortUser].[CohortPermission]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[CohortUser]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="CohortPermissionId" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="4e260bc7-95a6-4d25-bbfd-fde6aac94b21" ChangeDateTime="02/02/2017 23:06:19">
+    <Property Name="ElementName" Value="[dbo].[Question].[Type]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[Question]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="QuestionTypeId" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="6be447fb-2326-4c87-9095-b82ff62759ef" ChangeDateTime="02/02/2017 23:11:39">
+    <Property Name="ElementName" Value="[dbo].[AnswerInstance].[SurveyId]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[AnswerInstance]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="SurveyInstanceId" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="f0af041b-ac62-4c1d-90f6-38ba013936f6" ChangeDateTime="02/02/2017 23:14:58">
+    <Property Name="ElementName" Value="[dbo].[PendingSurvey].[GuID]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[PendingSurvey]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="Id" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="5a3f6092-be14-4465-a095-7592c474a260" ChangeDateTime="02/02/2017 23:18:04">
+    <Property Name="ElementName" Value="[dbo].[PendingSurvey].[UserTakenRoleID]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[PendingSurvey]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="UserSurveyRoleID" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="fdfe3a1e-ca7c-4424-a56b-48f1907dc3f0" ChangeDateTime="02/02/2017 23:21:19">
+    <Property Name="ElementName" Value="[dbo].[SurveyInstance].[UserTakenRole]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[SurveyInstance]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="UserSurveyRoleId" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="36a96cd8-44a4-4325-80e4-387c174d978d" ChangeDateTime="02/02/2017 23:30:02">
+    <Property Name="ElementName" Value="[dbo].[SurveysAvailableTo].[UserTakenRole]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[SurveysAvailableTo]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="UserTakenRoleId" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="3c40fdc4-7b90-4516-afdc-d2c993b4fcfa" ChangeDateTime="02/02/2017 23:30:12">
+    <Property Name="ElementName" Value="[dbo].[SurveysAvailableTo].[UserTakenRoleId]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[SurveysAvailableTo]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="UserSurveyRoleId" />
+  </Operation>
+</Operations>
