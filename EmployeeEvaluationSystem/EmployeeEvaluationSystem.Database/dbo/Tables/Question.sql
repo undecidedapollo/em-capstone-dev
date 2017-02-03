@@ -8,5 +8,5 @@
     [DateCreated] DATETIME NOT NULL, 
     [DateDeleted] DATETIME NULL, 
     CONSTRAINT [FK_Question_ToTable] FOREIGN KEY ([CategoryID]) REFERENCES [Category]([ID]), 
-    CONSTRAINT [FK_Question_ToTable_1] FOREIGN KEY ([QuestionTypeId]) REFERENCES [QuestionType]([Id])
+    CONSTRAINT [FK_Question_ToTable_1] FOREIGN KEY ([QuestionTypeId]) REFERENCES [QuestionType]([ID])
 )

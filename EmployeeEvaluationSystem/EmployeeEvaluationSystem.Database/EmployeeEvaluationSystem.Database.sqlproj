@@ -57,29 +57,42 @@
   <Import Condition="'$(SQLDBExtensionsRefPath)' == ''" Project="$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v$(VisualStudioVersion)\SSDT\Microsoft.Data.Tools.Schema.SqlTasks.targets" />
   <ItemGroup>
     <Folder Include="Properties" />
-    <Folder Include="Tables" />
+    <Folder Include="SchemaCompares" />
+    <Folder Include="dbo\" />
+    <Folder Include="dbo\Tables\" />
   </ItemGroup>
   <ItemGroup>
-    <Build Include="Tables\AnswerInstance.sql" />
-    <Build Include="Tables\Category.sql" />
-    <Build Include="Tables\Cohort.sql" />
-    <Build Include="Tables\CohortPermission.sql" />
-    <Build Include="Tables\CohortUser.sql" />
-    <Build Include="Tables\PendingSurvey.sql" />
-    <Build Include="Tables\Permission.sql" />
-    <Build Include="Tables\Question.sql" />
-    <Build Include="Tables\QuestionType.sql" />
-    <Build Include="Tables\SiteWidePermission.sql" />
+    <Build Include="dbo\Tables\AspNetUsers.sql" />
+    <Build Include="dbo\Tables\AspNetUserRoles.sql" />
+    <Build Include="dbo\Tables\AspNetUserLogins.sql" />
+    <Build Include="dbo\Tables\AspNetUserClaims.sql" />
+    <Build Include="dbo\Tables\AspNetRoles.sql" />
+    <Build Include="dbo\Tables\__MigrationHistory.sql" />
+    <Build Include="dbo\Tables\AnswerInstance.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="employee-evaluation-system.refactorlog" />
   </ItemGroup>
   <ItemGroup>
-    <Build Include="Tables\Survey.sql" />
-    <Build Include="Tables\SurveyInstance.sql" />
-    <Build Include="Tables\SurveysAvailable.sql" />
-    <Build Include="Tables\SurveysAvailableTo.sql" />
-    <Build Include="Tables\SurveyType.sql" />
-    <Build Include="Tables\UserSurveyRole.sql" />
+    <Build Include="dbo\Tables\Category.sql" />
+    <Build Include="dbo\Tables\Cohort.sql" />
+    <Build Include="dbo\Tables\CohortPermission.sql" />
+    <Build Include="dbo\Tables\CohortUser.sql" />
+    <Build Include="dbo\Tables\PendingSurvey.sql" />
+    <Build Include="dbo\Tables\Permission.sql" />
+    <Build Include="dbo\Tables\Question.sql" />
+    <Build Include="dbo\Tables\QuestionType.sql" />
+    <Build Include="dbo\Tables\SiteWidePermission.sql" />
+    <Build Include="dbo\Tables\Survey.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="SchemaCompares\JonahSchemaCompare.scmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Build Include="dbo\Tables\SurveyInstance.sql" />
+    <Build Include="dbo\Tables\SurveysAvailable.sql" />
+    <Build Include="dbo\Tables\SurveysAvailableTo.sql" />
+    <Build Include="dbo\Tables\SurveyType.sql" />
+    <Build Include="dbo\Tables\UserSurveyRole.sql" />
   </ItemGroup>
 </Project>

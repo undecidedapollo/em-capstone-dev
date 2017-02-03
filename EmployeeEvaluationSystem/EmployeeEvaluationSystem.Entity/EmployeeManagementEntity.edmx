@@ -1,0 +1,1935 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="EmployeeEvaluationSystem.Entity.EntityModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012.Azure" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="__MigrationHistory">
+          <Key>
+            <PropertyRef Name="MigrationId" />
+            <PropertyRef Name="ContextKey" />
+          </Key>
+          <Property Name="MigrationId" Type="nvarchar" MaxLength="150" Nullable="false" />
+          <Property Name="ContextKey" Type="nvarchar" MaxLength="300" Nullable="false" />
+          <Property Name="Model" Type="varbinary(max)" Nullable="false" />
+          <Property Name="ProductVersion" Type="nvarchar" MaxLength="32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="__RefactorLog">
+          <Key>
+            <PropertyRef Name="OperationKey" />
+          </Key>
+          <Property Name="OperationKey" Type="uniqueidentifier" Nullable="false" />
+        </EntityType>
+        <EntityType Name="AnswerInstance">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="QuestionID" Type="int" Nullable="false" />
+          <Property Name="ResponseNum" Type="int" Nullable="false" />
+          <Property Name="SurveyInstanceId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="AspNetRoles">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="256" Nullable="false" />
+        </EntityType>
+        <EntityType Name="AspNetUserClaims">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="UserId" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="ClaimType" Type="nvarchar(max)" />
+          <Property Name="ClaimValue" Type="nvarchar(max)" />
+        </EntityType>
+        <EntityType Name="AspNetUserLogins">
+          <Key>
+            <PropertyRef Name="LoginProvider" />
+            <PropertyRef Name="ProviderKey" />
+            <PropertyRef Name="UserId" />
+          </Key>
+          <Property Name="LoginProvider" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="ProviderKey" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="UserId" Type="nvarchar" MaxLength="128" Nullable="false" />
+        </EntityType>
+        <EntityType Name="AspNetUserRoles">
+          <Key>
+            <PropertyRef Name="UserId" />
+            <PropertyRef Name="RoleId" />
+          </Key>
+          <Property Name="UserId" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="RoleId" Type="nvarchar" MaxLength="128" Nullable="false" />
+        </EntityType>
+        <EntityType Name="AspNetUsers">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="Email" Type="nvarchar" MaxLength="256" />
+          <Property Name="EmailConfirmed" Type="bit" Nullable="false" />
+          <Property Name="PasswordHash" Type="nvarchar(max)" />
+          <Property Name="SecurityStamp" Type="nvarchar(max)" />
+          <Property Name="PhoneNumber" Type="nvarchar(max)" />
+          <Property Name="PhoneNumberConfirmed" Type="bit" Nullable="false" />
+          <Property Name="TwoFactorEnabled" Type="bit" Nullable="false" />
+          <Property Name="LockoutEndDateUtc" Type="datetime" />
+          <Property Name="LockoutEnabled" Type="bit" Nullable="false" />
+          <Property Name="AccessFailedCount" Type="int" Nullable="false" />
+          <Property Name="UserName" Type="nvarchar" MaxLength="256" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Category">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="SurveyID" Type="int" Nullable="false" />
+          <Property Name="IsDeleted" Type="bit" Nullable="false" />
+          <Property Name="Description" Type="nvarchar" MaxLength="500" Nullable="false" />
+          <Property Name="DateCreated" Type="datetime" />
+        </EntityType>
+        <EntityType Name="Cohort">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Description" Type="nvarchar" MaxLength="500" Nullable="false" />
+          <Property Name="IsDeleted" Type="bit" Nullable="false" />
+          <Property Name="DateDeleted" Type="datetime" />
+          <Property Name="DateCreated" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="CohortPermission">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Cohort" Type="int" Nullable="false" />
+          <Property Name="User" Type="int" Nullable="false" />
+          <Property Name="Survey" Type="int" Nullable="false" />
+          <Property Name="Report" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="CohortUser">
+          <Key>
+            <PropertyRef Name="CohortID" />
+          </Key>
+          <Property Name="CohortID" Type="int" Nullable="false" />
+          <Property Name="UserID" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="CohortPermissionId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="PendingSurvey">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="SurveyAvailToMeID" Type="int" Nullable="false" />
+          <Property Name="UserSurveyRoleID" Type="int" Nullable="false" />
+          <Property Name="DateSent" Type="datetime" Nullable="false" />
+          <Property Name="SurveyInstanceID" Type="int" />
+          <Property Name="Email" Type="nvarchar" MaxLength="200" Nullable="false" />
+          <Property Name="DateStarted" Type="datetime" />
+          <Property Name="DateCompleted" Type="datetime" />
+          <Property Name="IsDeleted" Type="bit" Nullable="false" />
+          <Property Name="DateDeleted" Type="datetime" />
+          <Property Name="UserSentById" Type="nvarchar" MaxLength="128" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Permission">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Add" Type="bit" Nullable="false" />
+          <Property Name="Edit" Type="bit" Nullable="false" />
+          <Property Name="Delete" Type="bit" Nullable="false" />
+          <Property Name="View" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Question">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="CategoryID" Type="int" Nullable="false" />
+          <Property Name="QuestionTypeId" Type="int" Nullable="false" />
+          <Property Name="IsRequired" Type="bit" Nullable="false" />
+          <Property Name="IsDeleted" Type="bit" Nullable="false" />
+          <Property Name="DateCreated" Type="datetime" Nullable="false" />
+          <Property Name="DateDeleted" Type="datetime" />
+        </EntityType>
+        <EntityType Name="QuestionType">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="RatingMax" Type="int" Nullable="false" />
+          <Property Name="RatingMin" Type="int" Nullable="false" />
+          <Property Name="IsRating" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="SiteWidePermission">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Cohort" Type="int" Nullable="false" />
+          <Property Name="User" Type="int" Nullable="false" />
+          <Property Name="Survey" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Survey">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Description" Type="nvarchar" MaxLength="500" Nullable="false" />
+          <Property Name="CreatedBy" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="IsDeleted" Type="bit" Nullable="false" />
+          <Property Name="DateCreated" Type="datetime" Nullable="false" />
+          <Property Name="DateDeleted" Type="datetime" />
+        </EntityType>
+        <EntityType Name="SurveyInstance">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="SurveyID" Type="int" Nullable="false" />
+          <Property Name="UserTakenBy" Type="nvarchar" MaxLength="128" />
+          <Property Name="DateStarted" Type="datetime" Nullable="false" />
+          <Property Name="DateFinished" Type="datetime" />
+          <Property Name="SurveyTypeId" Type="int" Nullable="false" />
+          <Property Name="UserSurveyRoleId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="SurveysAvailable">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="CohortID" Type="int" Nullable="false" />
+          <Property Name="SurveyID" Type="int" Nullable="false" />
+          <Property Name="DateOpen" Type="datetime" Nullable="false" />
+          <Property Name="DateClosed" Type="datetime" Nullable="false" />
+          <Property Name="SurveyTypeId" Type="int" Nullable="false" />
+          <Property Name="IsDeleted" Type="bit" Nullable="false" />
+          <Property Name="DateCreated" Type="datetime" Nullable="false" />
+          <Property Name="DateDeleted" Type="datetime" />
+        </EntityType>
+        <EntityType Name="SurveysAvailableTo">
+          <Key>
+            <PropertyRef Name="SurveyAvailableID" />
+          </Key>
+          <Property Name="SurveyAvailableID" Type="int" Nullable="false" />
+          <Property Name="UserSurveyRoleId" Type="int" Nullable="false" />
+          <Property Name="Quantity" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="SurveyType">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="DateCreated" Type="datetime" Nullable="false" />
+          <Property Name="IsDeleted" Type="bit" Nullable="false" />
+          <Property Name="DeletedDate" Type="datetime" />
+        </EntityType>
+        <EntityType Name="UserSurveyRole">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="IsDeleted" Type="bit" Nullable="false" />
+          <Property Name="DateCreated" Type="datetime" Nullable="false" />
+          <Property Name="DateDeleted" Type="datetime" />
+        </EntityType>
+        <Association Name="FK_AnswerInstance_SurveyInstance">
+          <End Role="SurveyInstance" Type="Self.SurveyInstance" Multiplicity="1" />
+          <End Role="AnswerInstance" Type="Self.AnswerInstance" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SurveyInstance">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="AnswerInstance">
+              <PropertyRef Name="SurveyInstanceId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_AnswerInstance_To_Question">
+          <End Role="Question" Type="Self.Question" Multiplicity="1" />
+          <End Role="AnswerInstance" Type="Self.AnswerInstance" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Question">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="AnswerInstance">
+              <PropertyRef Name="QuestionID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Category_ToTable">
+          <End Role="Survey" Type="Self.Survey" Multiplicity="1" />
+          <End Role="Category" Type="Self.Category" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Survey">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Category">
+              <PropertyRef Name="SurveyID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CohortPermission_To_Perm1">
+          <End Role="Permission" Type="Self.Permission" Multiplicity="1" />
+          <End Role="CohortPermission" Type="Self.CohortPermission" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Permission">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="CohortPermission">
+              <PropertyRef Name="Cohort" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CohortPermission_To_Perm2">
+          <End Role="Permission" Type="Self.Permission" Multiplicity="1" />
+          <End Role="CohortPermission" Type="Self.CohortPermission" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Permission">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="CohortPermission">
+              <PropertyRef Name="User" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CohortPermission_To_Perm3">
+          <End Role="Permission" Type="Self.Permission" Multiplicity="1" />
+          <End Role="CohortPermission" Type="Self.CohortPermission" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Permission">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="CohortPermission">
+              <PropertyRef Name="Survey" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CohortPermission_To_Perm4">
+          <End Role="Permission" Type="Self.Permission" Multiplicity="1" />
+          <End Role="CohortPermission" Type="Self.CohortPermission" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Permission">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="CohortPermission">
+              <PropertyRef Name="Report" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CohortUser_To_Cohort">
+          <End Role="Cohort" Type="Self.Cohort" Multiplicity="1" />
+          <End Role="CohortUser" Type="Self.CohortUser" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="Cohort">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="CohortUser">
+              <PropertyRef Name="CohortID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CohortUser_To_Permissions">
+          <End Role="CohortPermission" Type="Self.CohortPermission" Multiplicity="1" />
+          <End Role="CohortUser" Type="Self.CohortUser" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CohortPermission">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="CohortUser">
+              <PropertyRef Name="CohortPermissionId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CohortUser_ToTable">
+          <End Role="AspNetUsers" Type="Self.AspNetUsers" Multiplicity="1" />
+          <End Role="CohortUser" Type="Self.CohortUser" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AspNetUsers">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="CohortUser">
+              <PropertyRef Name="UserID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId">
+          <End Role="AspNetUsers" Type="Self.AspNetUsers" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="AspNetUserClaims" Type="Self.AspNetUserClaims" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AspNetUsers">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="AspNetUserClaims">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_dbo_AspNetUserLogins_dbo_AspNetUsers_UserId">
+          <End Role="AspNetUsers" Type="Self.AspNetUsers" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="AspNetUserLogins" Type="Self.AspNetUserLogins" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AspNetUsers">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="AspNetUserLogins">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_dbo_AspNetUserRoles_dbo_AspNetRoles_RoleId">
+          <End Role="AspNetRoles" Type="Self.AspNetRoles" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="AspNetUserRoles" Type="Self.AspNetUserRoles" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AspNetRoles">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="AspNetUserRoles">
+              <PropertyRef Name="RoleId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_dbo_AspNetUserRoles_dbo_AspNetUsers_UserId">
+          <End Role="AspNetUsers" Type="Self.AspNetUsers" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="AspNetUserRoles" Type="Self.AspNetUserRoles" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AspNetUsers">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="AspNetUserRoles">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PendingSurvey_To_Survey">
+          <End Role="Survey" Type="Self.Survey" Multiplicity="1" />
+          <End Role="PendingSurvey" Type="Self.PendingSurvey" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Survey">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="PendingSurvey">
+              <PropertyRef Name="SurveyAvailToMeID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PendingSurvey_To_SurveyInstance">
+          <End Role="SurveyInstance" Type="Self.SurveyInstance" Multiplicity="0..1" />
+          <End Role="PendingSurvey" Type="Self.PendingSurvey" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SurveyInstance">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="PendingSurvey">
+              <PropertyRef Name="SurveyInstanceID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PendingSurvey_To_UserSurveyRole">
+          <End Role="UserSurveyRole" Type="Self.UserSurveyRole" Multiplicity="1" />
+          <End Role="PendingSurvey" Type="Self.PendingSurvey" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserSurveyRole">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="PendingSurvey">
+              <PropertyRef Name="UserSurveyRoleID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PendingSurvey_ToTable">
+          <End Role="AspNetUsers" Type="Self.AspNetUsers" Multiplicity="1" />
+          <End Role="PendingSurvey" Type="Self.PendingSurvey" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AspNetUsers">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="PendingSurvey">
+              <PropertyRef Name="UserSentById" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Question_ToTable">
+          <End Role="Category" Type="Self.Category" Multiplicity="1" />
+          <End Role="Question" Type="Self.Question" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Category">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Question">
+              <PropertyRef Name="CategoryID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Question_ToTable_1">
+          <End Role="QuestionType" Type="Self.QuestionType" Multiplicity="1" />
+          <End Role="Question" Type="Self.Question" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="QuestionType">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Question">
+              <PropertyRef Name="QuestionTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SiteWidePermission_To_Perm1">
+          <End Role="Permission" Type="Self.Permission" Multiplicity="1" />
+          <End Role="SiteWidePermission" Type="Self.SiteWidePermission" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Permission">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="SiteWidePermission">
+              <PropertyRef Name="Cohort" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SiteWidePermission_To_Perm2">
+          <End Role="Permission" Type="Self.Permission" Multiplicity="1" />
+          <End Role="SiteWidePermission" Type="Self.SiteWidePermission" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Permission">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="SiteWidePermission">
+              <PropertyRef Name="User" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SiteWidePermission_To_Perm3">
+          <End Role="Permission" Type="Self.Permission" Multiplicity="1" />
+          <End Role="SiteWidePermission" Type="Self.SiteWidePermission" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Permission">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="SiteWidePermission">
+              <PropertyRef Name="Survey" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Survey_ToTable">
+          <End Role="AspNetUsers" Type="Self.AspNetUsers" Multiplicity="1" />
+          <End Role="Survey" Type="Self.Survey" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AspNetUsers">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Survey">
+              <PropertyRef Name="CreatedBy" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SurveyInstance_To_Survey">
+          <End Role="Survey" Type="Self.Survey" Multiplicity="1" />
+          <End Role="SurveyInstance" Type="Self.SurveyInstance" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Survey">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="SurveyInstance">
+              <PropertyRef Name="SurveyID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SurveyInstance_To_SurveyType">
+          <End Role="SurveyType" Type="Self.SurveyType" Multiplicity="1" />
+          <End Role="SurveyInstance" Type="Self.SurveyInstance" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SurveyType">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="SurveyInstance">
+              <PropertyRef Name="SurveyTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SurveyInstance_To_UserSurveyRole">
+          <End Role="UserSurveyRole" Type="Self.UserSurveyRole" Multiplicity="1" />
+          <End Role="SurveyInstance" Type="Self.SurveyInstance" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserSurveyRole">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="SurveyInstance">
+              <PropertyRef Name="UserSurveyRoleId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SurveyInstance_ToTable">
+          <End Role="AspNetUsers" Type="Self.AspNetUsers" Multiplicity="0..1" />
+          <End Role="SurveyInstance" Type="Self.SurveyInstance" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AspNetUsers">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="SurveyInstance">
+              <PropertyRef Name="UserTakenBy" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SurveysAvailable_To_Cohort">
+          <End Role="Cohort" Type="Self.Cohort" Multiplicity="1" />
+          <End Role="SurveysAvailable" Type="Self.SurveysAvailable" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Cohort">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="SurveysAvailable">
+              <PropertyRef Name="CohortID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SurveysAvailable_To_Survey">
+          <End Role="Survey" Type="Self.Survey" Multiplicity="1" />
+          <End Role="SurveysAvailable" Type="Self.SurveysAvailable" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Survey">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="SurveysAvailable">
+              <PropertyRef Name="SurveyID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SurveysAvailable_To_SurveyType">
+          <End Role="SurveyType" Type="Self.SurveyType" Multiplicity="1" />
+          <End Role="SurveysAvailable" Type="Self.SurveysAvailable" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SurveyType">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="SurveysAvailable">
+              <PropertyRef Name="SurveyTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SurveysAvailableTo_SurveysAvailable">
+          <End Role="SurveysAvailable" Type="Self.SurveysAvailable" Multiplicity="1" />
+          <End Role="SurveysAvailableTo" Type="Self.SurveysAvailableTo" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="SurveysAvailable">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="SurveysAvailableTo">
+              <PropertyRef Name="SurveyAvailableID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SurveysAvailableTo_UserTakenRole">
+          <End Role="UserSurveyRole" Type="Self.UserSurveyRole" Multiplicity="1" />
+          <End Role="SurveysAvailableTo" Type="Self.SurveysAvailableTo" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserSurveyRole">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="SurveysAvailableTo">
+              <PropertyRef Name="UserSurveyRoleId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="EmployeeEvaluationSystemEntityEntityModelStoreContainer">
+          <EntitySet Name="__MigrationHistory" EntityType="Self.__MigrationHistory" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="__RefactorLog" EntityType="Self.__RefactorLog" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="AnswerInstance" EntityType="Self.AnswerInstance" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="AspNetRoles" EntityType="Self.AspNetRoles" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="AspNetUserClaims" EntityType="Self.AspNetUserClaims" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="AspNetUserLogins" EntityType="Self.AspNetUserLogins" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="AspNetUserRoles" EntityType="Self.AspNetUserRoles" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="AspNetUsers" EntityType="Self.AspNetUsers" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Category" EntityType="Self.Category" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Cohort" EntityType="Self.Cohort" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="CohortPermission" EntityType="Self.CohortPermission" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="CohortUser" EntityType="Self.CohortUser" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="PendingSurvey" EntityType="Self.PendingSurvey" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Permission" EntityType="Self.Permission" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Question" EntityType="Self.Question" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="QuestionType" EntityType="Self.QuestionType" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="SiteWidePermission" EntityType="Self.SiteWidePermission" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Survey" EntityType="Self.Survey" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="SurveyInstance" EntityType="Self.SurveyInstance" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="SurveysAvailable" EntityType="Self.SurveysAvailable" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="SurveysAvailableTo" EntityType="Self.SurveysAvailableTo" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="SurveyType" EntityType="Self.SurveyType" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="UserSurveyRole" EntityType="Self.UserSurveyRole" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_AnswerInstance_SurveyInstance" Association="Self.FK_AnswerInstance_SurveyInstance">
+            <End Role="SurveyInstance" EntitySet="SurveyInstance" />
+            <End Role="AnswerInstance" EntitySet="AnswerInstance" />
+          </AssociationSet>
+          <AssociationSet Name="FK_AnswerInstance_To_Question" Association="Self.FK_AnswerInstance_To_Question">
+            <End Role="Question" EntitySet="Question" />
+            <End Role="AnswerInstance" EntitySet="AnswerInstance" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Category_ToTable" Association="Self.FK_Category_ToTable">
+            <End Role="Survey" EntitySet="Survey" />
+            <End Role="Category" EntitySet="Category" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CohortPermission_To_Perm1" Association="Self.FK_CohortPermission_To_Perm1">
+            <End Role="Permission" EntitySet="Permission" />
+            <End Role="CohortPermission" EntitySet="CohortPermission" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CohortPermission_To_Perm2" Association="Self.FK_CohortPermission_To_Perm2">
+            <End Role="Permission" EntitySet="Permission" />
+            <End Role="CohortPermission" EntitySet="CohortPermission" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CohortPermission_To_Perm3" Association="Self.FK_CohortPermission_To_Perm3">
+            <End Role="Permission" EntitySet="Permission" />
+            <End Role="CohortPermission" EntitySet="CohortPermission" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CohortPermission_To_Perm4" Association="Self.FK_CohortPermission_To_Perm4">
+            <End Role="Permission" EntitySet="Permission" />
+            <End Role="CohortPermission" EntitySet="CohortPermission" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CohortUser_To_Cohort" Association="Self.FK_CohortUser_To_Cohort">
+            <End Role="Cohort" EntitySet="Cohort" />
+            <End Role="CohortUser" EntitySet="CohortUser" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CohortUser_To_Permissions" Association="Self.FK_CohortUser_To_Permissions">
+            <End Role="CohortPermission" EntitySet="CohortPermission" />
+            <End Role="CohortUser" EntitySet="CohortUser" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CohortUser_ToTable" Association="Self.FK_CohortUser_ToTable">
+            <End Role="AspNetUsers" EntitySet="AspNetUsers" />
+            <End Role="CohortUser" EntitySet="CohortUser" />
+          </AssociationSet>
+          <AssociationSet Name="FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId" Association="Self.FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId">
+            <End Role="AspNetUsers" EntitySet="AspNetUsers" />
+            <End Role="AspNetUserClaims" EntitySet="AspNetUserClaims" />
+          </AssociationSet>
+          <AssociationSet Name="FK_dbo_AspNetUserLogins_dbo_AspNetUsers_UserId" Association="Self.FK_dbo_AspNetUserLogins_dbo_AspNetUsers_UserId">
+            <End Role="AspNetUsers" EntitySet="AspNetUsers" />
+            <End Role="AspNetUserLogins" EntitySet="AspNetUserLogins" />
+          </AssociationSet>
+          <AssociationSet Name="FK_dbo_AspNetUserRoles_dbo_AspNetRoles_RoleId" Association="Self.FK_dbo_AspNetUserRoles_dbo_AspNetRoles_RoleId">
+            <End Role="AspNetRoles" EntitySet="AspNetRoles" />
+            <End Role="AspNetUserRoles" EntitySet="AspNetUserRoles" />
+          </AssociationSet>
+          <AssociationSet Name="FK_dbo_AspNetUserRoles_dbo_AspNetUsers_UserId" Association="Self.FK_dbo_AspNetUserRoles_dbo_AspNetUsers_UserId">
+            <End Role="AspNetUsers" EntitySet="AspNetUsers" />
+            <End Role="AspNetUserRoles" EntitySet="AspNetUserRoles" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PendingSurvey_To_Survey" Association="Self.FK_PendingSurvey_To_Survey">
+            <End Role="Survey" EntitySet="Survey" />
+            <End Role="PendingSurvey" EntitySet="PendingSurvey" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PendingSurvey_To_SurveyInstance" Association="Self.FK_PendingSurvey_To_SurveyInstance">
+            <End Role="SurveyInstance" EntitySet="SurveyInstance" />
+            <End Role="PendingSurvey" EntitySet="PendingSurvey" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PendingSurvey_To_UserSurveyRole" Association="Self.FK_PendingSurvey_To_UserSurveyRole">
+            <End Role="UserSurveyRole" EntitySet="UserSurveyRole" />
+            <End Role="PendingSurvey" EntitySet="PendingSurvey" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PendingSurvey_ToTable" Association="Self.FK_PendingSurvey_ToTable">
+            <End Role="AspNetUsers" EntitySet="AspNetUsers" />
+            <End Role="PendingSurvey" EntitySet="PendingSurvey" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Question_ToTable" Association="Self.FK_Question_ToTable">
+            <End Role="Category" EntitySet="Category" />
+            <End Role="Question" EntitySet="Question" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Question_ToTable_1" Association="Self.FK_Question_ToTable_1">
+            <End Role="QuestionType" EntitySet="QuestionType" />
+            <End Role="Question" EntitySet="Question" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SiteWidePermission_To_Perm1" Association="Self.FK_SiteWidePermission_To_Perm1">
+            <End Role="Permission" EntitySet="Permission" />
+            <End Role="SiteWidePermission" EntitySet="SiteWidePermission" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SiteWidePermission_To_Perm2" Association="Self.FK_SiteWidePermission_To_Perm2">
+            <End Role="Permission" EntitySet="Permission" />
+            <End Role="SiteWidePermission" EntitySet="SiteWidePermission" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SiteWidePermission_To_Perm3" Association="Self.FK_SiteWidePermission_To_Perm3">
+            <End Role="Permission" EntitySet="Permission" />
+            <End Role="SiteWidePermission" EntitySet="SiteWidePermission" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Survey_ToTable" Association="Self.FK_Survey_ToTable">
+            <End Role="AspNetUsers" EntitySet="AspNetUsers" />
+            <End Role="Survey" EntitySet="Survey" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SurveyInstance_To_Survey" Association="Self.FK_SurveyInstance_To_Survey">
+            <End Role="Survey" EntitySet="Survey" />
+            <End Role="SurveyInstance" EntitySet="SurveyInstance" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SurveyInstance_To_SurveyType" Association="Self.FK_SurveyInstance_To_SurveyType">
+            <End Role="SurveyType" EntitySet="SurveyType" />
+            <End Role="SurveyInstance" EntitySet="SurveyInstance" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SurveyInstance_To_UserSurveyRole" Association="Self.FK_SurveyInstance_To_UserSurveyRole">
+            <End Role="UserSurveyRole" EntitySet="UserSurveyRole" />
+            <End Role="SurveyInstance" EntitySet="SurveyInstance" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SurveyInstance_ToTable" Association="Self.FK_SurveyInstance_ToTable">
+            <End Role="AspNetUsers" EntitySet="AspNetUsers" />
+            <End Role="SurveyInstance" EntitySet="SurveyInstance" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SurveysAvailable_To_Cohort" Association="Self.FK_SurveysAvailable_To_Cohort">
+            <End Role="Cohort" EntitySet="Cohort" />
+            <End Role="SurveysAvailable" EntitySet="SurveysAvailable" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SurveysAvailable_To_Survey" Association="Self.FK_SurveysAvailable_To_Survey">
+            <End Role="Survey" EntitySet="Survey" />
+            <End Role="SurveysAvailable" EntitySet="SurveysAvailable" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SurveysAvailable_To_SurveyType" Association="Self.FK_SurveysAvailable_To_SurveyType">
+            <End Role="SurveyType" EntitySet="SurveyType" />
+            <End Role="SurveysAvailable" EntitySet="SurveysAvailable" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SurveysAvailableTo_SurveysAvailable" Association="Self.FK_SurveysAvailableTo_SurveysAvailable">
+            <End Role="SurveysAvailable" EntitySet="SurveysAvailable" />
+            <End Role="SurveysAvailableTo" EntitySet="SurveysAvailableTo" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SurveysAvailableTo_UserTakenRole" Association="Self.FK_SurveysAvailableTo_UserTakenRole">
+            <End Role="UserSurveyRole" EntitySet="UserSurveyRole" />
+            <End Role="SurveysAvailableTo" EntitySet="SurveysAvailableTo" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="EmployeeEvaluationSystem.Entity.EntityModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityContainer Name="EmployeeDatabaseEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="C__MigrationHistory" EntityType="EmployeeEvaluationSystem.Entity.EntityModel.C__MigrationHistory" />
+          <EntitySet Name="C__RefactorLog" EntityType="EmployeeEvaluationSystem.Entity.EntityModel.C__RefactorLog" />
+          <EntitySet Name="AnswerInstances" EntityType="EmployeeEvaluationSystem.Entity.EntityModel.AnswerInstance" />
+          <EntitySet Name="AspNetRoles" EntityType="EmployeeEvaluationSystem.Entity.EntityModel.AspNetRole" />
+          <EntitySet Name="AspNetUserClaims" EntityType="EmployeeEvaluationSystem.Entity.EntityModel.AspNetUserClaim" />
+          <EntitySet Name="AspNetUserLogins" EntityType="EmployeeEvaluationSystem.Entity.EntityModel.AspNetUserLogin" />
+          <EntitySet Name="AspNetUsers" EntityType="EmployeeEvaluationSystem.Entity.EntityModel.AspNetUser" />
+          <EntitySet Name="Categories" EntityType="EmployeeEvaluationSystem.Entity.EntityModel.Category" />
+          <EntitySet Name="Cohorts" EntityType="EmployeeEvaluationSystem.Entity.EntityModel.Cohort" />
+          <EntitySet Name="CohortPermissions" EntityType="EmployeeEvaluationSystem.Entity.EntityModel.CohortPermission" />
+          <EntitySet Name="CohortUsers" EntityType="EmployeeEvaluationSystem.Entity.EntityModel.CohortUser" />
+          <EntitySet Name="PendingSurveys" EntityType="EmployeeEvaluationSystem.Entity.EntityModel.PendingSurvey" />
+          <EntitySet Name="Permissions" EntityType="EmployeeEvaluationSystem.Entity.EntityModel.Permission" />
+          <EntitySet Name="Questions" EntityType="EmployeeEvaluationSystem.Entity.EntityModel.Question" />
+          <EntitySet Name="QuestionTypes" EntityType="EmployeeEvaluationSystem.Entity.EntityModel.QuestionType" />
+          <EntitySet Name="SiteWidePermissions" EntityType="EmployeeEvaluationSystem.Entity.EntityModel.SiteWidePermission" />
+          <EntitySet Name="Surveys" EntityType="EmployeeEvaluationSystem.Entity.EntityModel.Survey" />
+          <EntitySet Name="SurveyInstances" EntityType="EmployeeEvaluationSystem.Entity.EntityModel.SurveyInstance" />
+          <EntitySet Name="SurveysAvailables" EntityType="EmployeeEvaluationSystem.Entity.EntityModel.SurveysAvailable" />
+          <EntitySet Name="SurveysAvailableToes" EntityType="EmployeeEvaluationSystem.Entity.EntityModel.SurveysAvailableTo" />
+          <EntitySet Name="SurveyTypes" EntityType="EmployeeEvaluationSystem.Entity.EntityModel.SurveyType" />
+          <EntitySet Name="UserSurveyRoles" EntityType="EmployeeEvaluationSystem.Entity.EntityModel.UserSurveyRole" />
+          <AssociationSet Name="FK_AnswerInstance_SurveyInstance" Association="EmployeeEvaluationSystem.Entity.EntityModel.FK_AnswerInstance_SurveyInstance">
+            <End Role="SurveyInstance" EntitySet="SurveyInstances" />
+            <End Role="AnswerInstance" EntitySet="AnswerInstances" />
+          </AssociationSet>
+          <AssociationSet Name="FK_AnswerInstance_To_Question" Association="EmployeeEvaluationSystem.Entity.EntityModel.FK_AnswerInstance_To_Question">
+            <End Role="Question" EntitySet="Questions" />
+            <End Role="AnswerInstance" EntitySet="AnswerInstances" />
+          </AssociationSet>
+          <AssociationSet Name="FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId" Association="EmployeeEvaluationSystem.Entity.EntityModel.FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId">
+            <End Role="AspNetUser" EntitySet="AspNetUsers" />
+            <End Role="AspNetUserClaim" EntitySet="AspNetUserClaims" />
+          </AssociationSet>
+          <AssociationSet Name="FK_dbo_AspNetUserLogins_dbo_AspNetUsers_UserId" Association="EmployeeEvaluationSystem.Entity.EntityModel.FK_dbo_AspNetUserLogins_dbo_AspNetUsers_UserId">
+            <End Role="AspNetUser" EntitySet="AspNetUsers" />
+            <End Role="AspNetUserLogin" EntitySet="AspNetUserLogins" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CohortUser_ToTable" Association="EmployeeEvaluationSystem.Entity.EntityModel.FK_CohortUser_ToTable">
+            <End Role="AspNetUser" EntitySet="AspNetUsers" />
+            <End Role="CohortUser" EntitySet="CohortUsers" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PendingSurvey_ToTable" Association="EmployeeEvaluationSystem.Entity.EntityModel.FK_PendingSurvey_ToTable">
+            <End Role="AspNetUser" EntitySet="AspNetUsers" />
+            <End Role="PendingSurvey" EntitySet="PendingSurveys" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Survey_ToTable" Association="EmployeeEvaluationSystem.Entity.EntityModel.FK_Survey_ToTable">
+            <End Role="AspNetUser" EntitySet="AspNetUsers" />
+            <End Role="Survey" EntitySet="Surveys" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SurveyInstance_ToTable" Association="EmployeeEvaluationSystem.Entity.EntityModel.FK_SurveyInstance_ToTable">
+            <End Role="AspNetUser" EntitySet="AspNetUsers" />
+            <End Role="SurveyInstance" EntitySet="SurveyInstances" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Category_ToTable" Association="EmployeeEvaluationSystem.Entity.EntityModel.FK_Category_ToTable">
+            <End Role="Survey" EntitySet="Surveys" />
+            <End Role="Category" EntitySet="Categories" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Question_ToTable" Association="EmployeeEvaluationSystem.Entity.EntityModel.FK_Question_ToTable">
+            <End Role="Category" EntitySet="Categories" />
+            <End Role="Question" EntitySet="Questions" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CohortUser_To_Cohort" Association="EmployeeEvaluationSystem.Entity.EntityModel.FK_CohortUser_To_Cohort">
+            <End Role="Cohort" EntitySet="Cohorts" />
+            <End Role="CohortUser" EntitySet="CohortUsers" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SurveysAvailable_To_Cohort" Association="EmployeeEvaluationSystem.Entity.EntityModel.FK_SurveysAvailable_To_Cohort">
+            <End Role="Cohort" EntitySet="Cohorts" />
+            <End Role="SurveysAvailable" EntitySet="SurveysAvailables" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CohortPermission_To_Perm1" Association="EmployeeEvaluationSystem.Entity.EntityModel.FK_CohortPermission_To_Perm1">
+            <End Role="Permission" EntitySet="Permissions" />
+            <End Role="CohortPermission" EntitySet="CohortPermissions" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CohortPermission_To_Perm2" Association="EmployeeEvaluationSystem.Entity.EntityModel.FK_CohortPermission_To_Perm2">
+            <End Role="Permission" EntitySet="Permissions" />
+            <End Role="CohortPermission" EntitySet="CohortPermissions" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CohortPermission_To_Perm3" Association="EmployeeEvaluationSystem.Entity.EntityModel.FK_CohortPermission_To_Perm3">
+            <End Role="Permission" EntitySet="Permissions" />
+            <End Role="CohortPermission" EntitySet="CohortPermissions" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CohortPermission_To_Perm4" Association="EmployeeEvaluationSystem.Entity.EntityModel.FK_CohortPermission_To_Perm4">
+            <End Role="Permission" EntitySet="Permissions" />
+            <End Role="CohortPermission" EntitySet="CohortPermissions" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CohortUser_To_Permissions" Association="EmployeeEvaluationSystem.Entity.EntityModel.FK_CohortUser_To_Permissions">
+            <End Role="CohortPermission" EntitySet="CohortPermissions" />
+            <End Role="CohortUser" EntitySet="CohortUsers" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PendingSurvey_To_Survey" Association="EmployeeEvaluationSystem.Entity.EntityModel.FK_PendingSurvey_To_Survey">
+            <End Role="Survey" EntitySet="Surveys" />
+            <End Role="PendingSurvey" EntitySet="PendingSurveys" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PendingSurvey_To_SurveyInstance" Association="EmployeeEvaluationSystem.Entity.EntityModel.FK_PendingSurvey_To_SurveyInstance">
+            <End Role="SurveyInstance" EntitySet="SurveyInstances" />
+            <End Role="PendingSurvey" EntitySet="PendingSurveys" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PendingSurvey_To_UserSurveyRole" Association="EmployeeEvaluationSystem.Entity.EntityModel.FK_PendingSurvey_To_UserSurveyRole">
+            <End Role="UserSurveyRole" EntitySet="UserSurveyRoles" />
+            <End Role="PendingSurvey" EntitySet="PendingSurveys" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SiteWidePermission_To_Perm1" Association="EmployeeEvaluationSystem.Entity.EntityModel.FK_SiteWidePermission_To_Perm1">
+            <End Role="Permission" EntitySet="Permissions" />
+            <End Role="SiteWidePermission" EntitySet="SiteWidePermissions" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SiteWidePermission_To_Perm2" Association="EmployeeEvaluationSystem.Entity.EntityModel.FK_SiteWidePermission_To_Perm2">
+            <End Role="Permission" EntitySet="Permissions" />
+            <End Role="SiteWidePermission" EntitySet="SiteWidePermissions" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SiteWidePermission_To_Perm3" Association="EmployeeEvaluationSystem.Entity.EntityModel.FK_SiteWidePermission_To_Perm3">
+            <End Role="Permission" EntitySet="Permissions" />
+            <End Role="SiteWidePermission" EntitySet="SiteWidePermissions" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Question_ToTable_1" Association="EmployeeEvaluationSystem.Entity.EntityModel.FK_Question_ToTable_1">
+            <End Role="QuestionType" EntitySet="QuestionTypes" />
+            <End Role="Question" EntitySet="Questions" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SurveyInstance_To_Survey" Association="EmployeeEvaluationSystem.Entity.EntityModel.FK_SurveyInstance_To_Survey">
+            <End Role="Survey" EntitySet="Surveys" />
+            <End Role="SurveyInstance" EntitySet="SurveyInstances" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SurveysAvailable_To_Survey" Association="EmployeeEvaluationSystem.Entity.EntityModel.FK_SurveysAvailable_To_Survey">
+            <End Role="Survey" EntitySet="Surveys" />
+            <End Role="SurveysAvailable" EntitySet="SurveysAvailables" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SurveyInstance_To_SurveyType" Association="EmployeeEvaluationSystem.Entity.EntityModel.FK_SurveyInstance_To_SurveyType">
+            <End Role="SurveyType" EntitySet="SurveyTypes" />
+            <End Role="SurveyInstance" EntitySet="SurveyInstances" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SurveyInstance_To_UserSurveyRole" Association="EmployeeEvaluationSystem.Entity.EntityModel.FK_SurveyInstance_To_UserSurveyRole">
+            <End Role="UserSurveyRole" EntitySet="UserSurveyRoles" />
+            <End Role="SurveyInstance" EntitySet="SurveyInstances" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SurveysAvailable_To_SurveyType" Association="EmployeeEvaluationSystem.Entity.EntityModel.FK_SurveysAvailable_To_SurveyType">
+            <End Role="SurveyType" EntitySet="SurveyTypes" />
+            <End Role="SurveysAvailable" EntitySet="SurveysAvailables" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SurveysAvailableTo_SurveysAvailable" Association="EmployeeEvaluationSystem.Entity.EntityModel.FK_SurveysAvailableTo_SurveysAvailable">
+            <End Role="SurveysAvailable" EntitySet="SurveysAvailables" />
+            <End Role="SurveysAvailableTo" EntitySet="SurveysAvailableToes" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SurveysAvailableTo_UserTakenRole" Association="EmployeeEvaluationSystem.Entity.EntityModel.FK_SurveysAvailableTo_UserTakenRole">
+            <End Role="UserSurveyRole" EntitySet="UserSurveyRoles" />
+            <End Role="SurveysAvailableTo" EntitySet="SurveysAvailableToes" />
+          </AssociationSet>
+          <AssociationSet Name="AspNetUserRoles" Association="EmployeeEvaluationSystem.Entity.EntityModel.AspNetUserRoles">
+            <End Role="AspNetRole" EntitySet="AspNetRoles" />
+            <End Role="AspNetUser" EntitySet="AspNetUsers" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="C__MigrationHistory">
+          <Key>
+            <PropertyRef Name="MigrationId" />
+            <PropertyRef Name="ContextKey" />
+          </Key>
+          <Property Name="MigrationId" Type="String" Nullable="false" MaxLength="150" FixedLength="false" Unicode="true" />
+          <Property Name="ContextKey" Type="String" Nullable="false" MaxLength="300" FixedLength="false" Unicode="true" />
+          <Property Name="Model" Type="Binary" Nullable="false" MaxLength="Max" FixedLength="false" />
+          <Property Name="ProductVersion" Type="String" Nullable="false" MaxLength="32" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="C__RefactorLog">
+          <Key>
+            <PropertyRef Name="OperationKey" />
+          </Key>
+          <Property Name="OperationKey" Type="Guid" Nullable="false" />
+        </EntityType>
+        <EntityType Name="AnswerInstance">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="QuestionID" Type="Int32" Nullable="false" />
+          <Property Name="ResponseNum" Type="Int32" Nullable="false" />
+          <Property Name="SurveyInstanceId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="SurveyInstance" Relationship="EmployeeEvaluationSystem.Entity.EntityModel.FK_AnswerInstance_SurveyInstance" FromRole="AnswerInstance" ToRole="SurveyInstance" />
+          <NavigationProperty Name="Question" Relationship="EmployeeEvaluationSystem.Entity.EntityModel.FK_AnswerInstance_To_Question" FromRole="AnswerInstance" ToRole="Question" />
+        </EntityType>
+        <EntityType Name="AspNetRole">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="256" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="AspNetUsers" Relationship="EmployeeEvaluationSystem.Entity.EntityModel.AspNetUserRoles" FromRole="AspNetRole" ToRole="AspNetUser" />
+        </EntityType>
+        <EntityType Name="AspNetUserClaim">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="UserId" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="ClaimType" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="ClaimValue" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="AspNetUser" Relationship="EmployeeEvaluationSystem.Entity.EntityModel.FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId" FromRole="AspNetUserClaim" ToRole="AspNetUser" />
+        </EntityType>
+        <EntityType Name="AspNetUserLogin">
+          <Key>
+            <PropertyRef Name="LoginProvider" />
+            <PropertyRef Name="ProviderKey" />
+            <PropertyRef Name="UserId" />
+          </Key>
+          <Property Name="LoginProvider" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="ProviderKey" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="UserId" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="AspNetUser" Relationship="EmployeeEvaluationSystem.Entity.EntityModel.FK_dbo_AspNetUserLogins_dbo_AspNetUsers_UserId" FromRole="AspNetUserLogin" ToRole="AspNetUser" />
+        </EntityType>
+        <EntityType Name="AspNetUser">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="Email" Type="String" MaxLength="256" FixedLength="false" Unicode="true" />
+          <Property Name="EmailConfirmed" Type="Boolean" Nullable="false" />
+          <Property Name="PasswordHash" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="SecurityStamp" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="PhoneNumber" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="PhoneNumberConfirmed" Type="Boolean" Nullable="false" />
+          <Property Name="TwoFactorEnabled" Type="Boolean" Nullable="false" />
+          <Property Name="LockoutEndDateUtc" Type="DateTime" Precision="3" />
+          <Property Name="LockoutEnabled" Type="Boolean" Nullable="false" />
+          <Property Name="AccessFailedCount" Type="Int32" Nullable="false" />
+          <Property Name="UserName" Type="String" Nullable="false" MaxLength="256" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="AspNetUserClaims" Relationship="EmployeeEvaluationSystem.Entity.EntityModel.FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId" FromRole="AspNetUser" ToRole="AspNetUserClaim" />
+          <NavigationProperty Name="AspNetUserLogins" Relationship="EmployeeEvaluationSystem.Entity.EntityModel.FK_dbo_AspNetUserLogins_dbo_AspNetUsers_UserId" FromRole="AspNetUser" ToRole="AspNetUserLogin" />
+          <NavigationProperty Name="CohortUsers" Relationship="EmployeeEvaluationSystem.Entity.EntityModel.FK_CohortUser_ToTable" FromRole="AspNetUser" ToRole="CohortUser" />
+          <NavigationProperty Name="PendingSurveys" Relationship="EmployeeEvaluationSystem.Entity.EntityModel.FK_PendingSurvey_ToTable" FromRole="AspNetUser" ToRole="PendingSurvey" />
+          <NavigationProperty Name="Surveys" Relationship="EmployeeEvaluationSystem.Entity.EntityModel.FK_Survey_ToTable" FromRole="AspNetUser" ToRole="Survey" />
+          <NavigationProperty Name="SurveyInstances" Relationship="EmployeeEvaluationSystem.Entity.EntityModel.FK_SurveyInstance_ToTable" FromRole="AspNetUser" ToRole="SurveyInstance" />
+          <NavigationProperty Name="AspNetRoles" Relationship="EmployeeEvaluationSystem.Entity.EntityModel.AspNetUserRoles" FromRole="AspNetUser" ToRole="AspNetRole" />
+        </EntityType>
+        <EntityType Name="Category">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="SurveyID" Type="Int32" Nullable="false" />
+          <Property Name="IsDeleted" Type="Boolean" Nullable="false" />
+          <Property Name="Description" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="DateCreated" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="Survey" Relationship="EmployeeEvaluationSystem.Entity.EntityModel.FK_Category_ToTable" FromRole="Category" ToRole="Survey" />
+          <NavigationProperty Name="Questions" Relationship="EmployeeEvaluationSystem.Entity.EntityModel.FK_Question_ToTable" FromRole="Category" ToRole="Question" />
+        </EntityType>
+        <EntityType Name="Cohort">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Description" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="IsDeleted" Type="Boolean" Nullable="false" />
+          <Property Name="DateDeleted" Type="DateTime" Precision="3" />
+          <Property Name="DateCreated" Type="DateTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="CohortUser" Relationship="EmployeeEvaluationSystem.Entity.EntityModel.FK_CohortUser_To_Cohort" FromRole="Cohort" ToRole="CohortUser" />
+          <NavigationProperty Name="SurveysAvailables" Relationship="EmployeeEvaluationSystem.Entity.EntityModel.FK_SurveysAvailable_To_Cohort" FromRole="Cohort" ToRole="SurveysAvailable" />
+        </EntityType>
+        <EntityType Name="CohortPermission">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Cohort" Type="Int32" Nullable="false" />
+          <Property Name="User" Type="Int32" Nullable="false" />
+          <Property Name="Survey" Type="Int32" Nullable="false" />
+          <Property Name="Report" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Permission" Relationship="EmployeeEvaluationSystem.Entity.EntityModel.FK_CohortPermission_To_Perm1" FromRole="CohortPermission" ToRole="Permission" />
+          <NavigationProperty Name="Permission1" Relationship="EmployeeEvaluationSystem.Entity.EntityModel.FK_CohortPermission_To_Perm2" FromRole="CohortPermission" ToRole="Permission" />
+          <NavigationProperty Name="Permission2" Relationship="EmployeeEvaluationSystem.Entity.EntityModel.FK_CohortPermission_To_Perm3" FromRole="CohortPermission" ToRole="Permission" />
+          <NavigationProperty Name="Permission3" Relationship="EmployeeEvaluationSystem.Entity.EntityModel.FK_CohortPermission_To_Perm4" FromRole="CohortPermission" ToRole="Permission" />
+          <NavigationProperty Name="CohortUsers" Relationship="EmployeeEvaluationSystem.Entity.EntityModel.FK_CohortUser_To_Permissions" FromRole="CohortPermission" ToRole="CohortUser" />
+        </EntityType>
+        <EntityType Name="CohortUser">
+          <Key>
+            <PropertyRef Name="CohortID" />
+          </Key>
+          <Property Name="CohortID" Type="Int32" Nullable="false" />
+          <Property Name="UserID" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="CohortPermissionId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="AspNetUser" Relationship="EmployeeEvaluationSystem.Entity.EntityModel.FK_CohortUser_ToTable" FromRole="CohortUser" ToRole="AspNetUser" />
+          <NavigationProperty Name="Cohort" Relationship="EmployeeEvaluationSystem.Entity.EntityModel.FK_CohortUser_To_Cohort" FromRole="CohortUser" ToRole="Cohort" />
+          <NavigationProperty Name="CohortPermission" Relationship="EmployeeEvaluationSystem.Entity.EntityModel.FK_CohortUser_To_Permissions" FromRole="CohortUser" ToRole="CohortPermission" />
+        </EntityType>
+        <EntityType Name="PendingSurvey">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Guid" Nullable="false" />
+          <Property Name="SurveyAvailToMeID" Type="Int32" Nullable="false" />
+          <Property Name="UserSurveyRoleID" Type="Int32" Nullable="false" />
+          <Property Name="DateSent" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="SurveyInstanceID" Type="Int32" />
+          <Property Name="Email" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="DateStarted" Type="DateTime" Precision="3" />
+          <Property Name="DateCompleted" Type="DateTime" Precision="3" />
+          <Property Name="IsDeleted" Type="Boolean" Nullable="false" />
+          <Property Name="DateDeleted" Type="DateTime" Precision="3" />
+          <Property Name="UserSentById" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="AspNetUser" Relationship="EmployeeEvaluationSystem.Entity.EntityModel.FK_PendingSurvey_ToTable" FromRole="PendingSurvey" ToRole="AspNetUser" />
+          <NavigationProperty Name="Survey" Relationship="EmployeeEvaluationSystem.Entity.EntityModel.FK_PendingSurvey_To_Survey" FromRole="PendingSurvey" ToRole="Survey" />
+          <NavigationProperty Name="SurveyInstance" Relationship="EmployeeEvaluationSystem.Entity.EntityModel.FK_PendingSurvey_To_SurveyInstance" FromRole="PendingSurvey" ToRole="SurveyInstance" />
+          <NavigationProperty Name="UserSurveyRole" Relationship="EmployeeEvaluationSystem.Entity.EntityModel.FK_PendingSurvey_To_UserSurveyRole" FromRole="PendingSurvey" ToRole="UserSurveyRole" />
+        </EntityType>
+        <EntityType Name="Permission">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Add" Type="Boolean" Nullable="false" />
+          <Property Name="Edit" Type="Boolean" Nullable="false" />
+          <Property Name="Delete" Type="Boolean" Nullable="false" />
+          <Property Name="View" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="CohortPermissions" Relationship="EmployeeEvaluationSystem.Entity.EntityModel.FK_CohortPermission_To_Perm1" FromRole="Permission" ToRole="CohortPermission" />
+          <NavigationProperty Name="CohortPermissions1" Relationship="EmployeeEvaluationSystem.Entity.EntityModel.FK_CohortPermission_To_Perm2" FromRole="Permission" ToRole="CohortPermission" />
+          <NavigationProperty Name="CohortPermissions2" Relationship="EmployeeEvaluationSystem.Entity.EntityModel.FK_CohortPermission_To_Perm3" FromRole="Permission" ToRole="CohortPermission" />
+          <NavigationProperty Name="CohortPermissions3" Relationship="EmployeeEvaluationSystem.Entity.EntityModel.FK_CohortPermission_To_Perm4" FromRole="Permission" ToRole="CohortPermission" />
+          <NavigationProperty Name="SiteWidePermissions" Relationship="EmployeeEvaluationSystem.Entity.EntityModel.FK_SiteWidePermission_To_Perm1" FromRole="Permission" ToRole="SiteWidePermission" />
+          <NavigationProperty Name="SiteWidePermissions1" Relationship="EmployeeEvaluationSystem.Entity.EntityModel.FK_SiteWidePermission_To_Perm2" FromRole="Permission" ToRole="SiteWidePermission" />
+          <NavigationProperty Name="SiteWidePermissions2" Relationship="EmployeeEvaluationSystem.Entity.EntityModel.FK_SiteWidePermission_To_Perm3" FromRole="Permission" ToRole="SiteWidePermission" />
+        </EntityType>
+        <EntityType Name="Question">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CategoryID" Type="Int32" Nullable="false" />
+          <Property Name="QuestionTypeId" Type="Int32" Nullable="false" />
+          <Property Name="IsRequired" Type="Boolean" Nullable="false" />
+          <Property Name="IsDeleted" Type="Boolean" Nullable="false" />
+          <Property Name="DateCreated" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="DateDeleted" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="AnswerInstances" Relationship="EmployeeEvaluationSystem.Entity.EntityModel.FK_AnswerInstance_To_Question" FromRole="Question" ToRole="AnswerInstance" />
+          <NavigationProperty Name="Category" Relationship="EmployeeEvaluationSystem.Entity.EntityModel.FK_Question_ToTable" FromRole="Question" ToRole="Category" />
+          <NavigationProperty Name="QuestionType" Relationship="EmployeeEvaluationSystem.Entity.EntityModel.FK_Question_ToTable_1" FromRole="Question" ToRole="QuestionType" />
+        </EntityType>
+        <EntityType Name="QuestionType">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="RatingMax" Type="Int32" Nullable="false" />
+          <Property Name="RatingMin" Type="Int32" Nullable="false" />
+          <Property Name="IsRating" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="Questions" Relationship="EmployeeEvaluationSystem.Entity.EntityModel.FK_Question_ToTable_1" FromRole="QuestionType" ToRole="Question" />
+        </EntityType>
+        <EntityType Name="SiteWidePermission">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Cohort" Type="Int32" Nullable="false" />
+          <Property Name="User" Type="Int32" Nullable="false" />
+          <Property Name="Survey" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Permission" Relationship="EmployeeEvaluationSystem.Entity.EntityModel.FK_SiteWidePermission_To_Perm1" FromRole="SiteWidePermission" ToRole="Permission" />
+          <NavigationProperty Name="Permission1" Relationship="EmployeeEvaluationSystem.Entity.EntityModel.FK_SiteWidePermission_To_Perm2" FromRole="SiteWidePermission" ToRole="Permission" />
+          <NavigationProperty Name="Permission2" Relationship="EmployeeEvaluationSystem.Entity.EntityModel.FK_SiteWidePermission_To_Perm3" FromRole="SiteWidePermission" ToRole="Permission" />
+        </EntityType>
+        <EntityType Name="Survey">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Description" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="CreatedBy" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="IsDeleted" Type="Boolean" Nullable="false" />
+          <Property Name="DateCreated" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="DateDeleted" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="AspNetUser" Relationship="EmployeeEvaluationSystem.Entity.EntityModel.FK_Survey_ToTable" FromRole="Survey" ToRole="AspNetUser" />
+          <NavigationProperty Name="Categories" Relationship="EmployeeEvaluationSystem.Entity.EntityModel.FK_Category_ToTable" FromRole="Survey" ToRole="Category" />
+          <NavigationProperty Name="PendingSurveys" Relationship="EmployeeEvaluationSystem.Entity.EntityModel.FK_PendingSurvey_To_Survey" FromRole="Survey" ToRole="PendingSurvey" />
+          <NavigationProperty Name="SurveyInstances" Relationship="EmployeeEvaluationSystem.Entity.EntityModel.FK_SurveyInstance_To_Survey" FromRole="Survey" ToRole="SurveyInstance" />
+          <NavigationProperty Name="SurveysAvailables" Relationship="EmployeeEvaluationSystem.Entity.EntityModel.FK_SurveysAvailable_To_Survey" FromRole="Survey" ToRole="SurveysAvailable" />
+        </EntityType>
+        <EntityType Name="SurveyInstance">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="SurveyID" Type="Int32" Nullable="false" />
+          <Property Name="UserTakenBy" Type="String" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="DateStarted" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="DateFinished" Type="DateTime" Precision="3" />
+          <Property Name="SurveyTypeId" Type="Int32" Nullable="false" />
+          <Property Name="UserSurveyRoleId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="AnswerInstances" Relationship="EmployeeEvaluationSystem.Entity.EntityModel.FK_AnswerInstance_SurveyInstance" FromRole="SurveyInstance" ToRole="AnswerInstance" />
+          <NavigationProperty Name="AspNetUser" Relationship="EmployeeEvaluationSystem.Entity.EntityModel.FK_SurveyInstance_ToTable" FromRole="SurveyInstance" ToRole="AspNetUser" />
+          <NavigationProperty Name="PendingSurveys" Relationship="EmployeeEvaluationSystem.Entity.EntityModel.FK_PendingSurvey_To_SurveyInstance" FromRole="SurveyInstance" ToRole="PendingSurvey" />
+          <NavigationProperty Name="Survey" Relationship="EmployeeEvaluationSystem.Entity.EntityModel.FK_SurveyInstance_To_Survey" FromRole="SurveyInstance" ToRole="Survey" />
+          <NavigationProperty Name="SurveyType" Relationship="EmployeeEvaluationSystem.Entity.EntityModel.FK_SurveyInstance_To_SurveyType" FromRole="SurveyInstance" ToRole="SurveyType" />
+          <NavigationProperty Name="UserSurveyRole" Relationship="EmployeeEvaluationSystem.Entity.EntityModel.FK_SurveyInstance_To_UserSurveyRole" FromRole="SurveyInstance" ToRole="UserSurveyRole" />
+        </EntityType>
+        <EntityType Name="SurveysAvailable">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CohortID" Type="Int32" Nullable="false" />
+          <Property Name="SurveyID" Type="Int32" Nullable="false" />
+          <Property Name="DateOpen" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="DateClosed" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="SurveyTypeId" Type="Int32" Nullable="false" />
+          <Property Name="IsDeleted" Type="Boolean" Nullable="false" />
+          <Property Name="DateCreated" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="DateDeleted" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="Cohort" Relationship="EmployeeEvaluationSystem.Entity.EntityModel.FK_SurveysAvailable_To_Cohort" FromRole="SurveysAvailable" ToRole="Cohort" />
+          <NavigationProperty Name="Survey" Relationship="EmployeeEvaluationSystem.Entity.EntityModel.FK_SurveysAvailable_To_Survey" FromRole="SurveysAvailable" ToRole="Survey" />
+          <NavigationProperty Name="SurveyType" Relationship="EmployeeEvaluationSystem.Entity.EntityModel.FK_SurveysAvailable_To_SurveyType" FromRole="SurveysAvailable" ToRole="SurveyType" />
+          <NavigationProperty Name="SurveysAvailableTo" Relationship="EmployeeEvaluationSystem.Entity.EntityModel.FK_SurveysAvailableTo_SurveysAvailable" FromRole="SurveysAvailable" ToRole="SurveysAvailableTo" />
+        </EntityType>
+        <EntityType Name="SurveysAvailableTo">
+          <Key>
+            <PropertyRef Name="SurveyAvailableID" />
+          </Key>
+          <Property Name="SurveyAvailableID" Type="Int32" Nullable="false" />
+          <Property Name="UserSurveyRoleId" Type="Int32" Nullable="false" />
+          <Property Name="Quantity" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="SurveysAvailable" Relationship="EmployeeEvaluationSystem.Entity.EntityModel.FK_SurveysAvailableTo_SurveysAvailable" FromRole="SurveysAvailableTo" ToRole="SurveysAvailable" />
+          <NavigationProperty Name="UserSurveyRole" Relationship="EmployeeEvaluationSystem.Entity.EntityModel.FK_SurveysAvailableTo_UserTakenRole" FromRole="SurveysAvailableTo" ToRole="UserSurveyRole" />
+        </EntityType>
+        <EntityType Name="SurveyType">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="DateCreated" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="IsDeleted" Type="Boolean" Nullable="false" />
+          <Property Name="DeletedDate" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="SurveyInstances" Relationship="EmployeeEvaluationSystem.Entity.EntityModel.FK_SurveyInstance_To_SurveyType" FromRole="SurveyType" ToRole="SurveyInstance" />
+          <NavigationProperty Name="SurveysAvailables" Relationship="EmployeeEvaluationSystem.Entity.EntityModel.FK_SurveysAvailable_To_SurveyType" FromRole="SurveyType" ToRole="SurveysAvailable" />
+        </EntityType>
+        <EntityType Name="UserSurveyRole">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="IsDeleted" Type="Boolean" Nullable="false" />
+          <Property Name="DateCreated" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="DateDeleted" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="PendingSurveys" Relationship="EmployeeEvaluationSystem.Entity.EntityModel.FK_PendingSurvey_To_UserSurveyRole" FromRole="UserSurveyRole" ToRole="PendingSurvey" />
+          <NavigationProperty Name="SurveyInstances" Relationship="EmployeeEvaluationSystem.Entity.EntityModel.FK_SurveyInstance_To_UserSurveyRole" FromRole="UserSurveyRole" ToRole="SurveyInstance" />
+          <NavigationProperty Name="SurveysAvailableToes" Relationship="EmployeeEvaluationSystem.Entity.EntityModel.FK_SurveysAvailableTo_UserTakenRole" FromRole="UserSurveyRole" ToRole="SurveysAvailableTo" />
+        </EntityType>
+        <Association Name="FK_AnswerInstance_SurveyInstance">
+          <End Type="EmployeeEvaluationSystem.Entity.EntityModel.SurveyInstance" Role="SurveyInstance" Multiplicity="1" />
+          <End Type="EmployeeEvaluationSystem.Entity.EntityModel.AnswerInstance" Role="AnswerInstance" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SurveyInstance">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="AnswerInstance">
+              <PropertyRef Name="SurveyInstanceId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_AnswerInstance_To_Question">
+          <End Type="EmployeeEvaluationSystem.Entity.EntityModel.Question" Role="Question" Multiplicity="1" />
+          <End Type="EmployeeEvaluationSystem.Entity.EntityModel.AnswerInstance" Role="AnswerInstance" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Question">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="AnswerInstance">
+              <PropertyRef Name="QuestionID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId">
+          <End Type="EmployeeEvaluationSystem.Entity.EntityModel.AspNetUser" Role="AspNetUser" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="EmployeeEvaluationSystem.Entity.EntityModel.AspNetUserClaim" Role="AspNetUserClaim" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AspNetUser">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="AspNetUserClaim">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_dbo_AspNetUserLogins_dbo_AspNetUsers_UserId">
+          <End Type="EmployeeEvaluationSystem.Entity.EntityModel.AspNetUser" Role="AspNetUser" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="EmployeeEvaluationSystem.Entity.EntityModel.AspNetUserLogin" Role="AspNetUserLogin" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AspNetUser">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="AspNetUserLogin">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CohortUser_ToTable">
+          <End Type="EmployeeEvaluationSystem.Entity.EntityModel.AspNetUser" Role="AspNetUser" Multiplicity="1" />
+          <End Type="EmployeeEvaluationSystem.Entity.EntityModel.CohortUser" Role="CohortUser" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AspNetUser">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="CohortUser">
+              <PropertyRef Name="UserID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PendingSurvey_ToTable">
+          <End Type="EmployeeEvaluationSystem.Entity.EntityModel.AspNetUser" Role="AspNetUser" Multiplicity="1" />
+          <End Type="EmployeeEvaluationSystem.Entity.EntityModel.PendingSurvey" Role="PendingSurvey" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AspNetUser">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="PendingSurvey">
+              <PropertyRef Name="UserSentById" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Survey_ToTable">
+          <End Type="EmployeeEvaluationSystem.Entity.EntityModel.AspNetUser" Role="AspNetUser" Multiplicity="1" />
+          <End Type="EmployeeEvaluationSystem.Entity.EntityModel.Survey" Role="Survey" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AspNetUser">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Survey">
+              <PropertyRef Name="CreatedBy" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SurveyInstance_ToTable">
+          <End Type="EmployeeEvaluationSystem.Entity.EntityModel.AspNetUser" Role="AspNetUser" Multiplicity="0..1" />
+          <End Type="EmployeeEvaluationSystem.Entity.EntityModel.SurveyInstance" Role="SurveyInstance" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AspNetUser">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="SurveyInstance">
+              <PropertyRef Name="UserTakenBy" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Category_ToTable">
+          <End Type="EmployeeEvaluationSystem.Entity.EntityModel.Survey" Role="Survey" Multiplicity="1" />
+          <End Type="EmployeeEvaluationSystem.Entity.EntityModel.Category" Role="Category" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Survey">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Category">
+              <PropertyRef Name="SurveyID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Question_ToTable">
+          <End Type="EmployeeEvaluationSystem.Entity.EntityModel.Category" Role="Category" Multiplicity="1" />
+          <End Type="EmployeeEvaluationSystem.Entity.EntityModel.Question" Role="Question" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Category">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Question">
+              <PropertyRef Name="CategoryID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CohortUser_To_Cohort">
+          <End Type="EmployeeEvaluationSystem.Entity.EntityModel.Cohort" Role="Cohort" Multiplicity="1" />
+          <End Type="EmployeeEvaluationSystem.Entity.EntityModel.CohortUser" Role="CohortUser" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="Cohort">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="CohortUser">
+              <PropertyRef Name="CohortID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SurveysAvailable_To_Cohort">
+          <End Type="EmployeeEvaluationSystem.Entity.EntityModel.Cohort" Role="Cohort" Multiplicity="1" />
+          <End Type="EmployeeEvaluationSystem.Entity.EntityModel.SurveysAvailable" Role="SurveysAvailable" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Cohort">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="SurveysAvailable">
+              <PropertyRef Name="CohortID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CohortPermission_To_Perm1">
+          <End Type="EmployeeEvaluationSystem.Entity.EntityModel.Permission" Role="Permission" Multiplicity="1" />
+          <End Type="EmployeeEvaluationSystem.Entity.EntityModel.CohortPermission" Role="CohortPermission" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Permission">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="CohortPermission">
+              <PropertyRef Name="Cohort" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CohortPermission_To_Perm2">
+          <End Type="EmployeeEvaluationSystem.Entity.EntityModel.Permission" Role="Permission" Multiplicity="1" />
+          <End Type="EmployeeEvaluationSystem.Entity.EntityModel.CohortPermission" Role="CohortPermission" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Permission">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="CohortPermission">
+              <PropertyRef Name="User" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CohortPermission_To_Perm3">
+          <End Type="EmployeeEvaluationSystem.Entity.EntityModel.Permission" Role="Permission" Multiplicity="1" />
+          <End Type="EmployeeEvaluationSystem.Entity.EntityModel.CohortPermission" Role="CohortPermission" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Permission">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="CohortPermission">
+              <PropertyRef Name="Survey" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CohortPermission_To_Perm4">
+          <End Type="EmployeeEvaluationSystem.Entity.EntityModel.Permission" Role="Permission" Multiplicity="1" />
+          <End Type="EmployeeEvaluationSystem.Entity.EntityModel.CohortPermission" Role="CohortPermission" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Permission">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="CohortPermission">
+              <PropertyRef Name="Report" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CohortUser_To_Permissions">
+          <End Type="EmployeeEvaluationSystem.Entity.EntityModel.CohortPermission" Role="CohortPermission" Multiplicity="1" />
+          <End Type="EmployeeEvaluationSystem.Entity.EntityModel.CohortUser" Role="CohortUser" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CohortPermission">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="CohortUser">
+              <PropertyRef Name="CohortPermissionId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PendingSurvey_To_Survey">
+          <End Type="EmployeeEvaluationSystem.Entity.EntityModel.Survey" Role="Survey" Multiplicity="1" />
+          <End Type="EmployeeEvaluationSystem.Entity.EntityModel.PendingSurvey" Role="PendingSurvey" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Survey">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="PendingSurvey">
+              <PropertyRef Name="SurveyAvailToMeID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PendingSurvey_To_SurveyInstance">
+          <End Type="EmployeeEvaluationSystem.Entity.EntityModel.SurveyInstance" Role="SurveyInstance" Multiplicity="0..1" />
+          <End Type="EmployeeEvaluationSystem.Entity.EntityModel.PendingSurvey" Role="PendingSurvey" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SurveyInstance">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="PendingSurvey">
+              <PropertyRef Name="SurveyInstanceID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PendingSurvey_To_UserSurveyRole">
+          <End Type="EmployeeEvaluationSystem.Entity.EntityModel.UserSurveyRole" Role="UserSurveyRole" Multiplicity="1" />
+          <End Type="EmployeeEvaluationSystem.Entity.EntityModel.PendingSurvey" Role="PendingSurvey" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserSurveyRole">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="PendingSurvey">
+              <PropertyRef Name="UserSurveyRoleID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SiteWidePermission_To_Perm1">
+          <End Type="EmployeeEvaluationSystem.Entity.EntityModel.Permission" Role="Permission" Multiplicity="1" />
+          <End Type="EmployeeEvaluationSystem.Entity.EntityModel.SiteWidePermission" Role="SiteWidePermission" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Permission">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="SiteWidePermission">
+              <PropertyRef Name="Cohort" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SiteWidePermission_To_Perm2">
+          <End Type="EmployeeEvaluationSystem.Entity.EntityModel.Permission" Role="Permission" Multiplicity="1" />
+          <End Type="EmployeeEvaluationSystem.Entity.EntityModel.SiteWidePermission" Role="SiteWidePermission" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Permission">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="SiteWidePermission">
+              <PropertyRef Name="User" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SiteWidePermission_To_Perm3">
+          <End Type="EmployeeEvaluationSystem.Entity.EntityModel.Permission" Role="Permission" Multiplicity="1" />
+          <End Type="EmployeeEvaluationSystem.Entity.EntityModel.SiteWidePermission" Role="SiteWidePermission" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Permission">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="SiteWidePermission">
+              <PropertyRef Name="Survey" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Question_ToTable_1">
+          <End Type="EmployeeEvaluationSystem.Entity.EntityModel.QuestionType" Role="QuestionType" Multiplicity="1" />
+          <End Type="EmployeeEvaluationSystem.Entity.EntityModel.Question" Role="Question" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="QuestionType">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Question">
+              <PropertyRef Name="QuestionTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SurveyInstance_To_Survey">
+          <End Type="EmployeeEvaluationSystem.Entity.EntityModel.Survey" Role="Survey" Multiplicity="1" />
+          <End Type="EmployeeEvaluationSystem.Entity.EntityModel.SurveyInstance" Role="SurveyInstance" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Survey">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="SurveyInstance">
+              <PropertyRef Name="SurveyID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SurveysAvailable_To_Survey">
+          <End Type="EmployeeEvaluationSystem.Entity.EntityModel.Survey" Role="Survey" Multiplicity="1" />
+          <End Type="EmployeeEvaluationSystem.Entity.EntityModel.SurveysAvailable" Role="SurveysAvailable" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Survey">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="SurveysAvailable">
+              <PropertyRef Name="SurveyID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SurveyInstance_To_SurveyType">
+          <End Type="EmployeeEvaluationSystem.Entity.EntityModel.SurveyType" Role="SurveyType" Multiplicity="1" />
+          <End Type="EmployeeEvaluationSystem.Entity.EntityModel.SurveyInstance" Role="SurveyInstance" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SurveyType">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="SurveyInstance">
+              <PropertyRef Name="SurveyTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SurveyInstance_To_UserSurveyRole">
+          <End Type="EmployeeEvaluationSystem.Entity.EntityModel.UserSurveyRole" Role="UserSurveyRole" Multiplicity="1" />
+          <End Type="EmployeeEvaluationSystem.Entity.EntityModel.SurveyInstance" Role="SurveyInstance" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserSurveyRole">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="SurveyInstance">
+              <PropertyRef Name="UserSurveyRoleId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SurveysAvailable_To_SurveyType">
+          <End Type="EmployeeEvaluationSystem.Entity.EntityModel.SurveyType" Role="SurveyType" Multiplicity="1" />
+          <End Type="EmployeeEvaluationSystem.Entity.EntityModel.SurveysAvailable" Role="SurveysAvailable" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SurveyType">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="SurveysAvailable">
+              <PropertyRef Name="SurveyTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SurveysAvailableTo_SurveysAvailable">
+          <End Type="EmployeeEvaluationSystem.Entity.EntityModel.SurveysAvailable" Role="SurveysAvailable" Multiplicity="1" />
+          <End Type="EmployeeEvaluationSystem.Entity.EntityModel.SurveysAvailableTo" Role="SurveysAvailableTo" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="SurveysAvailable">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="SurveysAvailableTo">
+              <PropertyRef Name="SurveyAvailableID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SurveysAvailableTo_UserTakenRole">
+          <End Type="EmployeeEvaluationSystem.Entity.EntityModel.UserSurveyRole" Role="UserSurveyRole" Multiplicity="1" />
+          <End Type="EmployeeEvaluationSystem.Entity.EntityModel.SurveysAvailableTo" Role="SurveysAvailableTo" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserSurveyRole">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="SurveysAvailableTo">
+              <PropertyRef Name="UserSurveyRoleId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="AspNetUserRoles">
+          <End Type="EmployeeEvaluationSystem.Entity.EntityModel.AspNetRole" Role="AspNetRole" Multiplicity="*" />
+          <End Type="EmployeeEvaluationSystem.Entity.EntityModel.AspNetUser" Role="AspNetUser" Multiplicity="*" />
+        </Association>
+        </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="EmployeeEvaluationSystemEntityEntityModelStoreContainer" CdmEntityContainer="EmployeeDatabaseEntities">
+          <EntitySetMapping Name="C__MigrationHistory">
+            <EntityTypeMapping TypeName="EmployeeEvaluationSystem.Entity.EntityModel.C__MigrationHistory">
+              <MappingFragment StoreEntitySet="__MigrationHistory">
+                <ScalarProperty Name="ProductVersion" ColumnName="ProductVersion" />
+                <ScalarProperty Name="Model" ColumnName="Model" />
+                <ScalarProperty Name="ContextKey" ColumnName="ContextKey" />
+                <ScalarProperty Name="MigrationId" ColumnName="MigrationId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="C__RefactorLog">
+            <EntityTypeMapping TypeName="EmployeeEvaluationSystem.Entity.EntityModel.C__RefactorLog">
+              <MappingFragment StoreEntitySet="__RefactorLog">
+                <ScalarProperty Name="OperationKey" ColumnName="OperationKey" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="AnswerInstances">
+            <EntityTypeMapping TypeName="EmployeeEvaluationSystem.Entity.EntityModel.AnswerInstance">
+              <MappingFragment StoreEntitySet="AnswerInstance">
+                <ScalarProperty Name="SurveyInstanceId" ColumnName="SurveyInstanceId" />
+                <ScalarProperty Name="ResponseNum" ColumnName="ResponseNum" />
+                <ScalarProperty Name="QuestionID" ColumnName="QuestionID" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="AspNetRoles">
+            <EntityTypeMapping TypeName="EmployeeEvaluationSystem.Entity.EntityModel.AspNetRole">
+              <MappingFragment StoreEntitySet="AspNetRoles">
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="AspNetUserClaims">
+            <EntityTypeMapping TypeName="EmployeeEvaluationSystem.Entity.EntityModel.AspNetUserClaim">
+              <MappingFragment StoreEntitySet="AspNetUserClaims">
+                <ScalarProperty Name="ClaimValue" ColumnName="ClaimValue" />
+                <ScalarProperty Name="ClaimType" ColumnName="ClaimType" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="AspNetUserLogins">
+            <EntityTypeMapping TypeName="EmployeeEvaluationSystem.Entity.EntityModel.AspNetUserLogin">
+              <MappingFragment StoreEntitySet="AspNetUserLogins">
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="ProviderKey" ColumnName="ProviderKey" />
+                <ScalarProperty Name="LoginProvider" ColumnName="LoginProvider" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="AspNetUsers">
+            <EntityTypeMapping TypeName="EmployeeEvaluationSystem.Entity.EntityModel.AspNetUser">
+              <MappingFragment StoreEntitySet="AspNetUsers">
+                <ScalarProperty Name="UserName" ColumnName="UserName" />
+                <ScalarProperty Name="AccessFailedCount" ColumnName="AccessFailedCount" />
+                <ScalarProperty Name="LockoutEnabled" ColumnName="LockoutEnabled" />
+                <ScalarProperty Name="LockoutEndDateUtc" ColumnName="LockoutEndDateUtc" />
+                <ScalarProperty Name="TwoFactorEnabled" ColumnName="TwoFactorEnabled" />
+                <ScalarProperty Name="PhoneNumberConfirmed" ColumnName="PhoneNumberConfirmed" />
+                <ScalarProperty Name="PhoneNumber" ColumnName="PhoneNumber" />
+                <ScalarProperty Name="SecurityStamp" ColumnName="SecurityStamp" />
+                <ScalarProperty Name="PasswordHash" ColumnName="PasswordHash" />
+                <ScalarProperty Name="EmailConfirmed" ColumnName="EmailConfirmed" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Categories">
+            <EntityTypeMapping TypeName="EmployeeEvaluationSystem.Entity.EntityModel.Category">
+              <MappingFragment StoreEntitySet="Category">
+                <ScalarProperty Name="DateCreated" ColumnName="DateCreated" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
+                <ScalarProperty Name="SurveyID" ColumnName="SurveyID" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Cohorts">
+            <EntityTypeMapping TypeName="EmployeeEvaluationSystem.Entity.EntityModel.Cohort">
+              <MappingFragment StoreEntitySet="Cohort">
+                <ScalarProperty Name="DateCreated" ColumnName="DateCreated" />
+                <ScalarProperty Name="DateDeleted" ColumnName="DateDeleted" />
+                <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="CohortPermissions">
+            <EntityTypeMapping TypeName="EmployeeEvaluationSystem.Entity.EntityModel.CohortPermission">
+              <MappingFragment StoreEntitySet="CohortPermission">
+                <ScalarProperty Name="Report" ColumnName="Report" />
+                <ScalarProperty Name="Survey" ColumnName="Survey" />
+                <ScalarProperty Name="User" ColumnName="User" />
+                <ScalarProperty Name="Cohort" ColumnName="Cohort" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="CohortUsers">
+            <EntityTypeMapping TypeName="EmployeeEvaluationSystem.Entity.EntityModel.CohortUser">
+              <MappingFragment StoreEntitySet="CohortUser">
+                <ScalarProperty Name="CohortPermissionId" ColumnName="CohortPermissionId" />
+                <ScalarProperty Name="UserID" ColumnName="UserID" />
+                <ScalarProperty Name="CohortID" ColumnName="CohortID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PendingSurveys">
+            <EntityTypeMapping TypeName="EmployeeEvaluationSystem.Entity.EntityModel.PendingSurvey">
+              <MappingFragment StoreEntitySet="PendingSurvey">
+                <ScalarProperty Name="UserSentById" ColumnName="UserSentById" />
+                <ScalarProperty Name="DateDeleted" ColumnName="DateDeleted" />
+                <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
+                <ScalarProperty Name="DateCompleted" ColumnName="DateCompleted" />
+                <ScalarProperty Name="DateStarted" ColumnName="DateStarted" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="SurveyInstanceID" ColumnName="SurveyInstanceID" />
+                <ScalarProperty Name="DateSent" ColumnName="DateSent" />
+                <ScalarProperty Name="UserSurveyRoleID" ColumnName="UserSurveyRoleID" />
+                <ScalarProperty Name="SurveyAvailToMeID" ColumnName="SurveyAvailToMeID" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Permissions">
+            <EntityTypeMapping TypeName="EmployeeEvaluationSystem.Entity.EntityModel.Permission">
+              <MappingFragment StoreEntitySet="Permission">
+                <ScalarProperty Name="View" ColumnName="View" />
+                <ScalarProperty Name="Delete" ColumnName="Delete" />
+                <ScalarProperty Name="Edit" ColumnName="Edit" />
+                <ScalarProperty Name="Add" ColumnName="Add" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Questions">
+            <EntityTypeMapping TypeName="EmployeeEvaluationSystem.Entity.EntityModel.Question">
+              <MappingFragment StoreEntitySet="Question">
+                <ScalarProperty Name="DateDeleted" ColumnName="DateDeleted" />
+                <ScalarProperty Name="DateCreated" ColumnName="DateCreated" />
+                <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
+                <ScalarProperty Name="IsRequired" ColumnName="IsRequired" />
+                <ScalarProperty Name="QuestionTypeId" ColumnName="QuestionTypeId" />
+                <ScalarProperty Name="CategoryID" ColumnName="CategoryID" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="QuestionTypes">
+            <EntityTypeMapping TypeName="EmployeeEvaluationSystem.Entity.EntityModel.QuestionType">
+              <MappingFragment StoreEntitySet="QuestionType">
+                <ScalarProperty Name="IsRating" ColumnName="IsRating" />
+                <ScalarProperty Name="RatingMin" ColumnName="RatingMin" />
+                <ScalarProperty Name="RatingMax" ColumnName="RatingMax" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="SiteWidePermissions">
+            <EntityTypeMapping TypeName="EmployeeEvaluationSystem.Entity.EntityModel.SiteWidePermission">
+              <MappingFragment StoreEntitySet="SiteWidePermission">
+                <ScalarProperty Name="Survey" ColumnName="Survey" />
+                <ScalarProperty Name="User" ColumnName="User" />
+                <ScalarProperty Name="Cohort" ColumnName="Cohort" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Surveys">
+            <EntityTypeMapping TypeName="EmployeeEvaluationSystem.Entity.EntityModel.Survey">
+              <MappingFragment StoreEntitySet="Survey">
+                <ScalarProperty Name="DateDeleted" ColumnName="DateDeleted" />
+                <ScalarProperty Name="DateCreated" ColumnName="DateCreated" />
+                <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="SurveyInstances">
+            <EntityTypeMapping TypeName="EmployeeEvaluationSystem.Entity.EntityModel.SurveyInstance">
+              <MappingFragment StoreEntitySet="SurveyInstance">
+                <ScalarProperty Name="UserSurveyRoleId" ColumnName="UserSurveyRoleId" />
+                <ScalarProperty Name="SurveyTypeId" ColumnName="SurveyTypeId" />
+                <ScalarProperty Name="DateFinished" ColumnName="DateFinished" />
+                <ScalarProperty Name="DateStarted" ColumnName="DateStarted" />
+                <ScalarProperty Name="UserTakenBy" ColumnName="UserTakenBy" />
+                <ScalarProperty Name="SurveyID" ColumnName="SurveyID" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="SurveysAvailables">
+            <EntityTypeMapping TypeName="EmployeeEvaluationSystem.Entity.EntityModel.SurveysAvailable">
+              <MappingFragment StoreEntitySet="SurveysAvailable">
+                <ScalarProperty Name="DateDeleted" ColumnName="DateDeleted" />
+                <ScalarProperty Name="DateCreated" ColumnName="DateCreated" />
+                <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
+                <ScalarProperty Name="SurveyTypeId" ColumnName="SurveyTypeId" />
+                <ScalarProperty Name="DateClosed" ColumnName="DateClosed" />
+                <ScalarProperty Name="DateOpen" ColumnName="DateOpen" />
+                <ScalarProperty Name="SurveyID" ColumnName="SurveyID" />
+                <ScalarProperty Name="CohortID" ColumnName="CohortID" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="SurveysAvailableToes">
+            <EntityTypeMapping TypeName="EmployeeEvaluationSystem.Entity.EntityModel.SurveysAvailableTo">
+              <MappingFragment StoreEntitySet="SurveysAvailableTo">
+                <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+                <ScalarProperty Name="UserSurveyRoleId" ColumnName="UserSurveyRoleId" />
+                <ScalarProperty Name="SurveyAvailableID" ColumnName="SurveyAvailableID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="SurveyTypes">
+            <EntityTypeMapping TypeName="EmployeeEvaluationSystem.Entity.EntityModel.SurveyType">
+              <MappingFragment StoreEntitySet="SurveyType">
+                <ScalarProperty Name="DeletedDate" ColumnName="DeletedDate" />
+                <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
+                <ScalarProperty Name="DateCreated" ColumnName="DateCreated" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="UserSurveyRoles">
+            <EntityTypeMapping TypeName="EmployeeEvaluationSystem.Entity.EntityModel.UserSurveyRole">
+              <MappingFragment StoreEntitySet="UserSurveyRole">
+                <ScalarProperty Name="DateDeleted" ColumnName="DateDeleted" />
+                <ScalarProperty Name="DateCreated" ColumnName="DateCreated" />
+                <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <AssociationSetMapping Name="AspNetUserRoles" TypeName="EmployeeEvaluationSystem.Entity.EntityModel.AspNetUserRoles" StoreEntitySet="AspNetUserRoles">
+            <EndProperty Name="AspNetUser">
+              <ScalarProperty Name="Id" ColumnName="UserId" />
+            </EndProperty>
+            <EndProperty Name="AspNetRole">
+              <ScalarProperty Name="Id" ColumnName="RoleId" />
+            </EndProperty>
+          </AssociationSetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="True" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

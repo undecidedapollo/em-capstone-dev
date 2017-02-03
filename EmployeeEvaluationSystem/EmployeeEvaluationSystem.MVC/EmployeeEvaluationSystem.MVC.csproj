@@ -277,6 +277,20 @@
     <None Include="Project_Readme.html" />
     <Content Include="Scripts\jquery-1.10.2.min.map" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\EmployeeEvaluationSystem.Entity.SharedObjects\EmployeeEvaluationSystem.Entity.SharedObjects.csproj">
+      <Project>{5aa6bce6-b37f-4b3a-ba9b-698e63928840}</Project>
+      <Name>EmployeeEvaluationSystem.Entity.SharedObjects</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\EmployeeEvaluationSystem.Entity\EmployeeEvaluationSystem.Entity.csproj">
+      <Project>{f77457d5-71ae-4d75-9c92-458485108c85}</Project>
+      <Name>EmployeeEvaluationSystem.Entity</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\EmployeeEvaluationSystem.SharedObjects\EmployeeEvaluationSystem.SharedObjects.csproj">
+      <Project>{b05bb64d-648d-4dfe-b999-95d14a9e6dc9}</Project>
+      <Name>EmployeeEvaluationSystem.SharedObjects</Name>
+    </ProjectReference>
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

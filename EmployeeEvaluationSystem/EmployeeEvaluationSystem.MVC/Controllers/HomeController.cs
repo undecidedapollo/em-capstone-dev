@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using EmployeeEvaluationSystem.Entity.SharedObjects.Repository.EF6;
 
 namespace EmployeeEvaluationSystem.MVC.Controllers
 {
@@ -10,6 +11,13 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
     {
         public ActionResult Index()
         {
+            //Example of unit of work framework
+            using (var unitOfWork = new UnitOfWork())
+            {
+                var numUsers = unitOfWork.Users.GetNumberOfUsers();
+                ViewBag.NumUsers = numUsers;
+            }
+
             return View();
         }
 
