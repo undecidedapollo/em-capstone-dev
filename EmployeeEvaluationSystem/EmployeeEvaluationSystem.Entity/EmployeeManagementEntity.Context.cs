@@ -47,5 +47,6 @@ namespace EmployeeEvaluationSystem.Entity
         public virtual DbSet<SurveysAvailableTo> SurveysAvailableToes { get; set; }
         public virtual DbSet<SurveyType> SurveyTypes { get; set; }
         public virtual DbSet<UserSurveyRole> UserSurveyRoles { get; set; }
+        public virtual DbSet<LocationAddress> LocationAddresses { get; set; }
     }
 }

@@ -59,6 +59,8 @@
         <AssociationConnector Association="EmployeeEvaluationSystem.Entity.EntityModel.FK_SurveysAvailableTo_SurveysAvailable" />
         <AssociationConnector Association="EmployeeEvaluationSystem.Entity.EntityModel.FK_SurveysAvailableTo_UserTakenRole" />
         <AssociationConnector Association="EmployeeEvaluationSystem.Entity.EntityModel.AspNetUserRoles" />
+        <EntityTypeShape EntityType="EmployeeEvaluationSystem.Entity.EntityModel.LocationAddress" Width="1.5" PointX="12.375" PointY="1" />
+        <AssociationConnector Association="EmployeeEvaluationSystem.Entity.EntityModel.FK_AspNetUsers_ToTable" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

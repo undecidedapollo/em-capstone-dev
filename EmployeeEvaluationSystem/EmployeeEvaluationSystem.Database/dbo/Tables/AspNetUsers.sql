@@ -11,7 +11,11 @@
     [LockoutEnabled]       BIT            NOT NULL,
     [AccessFailedCount]    INT            NOT NULL,
     [UserName]             NVARCHAR (256) NOT NULL,
-    CONSTRAINT [PK_dbo.AspNetUsers] PRIMARY KEY CLUSTERED ([Id] ASC)
+    [FirstName] NVARCHAR(128) NOT NULL, 
+    [LastName] NVARCHAR(128) NOT NULL, 
+    [MailingAddress] INT NULL, 
+    CONSTRAINT [PK_dbo.AspNetUsers] PRIMARY KEY CLUSTERED ([Id] ASC), 
+    CONSTRAINT [FK_AspNetUsers_ToTable] FOREIGN KEY ([MailingAddress]) REFERENCES [LocationAddress]([Id])
 );
 
 

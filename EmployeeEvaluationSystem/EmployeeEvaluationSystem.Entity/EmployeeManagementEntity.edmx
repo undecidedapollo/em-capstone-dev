@@ -80,6 +80,9 @@
           <Property Name="LockoutEnabled" Type="bit" Nullable="false" />
           <Property Name="AccessFailedCount" Type="int" Nullable="false" />
           <Property Name="UserName" Type="nvarchar" MaxLength="256" Nullable="false" />
+          <Property Name="FirstName" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="LastName" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="MailingAddress" Type="int" />
         </EntityType>
         <EntityType Name="Category">
           <Key>
@@ -121,6 +124,18 @@
           <Property Name="CohortID" Type="int" Nullable="false" />
           <Property Name="UserID" Type="nvarchar" MaxLength="128" Nullable="false" />
           <Property Name="CohortPermissionId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="LocationAddress">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Address" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="Address2" Type="nvarchar" MaxLength="128" />
+          <Property Name="City" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="State" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="ZipCode" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="DateCreated" Type="datetime" Nullable="false" />
         </EntityType>
         <EntityType Name="PendingSurvey">
           <Key>
@@ -268,6 +283,18 @@
             </Principal>
             <Dependent Role="AnswerInstance">
               <PropertyRef Name="QuestionID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_AspNetUsers_ToTable">
+          <End Role="LocationAddress" Type="Self.LocationAddress" Multiplicity="0..1" />
+          <End Role="AspNetUsers" Type="Self.AspNetUsers" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="LocationAddress">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="AspNetUsers">
+              <PropertyRef Name="MailingAddress" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -664,6 +691,7 @@
           <EntitySet Name="Cohort" EntityType="Self.Cohort" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="CohortPermission" EntityType="Self.CohortPermission" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="CohortUser" EntityType="Self.CohortUser" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="LocationAddress" EntityType="Self.LocationAddress" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="PendingSurvey" EntityType="Self.PendingSurvey" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Permission" EntityType="Self.Permission" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Question" EntityType="Self.Question" Schema="dbo" store:Type="Tables" />
@@ -682,6 +710,10 @@
           <AssociationSet Name="FK_AnswerInstance_To_Question" Association="Self.FK_AnswerInstance_To_Question">
             <End Role="Question" EntitySet="Question" />
             <End Role="AnswerInstance" EntitySet="AnswerInstance" />
+          </AssociationSet>
+          <AssociationSet Name="FK_AspNetUsers_ToTable" Association="Self.FK_AspNetUsers_ToTable">
+            <End Role="LocationAddress" EntitySet="LocationAddress" />
+            <End Role="AspNetUsers" EntitySet="AspNetUsers" />
           </AssociationSet>
           <AssociationSet Name="FK_Category_ToTable" Association="Self.FK_Category_ToTable">
             <End Role="Survey" EntitySet="Survey" />
@@ -963,6 +995,11 @@
             <End Role="AspNetRole" EntitySet="AspNetRoles" />
             <End Role="AspNetUser" EntitySet="AspNetUsers" />
           </AssociationSet>
+          <EntitySet Name="LocationAddresses" EntityType="EmployeeEvaluationSystem.Entity.EntityModel.LocationAddress" />
+          <AssociationSet Name="FK_AspNetUsers_ToTable" Association="EmployeeEvaluationSystem.Entity.EntityModel.FK_AspNetUsers_ToTable">
+            <End Role="LocationAddress" EntitySet="LocationAddresses" />
+            <End Role="AspNetUser" EntitySet="AspNetUsers" />
+          </AssociationSet>
         </EntityContainer>
         <EntityType Name="C__MigrationHistory">
           <Key>
@@ -1043,6 +1080,10 @@
           <NavigationProperty Name="Surveys" Relationship="EmployeeEvaluationSystem.Entity.EntityModel.FK_Survey_ToTable" FromRole="AspNetUser" ToRole="Survey" />
           <NavigationProperty Name="SurveyInstances" Relationship="EmployeeEvaluationSystem.Entity.EntityModel.FK_SurveyInstance_ToTable" FromRole="AspNetUser" ToRole="SurveyInstance" />
           <NavigationProperty Name="AspNetRoles" Relationship="EmployeeEvaluationSystem.Entity.EntityModel.AspNetUserRoles" FromRole="AspNetUser" ToRole="AspNetRole" />
+          <Property Name="FirstName" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="LastName" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="MailingAddress" Type="Int32" />
+          <NavigationProperty Name="LocationAddress" Relationship="EmployeeEvaluationSystem.Entity.EntityModel.FK_AspNetUsers_ToTable" FromRole="AspNetUser" ToRole="LocationAddress" />
         </EntityType>
         <EntityType Name="Category">
           <Key>
@@ -1642,6 +1683,31 @@
           <End Type="EmployeeEvaluationSystem.Entity.EntityModel.AspNetRole" Role="AspNetRole" Multiplicity="*" />
           <End Type="EmployeeEvaluationSystem.Entity.EntityModel.AspNetUser" Role="AspNetUser" Multiplicity="*" />
         </Association>
+        <EntityType Name="LocationAddress">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Address" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="Address2" Type="String" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="City" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="State" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="ZipCode" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="DateCreated" Type="DateTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="AspNetUsers" Relationship="EmployeeEvaluationSystem.Entity.EntityModel.FK_AspNetUsers_ToTable" FromRole="LocationAddress" ToRole="AspNetUser" />
+        </EntityType>
+        <Association Name="FK_AspNetUsers_ToTable">
+          <End Type="EmployeeEvaluationSystem.Entity.EntityModel.LocationAddress" Role="LocationAddress" Multiplicity="0..1" />
+          <End Type="EmployeeEvaluationSystem.Entity.EntityModel.AspNetUser" Role="AspNetUser" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="LocationAddress">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="AspNetUser">
+              <PropertyRef Name="MailingAddress" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -1705,6 +1771,9 @@
           <EntitySetMapping Name="AspNetUsers">
             <EntityTypeMapping TypeName="EmployeeEvaluationSystem.Entity.EntityModel.AspNetUser">
               <MappingFragment StoreEntitySet="AspNetUsers">
+                <ScalarProperty Name="MailingAddress" ColumnName="MailingAddress" />
+                <ScalarProperty Name="LastName" ColumnName="LastName" />
+                <ScalarProperty Name="FirstName" ColumnName="FirstName" />
                 <ScalarProperty Name="UserName" ColumnName="UserName" />
                 <ScalarProperty Name="AccessFailedCount" ColumnName="AccessFailedCount" />
                 <ScalarProperty Name="LockoutEnabled" ColumnName="LockoutEnabled" />
@@ -1909,6 +1978,19 @@
               <ScalarProperty Name="Id" ColumnName="RoleId" />
             </EndProperty>
           </AssociationSetMapping>
+          <EntitySetMapping Name="LocationAddresses">
+            <EntityTypeMapping TypeName="EmployeeEvaluationSystem.Entity.EntityModel.LocationAddress">
+              <MappingFragment StoreEntitySet="LocationAddress">
+                <ScalarProperty Name="DateCreated" ColumnName="DateCreated" />
+                <ScalarProperty Name="ZipCode" ColumnName="ZipCode" />
+                <ScalarProperty Name="State" ColumnName="State" />
+                <ScalarProperty Name="City" ColumnName="City" />
+                <ScalarProperty Name="Address2" ColumnName="Address2" />
+                <ScalarProperty Name="Address" ColumnName="Address" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>
