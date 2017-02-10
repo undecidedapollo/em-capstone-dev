@@ -14,12 +14,6 @@ namespace EmployeeEvaluationSystem.Entity
     
     public partial class LocationAddress
     {
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public LocationAddress()
-        {
-            this.AspNetUsers = new HashSet<AspNetUser>();
-        }
-    
         public int Id { get; set; }
         public string Address { get; set; }
         public string Address2 { get; set; }
@@ -27,8 +21,5 @@ namespace EmployeeEvaluationSystem.Entity
         public string State { get; set; }
         public string ZipCode { get; set; }
         public System.DateTime DateCreated { get; set; }
-    
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<AspNetUser> AspNetUsers { get; set; }
     }
 }

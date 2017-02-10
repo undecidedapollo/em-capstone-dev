@@ -26,9 +26,9 @@ namespace EmployeeEvaluationSystem.Entity
         public Nullable<System.DateTime> DateDeleted { get; set; }
         public string UserSentById { get; set; }
     
-        public virtual AspNetUser AspNetUser { get; set; }
         public virtual Survey Survey { get; set; }
         public virtual SurveyInstance SurveyInstance { get; set; }
         public virtual UserSurveyRole UserSurveyRole { get; set; }
+        public virtual AspNetUser AspNetUser { get; set; }
     }
 }

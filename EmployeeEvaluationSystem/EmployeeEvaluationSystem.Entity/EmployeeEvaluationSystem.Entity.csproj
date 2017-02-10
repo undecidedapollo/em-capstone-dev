@@ -99,6 +99,9 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>EmployeeManagementEntity.edmx</DependentUpon>
     </Compile>
+    <Compile Include="LocationAddress.cs">
+      <DependentUpon>EmployeeManagementEntity.tt</DependentUpon>
+    </Compile>
     <Compile Include="PendingSurvey.cs">
       <DependentUpon>EmployeeManagementEntity.tt</DependentUpon>
     </Compile>
@@ -147,7 +150,9 @@
     </EntityDeploy>
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.Config" />
+    <None Include="App.Config">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="EmployeeManagementEntity.edmx.diagram">
       <DependentUpon>EmployeeManagementEntity.edmx</DependentUpon>
     </None>

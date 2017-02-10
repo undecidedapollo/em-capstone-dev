@@ -31,7 +31,6 @@ namespace EmployeeEvaluationSystem.Entity
         public virtual DbSet<AspNetRole> AspNetRoles { get; set; }
         public virtual DbSet<AspNetUserClaim> AspNetUserClaims { get; set; }
         public virtual DbSet<AspNetUserLogin> AspNetUserLogins { get; set; }
-        public virtual DbSet<AspNetUser> AspNetUsers { get; set; }
         public virtual DbSet<Category> Categories { get; set; }
         public virtual DbSet<Cohort> Cohorts { get; set; }
         public virtual DbSet<CohortPermission> CohortPermissions { get; set; }
@@ -48,5 +47,6 @@ namespace EmployeeEvaluationSystem.Entity
         public virtual DbSet<SurveyType> SurveyTypes { get; set; }
         public virtual DbSet<UserSurveyRole> UserSurveyRoles { get; set; }
         public virtual DbSet<LocationAddress> LocationAddresses { get; set; }
+        public virtual DbSet<AspNetUser> AspNetUsers { get; set; }
     }
 }

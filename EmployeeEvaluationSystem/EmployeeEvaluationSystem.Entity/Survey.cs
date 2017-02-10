@@ -31,7 +31,6 @@ namespace EmployeeEvaluationSystem.Entity
         public System.DateTime DateCreated { get; set; }
         public Nullable<System.DateTime> DateDeleted { get; set; }
     
-        public virtual AspNetUser AspNetUser { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Category> Categories { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
@@ -40,5 +39,6 @@ namespace EmployeeEvaluationSystem.Entity
         public virtual ICollection<SurveyInstance> SurveyInstances { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<SurveysAvailable> SurveysAvailables { get; set; }
+        public virtual AspNetUser AspNetUser { get; set; }
     }
 }

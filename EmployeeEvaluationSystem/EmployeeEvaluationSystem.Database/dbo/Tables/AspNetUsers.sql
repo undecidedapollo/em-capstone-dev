@@ -13,9 +13,8 @@
     [UserName]             NVARCHAR (256) NOT NULL,
     [FirstName] NVARCHAR(128) NOT NULL, 
     [LastName] NVARCHAR(128) NOT NULL, 
-    [MailingAddress] INT NULL, 
-    CONSTRAINT [PK_dbo.AspNetUsers] PRIMARY KEY CLUSTERED ([Id] ASC), 
-    CONSTRAINT [FK_AspNetUsers_ToTable] FOREIGN KEY ([MailingAddress]) REFERENCES [LocationAddress]([Id])
+    [MailingAddress] NVARCHAR(500) NOT NULL, 
+    CONSTRAINT [PK_dbo.AspNetUsers] PRIMARY KEY CLUSTERED ([Id] ASC)
 );
 
 

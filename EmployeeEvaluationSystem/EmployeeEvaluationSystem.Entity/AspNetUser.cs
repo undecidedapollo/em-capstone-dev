@@ -40,7 +40,7 @@ namespace EmployeeEvaluationSystem.Entity
         public string UserName { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
-        public Nullable<int> MailingAddress { get; set; }
+        public string MailingAddress { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<AspNetUserClaim> AspNetUserClaims { get; set; }
@@ -56,6 +56,5 @@ namespace EmployeeEvaluationSystem.Entity
         public virtual ICollection<SurveyInstance> SurveyInstances { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<AspNetRole> AspNetRoles { get; set; }
-        public virtual LocationAddress LocationAddress { get; set; }
     }
 }

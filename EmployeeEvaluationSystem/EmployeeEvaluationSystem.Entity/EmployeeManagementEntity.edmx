@@ -82,7 +82,7 @@
           <Property Name="UserName" Type="nvarchar" MaxLength="256" Nullable="false" />
           <Property Name="FirstName" Type="nvarchar" MaxLength="128" Nullable="false" />
           <Property Name="LastName" Type="nvarchar" MaxLength="128" Nullable="false" />
-          <Property Name="MailingAddress" Type="int" />
+          <Property Name="MailingAddress" Type="nvarchar" MaxLength="50" Nullable="false" />
         </EntityType>
         <EntityType Name="Category">
           <Key>
@@ -283,18 +283,6 @@
             </Principal>
             <Dependent Role="AnswerInstance">
               <PropertyRef Name="QuestionID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_AspNetUsers_ToTable">
-          <End Role="LocationAddress" Type="Self.LocationAddress" Multiplicity="0..1" />
-          <End Role="AspNetUsers" Type="Self.AspNetUsers" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="LocationAddress">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="AspNetUsers">
-              <PropertyRef Name="MailingAddress" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -711,10 +699,6 @@
             <End Role="Question" EntitySet="Question" />
             <End Role="AnswerInstance" EntitySet="AnswerInstance" />
           </AssociationSet>
-          <AssociationSet Name="FK_AspNetUsers_ToTable" Association="Self.FK_AspNetUsers_ToTable">
-            <End Role="LocationAddress" EntitySet="LocationAddress" />
-            <End Role="AspNetUsers" EntitySet="AspNetUsers" />
-          </AssociationSet>
           <AssociationSet Name="FK_Category_ToTable" Association="Self.FK_Category_ToTable">
             <End Role="Survey" EntitySet="Survey" />
             <End Role="Category" EntitySet="Category" />
@@ -851,7 +835,6 @@
           <EntitySet Name="AspNetRoles" EntityType="EmployeeEvaluationSystem.Entity.EntityModel.AspNetRole" />
           <EntitySet Name="AspNetUserClaims" EntityType="EmployeeEvaluationSystem.Entity.EntityModel.AspNetUserClaim" />
           <EntitySet Name="AspNetUserLogins" EntityType="EmployeeEvaluationSystem.Entity.EntityModel.AspNetUserLogin" />
-          <EntitySet Name="AspNetUsers" EntityType="EmployeeEvaluationSystem.Entity.EntityModel.AspNetUser" />
           <EntitySet Name="Categories" EntityType="EmployeeEvaluationSystem.Entity.EntityModel.Category" />
           <EntitySet Name="Cohorts" EntityType="EmployeeEvaluationSystem.Entity.EntityModel.Cohort" />
           <EntitySet Name="CohortPermissions" EntityType="EmployeeEvaluationSystem.Entity.EntityModel.CohortPermission" />
@@ -874,30 +857,6 @@
           <AssociationSet Name="FK_AnswerInstance_To_Question" Association="EmployeeEvaluationSystem.Entity.EntityModel.FK_AnswerInstance_To_Question">
             <End Role="Question" EntitySet="Questions" />
             <End Role="AnswerInstance" EntitySet="AnswerInstances" />
-          </AssociationSet>
-          <AssociationSet Name="FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId" Association="EmployeeEvaluationSystem.Entity.EntityModel.FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId">
-            <End Role="AspNetUser" EntitySet="AspNetUsers" />
-            <End Role="AspNetUserClaim" EntitySet="AspNetUserClaims" />
-          </AssociationSet>
-          <AssociationSet Name="FK_dbo_AspNetUserLogins_dbo_AspNetUsers_UserId" Association="EmployeeEvaluationSystem.Entity.EntityModel.FK_dbo_AspNetUserLogins_dbo_AspNetUsers_UserId">
-            <End Role="AspNetUser" EntitySet="AspNetUsers" />
-            <End Role="AspNetUserLogin" EntitySet="AspNetUserLogins" />
-          </AssociationSet>
-          <AssociationSet Name="FK_CohortUser_ToTable" Association="EmployeeEvaluationSystem.Entity.EntityModel.FK_CohortUser_ToTable">
-            <End Role="AspNetUser" EntitySet="AspNetUsers" />
-            <End Role="CohortUser" EntitySet="CohortUsers" />
-          </AssociationSet>
-          <AssociationSet Name="FK_PendingSurvey_ToTable" Association="EmployeeEvaluationSystem.Entity.EntityModel.FK_PendingSurvey_ToTable">
-            <End Role="AspNetUser" EntitySet="AspNetUsers" />
-            <End Role="PendingSurvey" EntitySet="PendingSurveys" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Survey_ToTable" Association="EmployeeEvaluationSystem.Entity.EntityModel.FK_Survey_ToTable">
-            <End Role="AspNetUser" EntitySet="AspNetUsers" />
-            <End Role="Survey" EntitySet="Surveys" />
-          </AssociationSet>
-          <AssociationSet Name="FK_SurveyInstance_ToTable" Association="EmployeeEvaluationSystem.Entity.EntityModel.FK_SurveyInstance_ToTable">
-            <End Role="AspNetUser" EntitySet="AspNetUsers" />
-            <End Role="SurveyInstance" EntitySet="SurveyInstances" />
           </AssociationSet>
           <AssociationSet Name="FK_Category_ToTable" Association="EmployeeEvaluationSystem.Entity.EntityModel.FK_Category_ToTable">
             <End Role="Survey" EntitySet="Surveys" />
@@ -991,13 +950,34 @@
             <End Role="UserSurveyRole" EntitySet="UserSurveyRoles" />
             <End Role="SurveysAvailableTo" EntitySet="SurveysAvailableToes" />
           </AssociationSet>
+          <EntitySet Name="LocationAddresses" EntityType="EmployeeEvaluationSystem.Entity.EntityModel.LocationAddress" />
+          <EntitySet Name="AspNetUsers" EntityType="EmployeeEvaluationSystem.Entity.EntityModel.AspNetUser" />
+          <AssociationSet Name="FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId" Association="EmployeeEvaluationSystem.Entity.EntityModel.FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId">
+            <End Role="AspNetUser" EntitySet="AspNetUsers" />
+            <End Role="AspNetUserClaim" EntitySet="AspNetUserClaims" />
+          </AssociationSet>
+          <AssociationSet Name="FK_dbo_AspNetUserLogins_dbo_AspNetUsers_UserId" Association="EmployeeEvaluationSystem.Entity.EntityModel.FK_dbo_AspNetUserLogins_dbo_AspNetUsers_UserId">
+            <End Role="AspNetUser" EntitySet="AspNetUsers" />
+            <End Role="AspNetUserLogin" EntitySet="AspNetUserLogins" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CohortUser_ToTable" Association="EmployeeEvaluationSystem.Entity.EntityModel.FK_CohortUser_ToTable">
+            <End Role="AspNetUser" EntitySet="AspNetUsers" />
+            <End Role="CohortUser" EntitySet="CohortUsers" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PendingSurvey_ToTable" Association="EmployeeEvaluationSystem.Entity.EntityModel.FK_PendingSurvey_ToTable">
+            <End Role="AspNetUser" EntitySet="AspNetUsers" />
+            <End Role="PendingSurvey" EntitySet="PendingSurveys" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Survey_ToTable" Association="EmployeeEvaluationSystem.Entity.EntityModel.FK_Survey_ToTable">
+            <End Role="AspNetUser" EntitySet="AspNetUsers" />
+            <End Role="Survey" EntitySet="Surveys" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SurveyInstance_ToTable" Association="EmployeeEvaluationSystem.Entity.EntityModel.FK_SurveyInstance_ToTable">
+            <End Role="AspNetUser" EntitySet="AspNetUsers" />
+            <End Role="SurveyInstance" EntitySet="SurveyInstances" />
+          </AssociationSet>
           <AssociationSet Name="AspNetUserRoles" Association="EmployeeEvaluationSystem.Entity.EntityModel.AspNetUserRoles">
             <End Role="AspNetRole" EntitySet="AspNetRoles" />
-            <End Role="AspNetUser" EntitySet="AspNetUsers" />
-          </AssociationSet>
-          <EntitySet Name="LocationAddresses" EntityType="EmployeeEvaluationSystem.Entity.EntityModel.LocationAddress" />
-          <AssociationSet Name="FK_AspNetUsers_ToTable" Association="EmployeeEvaluationSystem.Entity.EntityModel.FK_AspNetUsers_ToTable">
-            <End Role="LocationAddress" EntitySet="LocationAddresses" />
             <End Role="AspNetUser" EntitySet="AspNetUsers" />
           </AssociationSet>
         </EntityContainer>
@@ -1057,34 +1037,6 @@
           <Property Name="UserId" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="AspNetUser" Relationship="EmployeeEvaluationSystem.Entity.EntityModel.FK_dbo_AspNetUserLogins_dbo_AspNetUsers_UserId" FromRole="AspNetUserLogin" ToRole="AspNetUser" />
         </EntityType>
-        <EntityType Name="AspNetUser">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
-          <Property Name="Email" Type="String" MaxLength="256" FixedLength="false" Unicode="true" />
-          <Property Name="EmailConfirmed" Type="Boolean" Nullable="false" />
-          <Property Name="PasswordHash" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="SecurityStamp" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="PhoneNumber" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="PhoneNumberConfirmed" Type="Boolean" Nullable="false" />
-          <Property Name="TwoFactorEnabled" Type="Boolean" Nullable="false" />
-          <Property Name="LockoutEndDateUtc" Type="DateTime" Precision="3" />
-          <Property Name="LockoutEnabled" Type="Boolean" Nullable="false" />
-          <Property Name="AccessFailedCount" Type="Int32" Nullable="false" />
-          <Property Name="UserName" Type="String" Nullable="false" MaxLength="256" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="AspNetUserClaims" Relationship="EmployeeEvaluationSystem.Entity.EntityModel.FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId" FromRole="AspNetUser" ToRole="AspNetUserClaim" />
-          <NavigationProperty Name="AspNetUserLogins" Relationship="EmployeeEvaluationSystem.Entity.EntityModel.FK_dbo_AspNetUserLogins_dbo_AspNetUsers_UserId" FromRole="AspNetUser" ToRole="AspNetUserLogin" />
-          <NavigationProperty Name="CohortUsers" Relationship="EmployeeEvaluationSystem.Entity.EntityModel.FK_CohortUser_ToTable" FromRole="AspNetUser" ToRole="CohortUser" />
-          <NavigationProperty Name="PendingSurveys" Relationship="EmployeeEvaluationSystem.Entity.EntityModel.FK_PendingSurvey_ToTable" FromRole="AspNetUser" ToRole="PendingSurvey" />
-          <NavigationProperty Name="Surveys" Relationship="EmployeeEvaluationSystem.Entity.EntityModel.FK_Survey_ToTable" FromRole="AspNetUser" ToRole="Survey" />
-          <NavigationProperty Name="SurveyInstances" Relationship="EmployeeEvaluationSystem.Entity.EntityModel.FK_SurveyInstance_ToTable" FromRole="AspNetUser" ToRole="SurveyInstance" />
-          <NavigationProperty Name="AspNetRoles" Relationship="EmployeeEvaluationSystem.Entity.EntityModel.AspNetUserRoles" FromRole="AspNetUser" ToRole="AspNetRole" />
-          <Property Name="FirstName" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
-          <Property Name="LastName" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
-          <Property Name="MailingAddress" Type="Int32" />
-          <NavigationProperty Name="LocationAddress" Relationship="EmployeeEvaluationSystem.Entity.EntityModel.FK_AspNetUsers_ToTable" FromRole="AspNetUser" ToRole="LocationAddress" />
-        </EntityType>
         <EntityType Name="Category">
           <Key>
             <PropertyRef Name="ID" />
@@ -1134,9 +1086,9 @@
           <Property Name="CohortID" Type="Int32" Nullable="false" />
           <Property Name="UserID" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
           <Property Name="CohortPermissionId" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="AspNetUser" Relationship="EmployeeEvaluationSystem.Entity.EntityModel.FK_CohortUser_ToTable" FromRole="CohortUser" ToRole="AspNetUser" />
           <NavigationProperty Name="Cohort" Relationship="EmployeeEvaluationSystem.Entity.EntityModel.FK_CohortUser_To_Cohort" FromRole="CohortUser" ToRole="Cohort" />
           <NavigationProperty Name="CohortPermission" Relationship="EmployeeEvaluationSystem.Entity.EntityModel.FK_CohortUser_To_Permissions" FromRole="CohortUser" ToRole="CohortPermission" />
+          <NavigationProperty Name="AspNetUser" Relationship="EmployeeEvaluationSystem.Entity.EntityModel.FK_CohortUser_ToTable" FromRole="CohortUser" ToRole="AspNetUser" />
         </EntityType>
         <EntityType Name="PendingSurvey">
           <Key>
@@ -1153,10 +1105,10 @@
           <Property Name="IsDeleted" Type="Boolean" Nullable="false" />
           <Property Name="DateDeleted" Type="DateTime" Precision="3" />
           <Property Name="UserSentById" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="AspNetUser" Relationship="EmployeeEvaluationSystem.Entity.EntityModel.FK_PendingSurvey_ToTable" FromRole="PendingSurvey" ToRole="AspNetUser" />
           <NavigationProperty Name="Survey" Relationship="EmployeeEvaluationSystem.Entity.EntityModel.FK_PendingSurvey_To_Survey" FromRole="PendingSurvey" ToRole="Survey" />
           <NavigationProperty Name="SurveyInstance" Relationship="EmployeeEvaluationSystem.Entity.EntityModel.FK_PendingSurvey_To_SurveyInstance" FromRole="PendingSurvey" ToRole="SurveyInstance" />
           <NavigationProperty Name="UserSurveyRole" Relationship="EmployeeEvaluationSystem.Entity.EntityModel.FK_PendingSurvey_To_UserSurveyRole" FromRole="PendingSurvey" ToRole="UserSurveyRole" />
+          <NavigationProperty Name="AspNetUser" Relationship="EmployeeEvaluationSystem.Entity.EntityModel.FK_PendingSurvey_ToTable" FromRole="PendingSurvey" ToRole="AspNetUser" />
         </EntityType>
         <EntityType Name="Permission">
           <Key>
@@ -1226,11 +1178,11 @@
           <Property Name="IsDeleted" Type="Boolean" Nullable="false" />
           <Property Name="DateCreated" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="DateDeleted" Type="DateTime" Precision="3" />
-          <NavigationProperty Name="AspNetUser" Relationship="EmployeeEvaluationSystem.Entity.EntityModel.FK_Survey_ToTable" FromRole="Survey" ToRole="AspNetUser" />
           <NavigationProperty Name="Categories" Relationship="EmployeeEvaluationSystem.Entity.EntityModel.FK_Category_ToTable" FromRole="Survey" ToRole="Category" />
           <NavigationProperty Name="PendingSurveys" Relationship="EmployeeEvaluationSystem.Entity.EntityModel.FK_PendingSurvey_To_Survey" FromRole="Survey" ToRole="PendingSurvey" />
           <NavigationProperty Name="SurveyInstances" Relationship="EmployeeEvaluationSystem.Entity.EntityModel.FK_SurveyInstance_To_Survey" FromRole="Survey" ToRole="SurveyInstance" />
           <NavigationProperty Name="SurveysAvailables" Relationship="EmployeeEvaluationSystem.Entity.EntityModel.FK_SurveysAvailable_To_Survey" FromRole="Survey" ToRole="SurveysAvailable" />
+          <NavigationProperty Name="AspNetUser" Relationship="EmployeeEvaluationSystem.Entity.EntityModel.FK_Survey_ToTable" FromRole="Survey" ToRole="AspNetUser" />
         </EntityType>
         <EntityType Name="SurveyInstance">
           <Key>
@@ -1244,11 +1196,11 @@
           <Property Name="SurveyTypeId" Type="Int32" Nullable="false" />
           <Property Name="UserSurveyRoleId" Type="Int32" Nullable="false" />
           <NavigationProperty Name="AnswerInstances" Relationship="EmployeeEvaluationSystem.Entity.EntityModel.FK_AnswerInstance_SurveyInstance" FromRole="SurveyInstance" ToRole="AnswerInstance" />
-          <NavigationProperty Name="AspNetUser" Relationship="EmployeeEvaluationSystem.Entity.EntityModel.FK_SurveyInstance_ToTable" FromRole="SurveyInstance" ToRole="AspNetUser" />
           <NavigationProperty Name="PendingSurveys" Relationship="EmployeeEvaluationSystem.Entity.EntityModel.FK_PendingSurvey_To_SurveyInstance" FromRole="SurveyInstance" ToRole="PendingSurvey" />
           <NavigationProperty Name="Survey" Relationship="EmployeeEvaluationSystem.Entity.EntityModel.FK_SurveyInstance_To_Survey" FromRole="SurveyInstance" ToRole="Survey" />
           <NavigationProperty Name="SurveyType" Relationship="EmployeeEvaluationSystem.Entity.EntityModel.FK_SurveyInstance_To_SurveyType" FromRole="SurveyInstance" ToRole="SurveyType" />
           <NavigationProperty Name="UserSurveyRole" Relationship="EmployeeEvaluationSystem.Entity.EntityModel.FK_SurveyInstance_To_UserSurveyRole" FromRole="SurveyInstance" ToRole="UserSurveyRole" />
+          <NavigationProperty Name="AspNetUser" Relationship="EmployeeEvaluationSystem.Entity.EntityModel.FK_SurveyInstance_ToTable" FromRole="SurveyInstance" ToRole="AspNetUser" />
         </EntityType>
         <EntityType Name="SurveysAvailable">
           <Key>
@@ -1324,82 +1276,6 @@
             </Principal>
             <Dependent Role="AnswerInstance">
               <PropertyRef Name="QuestionID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId">
-          <End Type="EmployeeEvaluationSystem.Entity.EntityModel.AspNetUser" Role="AspNetUser" Multiplicity="1">
-            <OnDelete Action="Cascade" />
-          </End>
-          <End Type="EmployeeEvaluationSystem.Entity.EntityModel.AspNetUserClaim" Role="AspNetUserClaim" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="AspNetUser">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="AspNetUserClaim">
-              <PropertyRef Name="UserId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_dbo_AspNetUserLogins_dbo_AspNetUsers_UserId">
-          <End Type="EmployeeEvaluationSystem.Entity.EntityModel.AspNetUser" Role="AspNetUser" Multiplicity="1">
-            <OnDelete Action="Cascade" />
-          </End>
-          <End Type="EmployeeEvaluationSystem.Entity.EntityModel.AspNetUserLogin" Role="AspNetUserLogin" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="AspNetUser">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="AspNetUserLogin">
-              <PropertyRef Name="UserId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_CohortUser_ToTable">
-          <End Type="EmployeeEvaluationSystem.Entity.EntityModel.AspNetUser" Role="AspNetUser" Multiplicity="1" />
-          <End Type="EmployeeEvaluationSystem.Entity.EntityModel.CohortUser" Role="CohortUser" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="AspNetUser">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="CohortUser">
-              <PropertyRef Name="UserID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_PendingSurvey_ToTable">
-          <End Type="EmployeeEvaluationSystem.Entity.EntityModel.AspNetUser" Role="AspNetUser" Multiplicity="1" />
-          <End Type="EmployeeEvaluationSystem.Entity.EntityModel.PendingSurvey" Role="PendingSurvey" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="AspNetUser">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="PendingSurvey">
-              <PropertyRef Name="UserSentById" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Survey_ToTable">
-          <End Type="EmployeeEvaluationSystem.Entity.EntityModel.AspNetUser" Role="AspNetUser" Multiplicity="1" />
-          <End Type="EmployeeEvaluationSystem.Entity.EntityModel.Survey" Role="Survey" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="AspNetUser">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="Survey">
-              <PropertyRef Name="CreatedBy" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_SurveyInstance_ToTable">
-          <End Type="EmployeeEvaluationSystem.Entity.EntityModel.AspNetUser" Role="AspNetUser" Multiplicity="0..1" />
-          <End Type="EmployeeEvaluationSystem.Entity.EntityModel.SurveyInstance" Role="SurveyInstance" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="AspNetUser">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="SurveyInstance">
-              <PropertyRef Name="UserTakenBy" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -1679,10 +1555,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="AspNetUserRoles">
-          <End Type="EmployeeEvaluationSystem.Entity.EntityModel.AspNetRole" Role="AspNetRole" Multiplicity="*" />
-          <End Type="EmployeeEvaluationSystem.Entity.EntityModel.AspNetUser" Role="AspNetUser" Multiplicity="*" />
-        </Association>
         <EntityType Name="LocationAddress">
           <Key>
             <PropertyRef Name="Id" />
@@ -1694,19 +1566,113 @@
           <Property Name="State" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
           <Property Name="ZipCode" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
           <Property Name="DateCreated" Type="DateTime" Nullable="false" Precision="3" />
-          <NavigationProperty Name="AspNetUsers" Relationship="EmployeeEvaluationSystem.Entity.EntityModel.FK_AspNetUsers_ToTable" FromRole="LocationAddress" ToRole="AspNetUser" />
         </EntityType>
-        <Association Name="FK_AspNetUsers_ToTable">
-          <End Type="EmployeeEvaluationSystem.Entity.EntityModel.LocationAddress" Role="LocationAddress" Multiplicity="0..1" />
-          <End Type="EmployeeEvaluationSystem.Entity.EntityModel.AspNetUser" Role="AspNetUser" Multiplicity="*" />
+        <EntityType Name="AspNetUser">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="Email" Type="String" MaxLength="256" FixedLength="false" Unicode="true" />
+          <Property Name="EmailConfirmed" Type="Boolean" Nullable="false" />
+          <Property Name="PasswordHash" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="SecurityStamp" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="PhoneNumber" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="PhoneNumberConfirmed" Type="Boolean" Nullable="false" />
+          <Property Name="TwoFactorEnabled" Type="Boolean" Nullable="false" />
+          <Property Name="LockoutEndDateUtc" Type="DateTime" Precision="3" />
+          <Property Name="LockoutEnabled" Type="Boolean" Nullable="false" />
+          <Property Name="AccessFailedCount" Type="Int32" Nullable="false" />
+          <Property Name="UserName" Type="String" Nullable="false" MaxLength="256" FixedLength="false" Unicode="true" />
+          <Property Name="FirstName" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="LastName" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="MailingAddress" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="AspNetUserClaims" Relationship="EmployeeEvaluationSystem.Entity.EntityModel.FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId" FromRole="AspNetUser" ToRole="AspNetUserClaim" />
+          <NavigationProperty Name="AspNetUserLogins" Relationship="EmployeeEvaluationSystem.Entity.EntityModel.FK_dbo_AspNetUserLogins_dbo_AspNetUsers_UserId" FromRole="AspNetUser" ToRole="AspNetUserLogin" />
+          <NavigationProperty Name="CohortUsers" Relationship="EmployeeEvaluationSystem.Entity.EntityModel.FK_CohortUser_ToTable" FromRole="AspNetUser" ToRole="CohortUser" />
+          <NavigationProperty Name="PendingSurveys" Relationship="EmployeeEvaluationSystem.Entity.EntityModel.FK_PendingSurvey_ToTable" FromRole="AspNetUser" ToRole="PendingSurvey" />
+          <NavigationProperty Name="Surveys" Relationship="EmployeeEvaluationSystem.Entity.EntityModel.FK_Survey_ToTable" FromRole="AspNetUser" ToRole="Survey" />
+          <NavigationProperty Name="SurveyInstances" Relationship="EmployeeEvaluationSystem.Entity.EntityModel.FK_SurveyInstance_ToTable" FromRole="AspNetUser" ToRole="SurveyInstance" />
+          <NavigationProperty Name="AspNetRoles" Relationship="EmployeeEvaluationSystem.Entity.EntityModel.AspNetUserRoles" FromRole="AspNetUser" ToRole="AspNetRole" />
+        </EntityType>
+        <Association Name="FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId">
+          <End Type="EmployeeEvaluationSystem.Entity.EntityModel.AspNetUser" Role="AspNetUser" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="EmployeeEvaluationSystem.Entity.EntityModel.AspNetUserClaim" Role="AspNetUserClaim" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="LocationAddress">
+            <Principal Role="AspNetUser">
               <PropertyRef Name="Id" />
             </Principal>
-            <Dependent Role="AspNetUser">
-              <PropertyRef Name="MailingAddress" />
+            <Dependent Role="AspNetUserClaim">
+              <PropertyRef Name="UserId" />
             </Dependent>
           </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_dbo_AspNetUserLogins_dbo_AspNetUsers_UserId">
+          <End Type="EmployeeEvaluationSystem.Entity.EntityModel.AspNetUser" Role="AspNetUser" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="EmployeeEvaluationSystem.Entity.EntityModel.AspNetUserLogin" Role="AspNetUserLogin" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AspNetUser">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="AspNetUserLogin">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CohortUser_ToTable">
+          <End Type="EmployeeEvaluationSystem.Entity.EntityModel.AspNetUser" Role="AspNetUser" Multiplicity="1" />
+          <End Type="EmployeeEvaluationSystem.Entity.EntityModel.CohortUser" Role="CohortUser" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AspNetUser">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="CohortUser">
+              <PropertyRef Name="UserID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PendingSurvey_ToTable">
+          <End Type="EmployeeEvaluationSystem.Entity.EntityModel.AspNetUser" Role="AspNetUser" Multiplicity="1" />
+          <End Type="EmployeeEvaluationSystem.Entity.EntityModel.PendingSurvey" Role="PendingSurvey" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AspNetUser">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="PendingSurvey">
+              <PropertyRef Name="UserSentById" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Survey_ToTable">
+          <End Type="EmployeeEvaluationSystem.Entity.EntityModel.AspNetUser" Role="AspNetUser" Multiplicity="1" />
+          <End Type="EmployeeEvaluationSystem.Entity.EntityModel.Survey" Role="Survey" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AspNetUser">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Survey">
+              <PropertyRef Name="CreatedBy" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SurveyInstance_ToTable">
+          <End Type="EmployeeEvaluationSystem.Entity.EntityModel.AspNetUser" Role="AspNetUser" Multiplicity="0..1" />
+          <End Type="EmployeeEvaluationSystem.Entity.EntityModel.SurveyInstance" Role="SurveyInstance" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AspNetUser">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="SurveyInstance">
+              <PropertyRef Name="UserTakenBy" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="AspNetUserRoles">
+          <End Type="EmployeeEvaluationSystem.Entity.EntityModel.AspNetRole" Role="AspNetRole" Multiplicity="*" />
+          <End Type="EmployeeEvaluationSystem.Entity.EntityModel.AspNetUser" Role="AspNetUser" Multiplicity="*" />
         </Association>
         </Schema>
     </edmx:ConceptualModels>
@@ -1765,27 +1731,6 @@
                 <ScalarProperty Name="UserId" ColumnName="UserId" />
                 <ScalarProperty Name="ProviderKey" ColumnName="ProviderKey" />
                 <ScalarProperty Name="LoginProvider" ColumnName="LoginProvider" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="AspNetUsers">
-            <EntityTypeMapping TypeName="EmployeeEvaluationSystem.Entity.EntityModel.AspNetUser">
-              <MappingFragment StoreEntitySet="AspNetUsers">
-                <ScalarProperty Name="MailingAddress" ColumnName="MailingAddress" />
-                <ScalarProperty Name="LastName" ColumnName="LastName" />
-                <ScalarProperty Name="FirstName" ColumnName="FirstName" />
-                <ScalarProperty Name="UserName" ColumnName="UserName" />
-                <ScalarProperty Name="AccessFailedCount" ColumnName="AccessFailedCount" />
-                <ScalarProperty Name="LockoutEnabled" ColumnName="LockoutEnabled" />
-                <ScalarProperty Name="LockoutEndDateUtc" ColumnName="LockoutEndDateUtc" />
-                <ScalarProperty Name="TwoFactorEnabled" ColumnName="TwoFactorEnabled" />
-                <ScalarProperty Name="PhoneNumberConfirmed" ColumnName="PhoneNumberConfirmed" />
-                <ScalarProperty Name="PhoneNumber" ColumnName="PhoneNumber" />
-                <ScalarProperty Name="SecurityStamp" ColumnName="SecurityStamp" />
-                <ScalarProperty Name="PasswordHash" ColumnName="PasswordHash" />
-                <ScalarProperty Name="EmailConfirmed" ColumnName="EmailConfirmed" />
-                <ScalarProperty Name="Email" ColumnName="Email" />
-                <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -1970,14 +1915,6 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <AssociationSetMapping Name="AspNetUserRoles" TypeName="EmployeeEvaluationSystem.Entity.EntityModel.AspNetUserRoles" StoreEntitySet="AspNetUserRoles">
-            <EndProperty Name="AspNetUser">
-              <ScalarProperty Name="Id" ColumnName="UserId" />
-            </EndProperty>
-            <EndProperty Name="AspNetRole">
-              <ScalarProperty Name="Id" ColumnName="RoleId" />
-            </EndProperty>
-          </AssociationSetMapping>
           <EntitySetMapping Name="LocationAddresses">
             <EntityTypeMapping TypeName="EmployeeEvaluationSystem.Entity.EntityModel.LocationAddress">
               <MappingFragment StoreEntitySet="LocationAddress">
@@ -1991,6 +1928,35 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="AspNetUsers">
+            <EntityTypeMapping TypeName="EmployeeEvaluationSystem.Entity.EntityModel.AspNetUser">
+              <MappingFragment StoreEntitySet="AspNetUsers">
+                <ScalarProperty Name="MailingAddress" ColumnName="MailingAddress" />
+                <ScalarProperty Name="LastName" ColumnName="LastName" />
+                <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+                <ScalarProperty Name="UserName" ColumnName="UserName" />
+                <ScalarProperty Name="AccessFailedCount" ColumnName="AccessFailedCount" />
+                <ScalarProperty Name="LockoutEnabled" ColumnName="LockoutEnabled" />
+                <ScalarProperty Name="LockoutEndDateUtc" ColumnName="LockoutEndDateUtc" />
+                <ScalarProperty Name="TwoFactorEnabled" ColumnName="TwoFactorEnabled" />
+                <ScalarProperty Name="PhoneNumberConfirmed" ColumnName="PhoneNumberConfirmed" />
+                <ScalarProperty Name="PhoneNumber" ColumnName="PhoneNumber" />
+                <ScalarProperty Name="SecurityStamp" ColumnName="SecurityStamp" />
+                <ScalarProperty Name="PasswordHash" ColumnName="PasswordHash" />
+                <ScalarProperty Name="EmailConfirmed" ColumnName="EmailConfirmed" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <AssociationSetMapping Name="AspNetUserRoles" TypeName="EmployeeEvaluationSystem.Entity.EntityModel.AspNetUserRoles" StoreEntitySet="AspNetUserRoles">
+            <EndProperty Name="AspNetUser">
+              <ScalarProperty Name="Id" ColumnName="UserId" />
+            </EndProperty>
+            <EndProperty Name="AspNetRole">
+              <ScalarProperty Name="Id" ColumnName="RoleId" />
+            </EndProperty>
+          </AssociationSetMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

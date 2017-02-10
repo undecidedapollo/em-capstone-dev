@@ -49,6 +49,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Model\Authentication\PersonalAspNetUserViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repository\Core\IUnitOfWork.cs" />
     <Compile Include="Repository\Core\Repositories\IRepository.cs" />
