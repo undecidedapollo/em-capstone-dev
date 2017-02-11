@@ -25,7 +25,16 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
 
             using (var unitOfWork = new UnitOfWork())
             {
-                return View(unitOfWork.Users.GetAllUsers(userId).ToList());
+                var unconvertedUsers = unitOfWork.Users.GetAllUsers(userId).ToList();
+
+                var convertedUsers = new List<PersonalAspNetUserViewModel>();
+
+                foreach (var user in unconvertedUsers)
+                {
+                    convertedUsers.Add(PersonalAspNetUserViewModel.Convert(user));
+                }
+
+                return View(convertedUsers);
             }
 
             
@@ -107,9 +116,7 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
 
                 unitOfWork.Complete();
 
-                var returnUser = PersonalAspNetUserViewModel.Convert(newUser);
-
-                return View(returnUser);
+                return RedirectToAction("Index");
             }
 
         }

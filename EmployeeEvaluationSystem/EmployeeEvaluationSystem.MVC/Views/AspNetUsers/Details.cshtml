@@ -7,9 +7,24 @@
 <h2>Details</h2>
 
 <div>
-    <h4>AspNetUser</h4>
     <hr />
     <dl class="dl-horizontal">
+        <dt>
+            <strong>First Name</strong>
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.FirstName)
+        </dd>
+
+        <dt>
+            <strong>Last Name</strong>
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.LastName)
+        </dd>
+
         <dt>
             @Html.DisplayNameFor(model => model.Email)
         </dt>
@@ -19,7 +34,7 @@
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.PhoneNumber)
+            <strong>Phone</strong>
         </dt>
 
         <dd>
@@ -27,23 +42,7 @@
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.FirstName)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.FirstName)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.LastName)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.LastName)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.MailingAddress)
+            <strong>Address</strong>
         </dt>
 
         <dd>

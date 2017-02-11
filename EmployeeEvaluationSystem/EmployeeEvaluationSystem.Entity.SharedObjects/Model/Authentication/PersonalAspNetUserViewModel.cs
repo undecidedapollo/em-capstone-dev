@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -32,6 +33,5 @@ namespace EmployeeEvaluationSystem.Entity.SharedObjects.Model.Authentication
                 PhoneNumber = x.PhoneNumber
             };
         }
-
     }
 }
