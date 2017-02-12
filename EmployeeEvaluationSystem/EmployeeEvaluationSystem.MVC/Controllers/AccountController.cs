@@ -6,6 +6,11 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using System.Linq;
+using System.Collections;
+using System.Collections.Generic;
+using System;
+using EmployeeEvaluationSystem.MVC.Models.Authentication;
+using System.Web.Routing;
 
 namespace EmployeeEvaluationSystem.MVC.Controllers
 {
@@ -14,13 +19,15 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
     {
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;
+        private HttpRequestBase passedInRequest;
 
         public AccountController()
         {
         }
 
-        public AccountController(ApplicationUserManager userManager, ApplicationSignInManager signInManager)
+        public AccountController(ApplicationUserManager userManager, ApplicationSignInManager signInManager, HttpRequestBase request = null)
         {
+            this.passedInRequest = request;
             UserManager = userManager;
             SignInManager = signInManager;
         }
@@ -144,38 +151,115 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
         {
             if (ModelState.IsValid)
             {
-                var user = new ApplicationUser
+
+                var status = await RegisterUser(model);
+
+                if (status.Item1.Succeeded)
                 {
-                    UserName = model.Email,
-                    Email = model.Email,
-                    FirstName = model.FirstName,
-                    LastName = model.LastName,
-                    PhoneNumber = model.PhoneNumber,
-                    MailingAddress = model.MailingAddress
-                };
-                var result = await UserManager.CreateAsync(user);
-                if (result.Succeeded)
-                {
-                    //await SignInManager.SignInAsync(user, isPersistent:false, rememberBrowser:false);
-
-                    // For more information on how to enable account confirmation and password reset please visit http://go.microsoft.com/fwlink/?LinkID=320771
-                    // Send an email with this link
-
-                    var callbackUrl = await SendEmailConfirmationTokenAsync(user.Id, "Confirm your account");
-
-                    //TempData["ViewBagLink"] = callbackUrl;
+                    var callbackUrl = await SendEmailConfirmationTokenAsync(status.Item2.Id, "Confirm your account");
 
                     ViewBag.Message = "An Email has been sent to the employee(s) to complete registration.";
 
                     return View("Info");
-                    //return RedirectToAction("Index", "Home");
                 }
-                AddErrors(result);
+
+
+                AddErrors(status.Item1);
             }
 
             // If we got this far, something failed, redisplay form
             return View(model);
         }
+
+        public async Task<Tuple<IdentityResult, ApplicationUser>> RegisterUser(RegisterViewModel model)
+        {
+            var user = new ApplicationUser
+            {
+                UserName = model.Email,
+                Email = model.Email,
+                FirstName = model.FirstName,
+                LastName = model.LastName,
+                PhoneNumber = model.PhoneNumber,
+                MailingAddress = model.MailingAddress
+            };
+            var result = await UserManager.CreateAsync(user);
+            if (result.Succeeded)
+            {
+                //Moving email confirmation to whoever calls you to handle multiple user case.
+
+                //await SignInManager.SignInAsync(user, isPersistent:false, rememberBrowser:false);
+
+
+
+                var theUser = await UserManager.FindByEmailAsync(user.Email);
+
+                return new Tuple<IdentityResult, ApplicationUser>(result, theUser);
+            }
+
+            return new Tuple<IdentityResult, ApplicationUser>(result, null);
+        }
+
+        public async Task<MultiRegisterResult> RegisterMultipleUsers(IEnumerable<RegisterViewModel> theItems)
+        {
+           
+            Action<IEnumerable<Tuple<IdentityResult, ApplicationUser>>> tryDeleteUsersFAILSAFE = (users) =>
+            {
+                try
+                {
+                    foreach(var user in users)
+                    {
+                        try
+                        {
+                            UserManager.Delete(user.Item2);
+                        }
+                        catch (Exception)
+                        {
+
+                        }
+                    }
+                }
+                catch (Exception)
+                {
+
+                }
+            };
+
+            var successfulRegistrations = new List<Tuple<IdentityResult, ApplicationUser>>();
+
+
+            foreach (var user in theItems)
+            {
+                var result = await this.RegisterUser(user);
+
+                if(result.Item1.Succeeded && result.Item2 != null)
+                {
+                    successfulRegistrations.Add(result);
+                }else
+                {
+                    tryDeleteUsersFAILSAFE(successfulRegistrations);
+                    return new MultiRegisterResult { Successful = false, FailedUser = user };
+                }
+            }
+
+            //Send emails if all successful
+
+            foreach (var user in successfulRegistrations)
+            {
+                try
+                {
+                    var callbackUrl = await SendEmailConfirmationTokenAsync(user.Item2.Id, "Confirm your account");
+                }
+                catch (Exception)
+                {
+
+                }
+            }
+            return new MultiRegisterResult { Successful = true };
+
+
+        }
+
+
 
         //
         // GET: /Account/ConfirmEmail
@@ -189,11 +273,22 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
 
             if (result.Succeeded)
             {
-                string passwordCode = await UserManager.GeneratePasswordResetTokenAsync(userId);
-                var callbackUrl = Url.Action("SetupPassword", "Account", new {userId, code = passwordCode},
-                    Request.Url.Scheme);
+                var scheme = Request?.Url?.Scheme ?? passedInRequest.Url.Scheme;
+                var hostname = Request?.Url?.Host ?? passedInRequest.Url.Host;
 
-                return Redirect(callbackUrl);
+                if ((Request?.Url?.Port ?? passedInRequest.Url.Port) != 80 || (Request?.Url?.Port ?? passedInRequest.Url.Port) != 43)
+                {
+                    hostname += ":" + (Request?.Url?.Port ?? passedInRequest.Url.Port);
+                }
+
+                var theUrl = $"{scheme}://{hostname}/Account/SetupPassword?userId={HttpUtility.UrlEncode(userId)}";
+
+
+
+                //var callbackUrl = Url.Action("SetupPassword", "Account", new RouteValueDictionary (new { userId = userId, code = code}),
+                //    Request?.Url?.Scheme ?? passedInRequest.Url.Scheme, Request?.Url?.Host ?? passedInRequest.Url.Host);
+
+                return Redirect(theUrl);
             }
 
             return View("Error");
@@ -202,15 +297,14 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
         //
         // GET: /Account/SetupPassword
         [AllowAnonymous]
-        public ActionResult SetupPassword(string userId, string code)
+        public ActionResult SetupPassword(string userId)
         {
             var model = new SetupPasswordViewModel
             {
-                UserId = userId,
-                Code = code
+                UserId = userId
             };
 
-            return code == null ? View("Error") : View(model);
+            return userId == null ? View("Error") : View(model);
         }
 
         //
@@ -225,7 +319,7 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
             var user = await UserManager.FindByIdAsync(model.UserId);
             if (user == null)
                 return View("Error");
-            var result = await UserManager.ResetPasswordAsync(user.Id, model.Code, model.Password);
+            var result = await UserManager.AddPasswordAsync(user.Id, model.Password);
             if (result.Succeeded)
                 return RedirectToAction("SetupPasswordConfirmation", "Account");
             AddErrors(result);
@@ -261,13 +355,23 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
                 if (user == null || !await UserManager.IsEmailConfirmedAsync(user.Id))
                     return View("ForgotPasswordConfirmation");
 
-                // For more information on how to enable account confirmation and password reset please visit http://go.microsoft.com/fwlink/?LinkID=320771
-                // Send an email with this link
+
                 string code = await UserManager.GeneratePasswordResetTokenAsync(user.Id);
-                var callbackUrl = Url.Action("ResetPassword", "Account", new {userId = user.Id, code},
-                    Request.Url.Scheme);
+                var scheme = Request?.Url?.Scheme ?? passedInRequest.Url.Scheme;
+                var hostname = Request?.Url?.Host ?? passedInRequest.Url.Host;
+
+                if ((Request?.Url?.Port ?? passedInRequest.Url.Port) != 80 || (Request?.Url?.Port ?? passedInRequest.Url.Port) != 43)
+                {
+                    hostname += ":" + (Request?.Url?.Port ?? passedInRequest.Url.Port);
+                }
+
+                var theUrl = $"{scheme}://{hostname}/Account/ResetPassword?userId={HttpUtility.UrlEncode(user.Id)}&code={code}";
+
+             
+                //var callbackUrl = Url.Action("ResetPassword", "Account", new RouteValueDictionary(new { userId = user.Id, code = code }),
+                //    Request?.Url?.Scheme ?? passedInRequest.Url.Scheme, Request?.Url?.Host ?? passedInRequest.Url.Host);
                 await UserManager.SendEmailAsync(user.Id, "Reset Password",
-                    "Please reset your password by clicking <a href=\"" + callbackUrl + "\">here</a>");
+                    "Please reset your password by clicking <a href=\"" + theUrl + "\">here</a>");
                 return RedirectToAction("ForgotPasswordConfirmation", "Account");
             }
 
@@ -490,12 +594,26 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
         private async Task<string> SendEmailConfirmationTokenAsync(string userID, string subject)
         {
             string code = await UserManager.GenerateEmailConfirmationTokenAsync(userID);
-            var callbackUrl = Url.Action("ConfirmEmail", "Account",
-                new {userId = userID, code}, Request.Url.Scheme);
-            await UserManager.SendEmailAsync(userID, subject,
-                "Please confirm your account by clicking <a href=\"" + callbackUrl + "\">here</a>");
 
-            return callbackUrl;
+
+            var scheme = Request?.Url?.Scheme ?? passedInRequest.Url.Scheme;
+            var hostname = Request?.Url?.Host ?? passedInRequest.Url.Host;
+
+            if((Request?.Url?.Port ?? passedInRequest.Url.Port) != 80 || (Request?.Url?.Port ?? passedInRequest.Url.Port) != 43)
+            {
+                hostname += ":" + (Request?.Url?.Port ?? passedInRequest.Url.Port);
+            }
+
+            var theUrl = $"{scheme}://{hostname}/Account/ConfirmEmail?userId={HttpUtility.UrlEncode(userID)}&code={code}";
+
+
+            //var callbackUrl = Url.Action("ConfirmEmail", "Account",
+            //    new RouteValueDictionary(new { userId = userID, code = code }),
+            //        Request?.Url?.Scheme ?? passedInRequest.Url.Scheme, Request?.Url?.Host ?? passedInRequest.Url.Host);
+            await UserManager.SendEmailAsync(userID, subject,
+                "Please confirm your account by clicking <a href=\"" + theUrl + "\">here</a>");
+
+            return theUrl;
         }
 
         internal class ChallengeResult : HttpUnauthorizedResult
@@ -527,4 +645,6 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
 
         #endregion
     }
+
+
 }

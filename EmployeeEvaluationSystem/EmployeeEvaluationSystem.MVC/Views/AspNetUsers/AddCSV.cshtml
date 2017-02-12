@@ -1,0 +1,124 @@
+﻿<h2>Upload File</h2>
+
+@using EmployeeEvaluationSystem.MVC.Models
+@model List<CSVEmployeeViewModel>
+
+
+
+
+@using (Html.BeginForm("AddCSV", "AspNetUsers", null, FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+
+    if (Model == null)
+    {
+        @Html.AntiForgeryToken()
+        @Html.ValidationSummary()
+
+        <div class="form-group">
+            <input type="file" id="dataFile" name="upload" />
+        </div>
+
+        <div class="form-group">
+            <input type="submit" value="Upload" class="btn btn-default" />
+        </div>
+    }
+
+}
+
+
+@if (Model != null)
+{
+    <form action="/AspNetUsers/SaveCSV" method="post" id="form">
+        <table>
+            <thead>
+                <tr>
+                    <th>EmployeeID</th>
+                    <th>First Name</th>
+                    <th>Last Name</th>
+                    <th>Email</th>
+                    <th>Mailing Address</th>
+                    <th>Phone</th>
+                </tr>
+            </thead>
+            <tbody>
+                @for (int i = 0; i < Model.Count(); i++)
+                {
+                    <tr>
+                        <td>
+                            @Html.EditorFor(m => m[i].EmployeeId)
+                        </td>
+                        <td>
+                            @Html.EditorFor(m => m[i].FirstName)
+                        </td>
+                        <td>
+                            @Html.EditorFor(m => m[i].LastName)
+                        </td>
+                        <td>
+                            @Html.EditorFor(m => m[i].Email)
+                        </td>
+                        <td>
+                            @Html.EditorFor(m => m[i].MailingAddress)
+                        </td>
+                        <td>
+                            @Html.EditorFor(m => m[i].PhoneNumber)
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        <input type="submit" value="Register Employees" />
+    </form>
+}
+
+@*@using (Html.BeginForm("SaveCSV", "AspNetUsers"))
+{
+
+    if (Model != null)
+    {
+        <table>
+            <thead>
+                <tr>
+                    <th>EmployeeID</th>
+                    <th>First Name</th>
+                    <th>Last Name</th>
+                    <th>Email</th>
+                    <th>Mailing Address</th>
+                    <th>Phone</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var row in Model)
+                {
+                    <tr>
+                        @Html.EditorFor((ro)
+                    </tr>
+                    <tr>
+                        @Html.EditorFor((m) => row[col.ColumnName])
+                    </tr>
+                    <tr>
+                        @Html.EditorFor((m) => row[col.ColumnName])
+                    </tr>
+                    <tr>
+                        @Html.EditorFor((m) => row[col.ColumnName])
+                    </tr>
+                    <tr>
+                        @Html.EditorFor((m) => row[col.ColumnName])
+                    </tr>
+                    <tr>
+                        @Html.EditorFor((m) => row[col.ColumnName])
+                    </tr>
+                    <tr>
+                        @Html.EditorFor((m) => row[col.ColumnName])
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+       // @Html.HiddenFor(m => 1);
+
+        <input id="btnSubmit" type="submit" value="Submit" />
+    }
+
+
+}*@
+
