@@ -27,12 +27,9 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
             {
                 var unconvertedUsers = unitOfWork.Users.GetAllUsers(userId).ToList();
 
-                var convertedUsers = new List<PersonalAspNetUserViewModel>();
 
-                foreach (var user in unconvertedUsers)
-                {
-                    convertedUsers.Add(PersonalAspNetUserViewModel.Convert(user));
-                }
+
+                var convertedUsers = unconvertedUsers?.Select(x => PersonalAspNetUserViewModel.Convert(x))?.ToList();
 
                 return View(convertedUsers);
             }

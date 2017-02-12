@@ -15,44 +15,46 @@ using SendGrid;
 using System.Net;
 using System.Configuration;
 using System.Diagnostics;
+using SendGrid.Helpers.Mail;
 
 namespace EmployeeEvaluationSystem.MVC
 {
-    public class EmailService : IIdentityMessageService
+    public class SendgridEmailService : IIdentityMessageService
     {
-        public async Task SendAsync(IdentityMessage message)
+        private static SendgridEmailService theInstance;
+        private static object theLock = new object();
+
+        private SendgridEmailService()
         {
-            await configSendGridasync(message);
+
         }
 
-        private async Task configSendGridasync(IdentityMessage message)
+        public static SendgridEmailService GetInstance()
         {
-            var myMessage = new SendGridMessage();
-            myMessage.AddTo(message.Destination);
-            myMessage.From = new System.Net.Mail.MailAddress(
-                                "Joe@contoso.com", "Joe S.");
-            myMessage.Subject = message.Subject;
-            myMessage.Text = message.Body;
-            myMessage.Html = message.Body;
-
-            var credentials = new NetworkCredential(
-                       ConfigurationManager.AppSettings["mailAccount"],
-                       ConfigurationManager.AppSettings["mailPassword"]
-                       );
-
-            // Create a Web transport for sending email.
-            var transportWeb = new Web(credentials);
-
-            // Send the email.
-            if (transportWeb != null)
+            lock (theLock)
             {
-                await transportWeb.DeliverAsync(myMessage);
+                if(theInstance == null)
+                {
+                    theInstance = new SendgridEmailService();
+                }
+
+                return theInstance;
             }
-            else
-            {
-                Trace.TraceError("Failed to create Web transport.");
-                await Task.FromResult(0);
-            }
+        }
+
+
+        public async Task SendAsync(IdentityMessage message)
+        {
+            string apiKey = ConfigurationManager.AppSettings["mailApiKey"];
+            dynamic sg = new SendGridAPIClient(apiKey);
+
+            Email from = new Email(ConfigurationManager.AppSettings["mailAddress"]);
+            string subject = message.Subject;
+            Email to = new Email(message.Destination);
+            Content content = new Content("text/html", message.Body);
+            Mail mail = new Mail(from, subject, to, content);
+
+            dynamic response = await sg.client.mail.send.post(requestBody: mail.Get());
         }
     }
 
@@ -97,6 +99,8 @@ namespace EmployeeEvaluationSystem.MVC
             manager.DefaultAccountLockoutTimeSpan = TimeSpan.FromMinutes(5);
             manager.MaxFailedAccessAttemptsBeforeLockout = 5;
 
+
+            manager.EmailService = SendgridEmailService.GetInstance();
             //// Register two factor authentication providers. This application uses Phone and Emails as a step of receiving a code for verifying the user
             //// You can write your own provider and plug it in here.
             //manager.RegisterTwoFactorProvider("Phone Code", new PhoneNumberTokenProvider<ApplicationUser>
