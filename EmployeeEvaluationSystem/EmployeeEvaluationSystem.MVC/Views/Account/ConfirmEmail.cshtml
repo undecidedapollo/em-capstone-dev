@@ -1,11 +1,11 @@
-﻿@model EmployeeEvaluationSystem.MVC.Models.SetupPasswordViewModel
+﻿@model EmployeeEvaluationSystem.MVC.Models.ConfirmEmailViewModel
 
 @{
-    ViewBag.Title = "SetupPassword";
+    ViewBag.Title = "Setup Account";
 }
 
-<h2>SetupPassword</h2>
-<h4>Thank you for confirming your password. In the form below enter a password you would like to use for logging in.</h4>
+<h2>Setup Account</h2>
+<h4>To finish setting up your account, please enter a password.</h4>
 
 @using (Html.BeginForm())
 {
@@ -14,18 +14,18 @@
     <div class="form-horizontal">
         <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        @Html.HiddenFor(model => model.UserId)
-
+        @Html.HiddenFor(model => model.emailCode)
+        @Html.HiddenFor(model => model.userId)
         <div class="form-group">
-            @Html.LabelFor(m => m.Password, new { @class = "col-md-2 control-label" })
+            @Html.LabelFor(m => m.password, new { @class = "col-md-2 control-label" })
             <div class="col-md-10">
-                @Html.PasswordFor(m => m.Password, new { @class = "form-control" })
+                @Html.PasswordFor(m => m.password, new { @class = "form-control" })
             </div>
         </div>
         <div class="form-group">
-            @Html.LabelFor(m => m.ConfirmPassword, new { @class = "col-md-2 control-label" })
+            @Html.LabelFor(m => m.confirmpassword, new { @class = "col-md-2 control-label" })
             <div class="col-md-10">
-                @Html.PasswordFor(m => m.ConfirmPassword, new { @class = "form-control" })
+                @Html.PasswordFor(m => m.confirmpassword, new { @class = "form-control" })
             </div>
         </div>
 

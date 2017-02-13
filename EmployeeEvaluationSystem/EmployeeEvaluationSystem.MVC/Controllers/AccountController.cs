@@ -64,17 +64,20 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
                 return View(model);
 
             // Require the user to have a confirmed email before they can log on.
-            var user = await UserManager.FindByNameAsync(model.Email);
+            var user = await UserManager.FindByEmailAsync(model.Email);
             if (user != null)
+            {
                 if (!await UserManager.IsEmailConfirmedAsync(user.Id))
                 {
                     var callbackUrl = await SendEmailConfirmationTokenAsync(user.Id, "Confirm your account-Resend");
 
                     ViewBag.errorMessage = "You must have a confirmed email to log on. "
-                                           + "The confirmation email has been resent to your email account.";
+                                            + "The confirmation email has been resent to your email account.";
 
                     return View("Error");
                 }
+            }
+
 
             // This doesn't count login failures towards account lockout
             // To enable password failures to trigger account lockout, change to shouldLockout: true
@@ -264,66 +267,54 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
         //
         // GET: /Account/ConfirmEmail
         [AllowAnonymous]
-        public async Task<ActionResult> ConfirmEmail(string userId, string code)
+        [HttpPost]
+        public async Task<ActionResult> ConfirmEmail(ConfirmEmailViewModel model)
         {
-            if (userId == null || code == null)
-                return View("Error");
 
-            var result = await UserManager.ConfirmEmailAsync(userId, code);
-
-            if (result.Succeeded)
+            if (ModelState.IsValid)
             {
-                var scheme = Request?.Url?.Scheme ?? passedInRequest.Url.Scheme;
-                var hostname = Request?.Url?.Host ?? passedInRequest.Url.Host;
+                var pwresult = await UserManager.PasswordValidator.ValidateAsync(model.password);
 
-                if ((Request?.Url?.Port ?? passedInRequest.Url.Port) != 80 || (Request?.Url?.Port ?? passedInRequest.Url.Port) != 43)
+                if (!pwresult.Succeeded)
                 {
-                    hostname += ":" + (Request?.Url?.Port ?? passedInRequest.Url.Port);
+                    AddErrors(pwresult);
+                    return View(model);
                 }
 
-                var theUrl = $"{scheme}://{hostname}/Account/SetupPassword?userId={HttpUtility.UrlEncode(userId)}";
+                var confirmed = await UserManager.ConfirmEmailAsync(model.userId, model.emailCode);
+
+                if (!confirmed.Succeeded)
+                {
+                    AddErrors(confirmed);
+                    return View(model);
+                }
+
+                var addPW = await UserManager.AddPasswordAsync(model.userId, model.password);
+
+                if (!addPW.Succeeded)
+                {
+                    //TODO possibly need to unconfirm email if the password step fails.
+                    AddErrors(addPW);
+                    return View(model);
+                }
+
+                return View("SetupPasswordConfirmation");
 
 
-
-                //var callbackUrl = Url.Action("SetupPassword", "Account", new RouteValueDictionary (new { userId = userId, code = code}),
-                //    Request?.Url?.Scheme ?? passedInRequest.Url.Scheme, Request?.Url?.Host ?? passedInRequest.Url.Host);
-
-                return Redirect(theUrl);
             }
 
             return View("Error");
         }
 
-        //
-        // GET: /Account/SetupPassword
         [AllowAnonymous]
-        public ActionResult SetupPassword(string userId)
+        [HttpGet]
+        public  ActionResult ConfirmEmail(string userId, string code)
         {
-            var model = new SetupPasswordViewModel
-            {
-                UserId = userId
-            };
-
-            return userId == null ? View("Error") : View(model);
-        }
-
-        //
-        // POST: /Account/SetupPassword
-        [HttpPost]
-        [AllowAnonymous]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> SetupPassword(SetupPasswordViewModel model)
-        {
-            if (!ModelState.IsValid)
-                return View(model);
-            var user = await UserManager.FindByIdAsync(model.UserId);
-            if (user == null)
+            if (userId == null || code == null)
                 return View("Error");
-            var result = await UserManager.AddPasswordAsync(user.Id, model.Password);
-            if (result.Succeeded)
-                return RedirectToAction("SetupPasswordConfirmation", "Account");
-            AddErrors(result);
-            return View();
+
+
+            return View(new ConfirmEmailViewModel { userId = userId, emailCode = code });
         }
 
         //
@@ -365,7 +356,7 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
                     hostname += ":" + (Request?.Url?.Port ?? passedInRequest.Url.Port);
                 }
 
-                var theUrl = $"{scheme}://{hostname}/Account/ResetPassword?userId={HttpUtility.UrlEncode(user.Id)}&code={code}";
+                var theUrl = $"{scheme}://{hostname}/Account/ResetPassword?userId={HttpUtility.UrlEncode(user.Id)}&code={HttpUtility.UrlEncode(code)}";
 
              
                 //var callbackUrl = Url.Action("ResetPassword", "Account", new RouteValueDictionary(new { userId = user.Id, code = code }),
@@ -604,7 +595,7 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
                 hostname += ":" + (Request?.Url?.Port ?? passedInRequest.Url.Port);
             }
 
-            var theUrl = $"{scheme}://{hostname}/Account/ConfirmEmail?userId={HttpUtility.UrlEncode(userID)}&code={code}";
+            var theUrl = $"{scheme}://{hostname}/Account/ConfirmEmail?userId={HttpUtility.UrlEncode(userID)}&code={HttpUtility.UrlEncode(code)}";
 
 
             //var callbackUrl = Url.Action("ConfirmEmail", "Account",
