@@ -273,6 +273,14 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
 
             if (ModelState.IsValid)
             {
+                if(model.password != model.confirmpassword)
+                {
+                    ModelState.AddModelError("", "Your passwords do not match.");
+                    return View(model);
+                }
+
+
+
                 var pwresult = await UserManager.PasswordValidator.ValidateAsync(model.password);
 
                 if (!pwresult.Succeeded)
