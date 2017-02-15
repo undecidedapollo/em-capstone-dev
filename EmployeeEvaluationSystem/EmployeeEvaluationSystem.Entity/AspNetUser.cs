@@ -19,11 +19,11 @@ namespace EmployeeEvaluationSystem.Entity
         {
             this.AspNetUserClaims = new HashSet<AspNetUserClaim>();
             this.AspNetUserLogins = new HashSet<AspNetUserLogin>();
-            this.CohortUsers = new HashSet<CohortUser>();
             this.PendingSurveys = new HashSet<PendingSurvey>();
             this.Surveys = new HashSet<Survey>();
             this.SurveyInstances = new HashSet<SurveyInstance>();
             this.AspNetRoles = new HashSet<AspNetRole>();
+            this.CohortUsers = new HashSet<CohortUser>();
         }
     
         public string Id { get; set; }
@@ -41,13 +41,12 @@ namespace EmployeeEvaluationSystem.Entity
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string MailingAddress { get; set; }
+        public string EmployeeID { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<AspNetUserClaim> AspNetUserClaims { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<AspNetUserLogin> AspNetUserLogins { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<CohortUser> CohortUsers { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<PendingSurvey> PendingSurveys { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
@@ -56,5 +55,7 @@ namespace EmployeeEvaluationSystem.Entity
         public virtual ICollection<SurveyInstance> SurveyInstances { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<AspNetRole> AspNetRoles { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<CohortUser> CohortUsers { get; set; }
     }
 }

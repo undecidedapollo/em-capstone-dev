@@ -14,6 +14,7 @@
     [FirstName] NVARCHAR(128) NOT NULL, 
     [LastName] NVARCHAR(128) NOT NULL, 
     [MailingAddress] NVARCHAR(500) NOT NULL, 
+    [EmployeeID] NCHAR(128) NOT NULL DEFAULT 0, 
     CONSTRAINT [PK_dbo.AspNetUsers] PRIMARY KEY CLUSTERED ([Id] ASC)
 );
 

@@ -18,6 +18,7 @@ namespace EmployeeEvaluationSystem.Entity
         public Cohort()
         {
             this.SurveysAvailables = new HashSet<SurveysAvailable>();
+            this.CohortUsers = new HashSet<CohortUser>();
         }
     
         public int ID { get; set; }
@@ -27,8 +28,9 @@ namespace EmployeeEvaluationSystem.Entity
         public Nullable<System.DateTime> DateDeleted { get; set; }
         public System.DateTime DateCreated { get; set; }
     
-        public virtual CohortUser CohortUser { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<SurveysAvailable> SurveysAvailables { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<CohortUser> CohortUsers { get; set; }
     }
 }

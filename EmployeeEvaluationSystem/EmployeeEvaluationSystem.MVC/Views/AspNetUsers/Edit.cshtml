@@ -17,6 +17,13 @@
         @Html.HiddenFor(model => model.Id)
         
         <div class="form-group">
+            @Html.LabelFor(model => model.EmployeeID, "Company ID", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DisplayTextFor(model => model.EmployeeID)
+            </div>
+        </div>
+
+        <div class="form-group">
             @Html.LabelFor(model => model.FirstName, "First Name", htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
                 @Html.EditorFor(model => model.FirstName, new { htmlAttributes = new { @class = "form-control" } })

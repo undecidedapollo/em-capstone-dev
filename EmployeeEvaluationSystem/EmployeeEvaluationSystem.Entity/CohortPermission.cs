@@ -27,10 +27,10 @@ namespace EmployeeEvaluationSystem.Entity
         public int Survey { get; set; }
         public int Report { get; set; }
     
-        public virtual Permission Permission { get; set; }
-        public virtual Permission Permission1 { get; set; }
-        public virtual Permission Permission2 { get; set; }
-        public virtual Permission Permission3 { get; set; }
+        public virtual Permission CohortPermissions { get; set; }
+        public virtual Permission UserPermissions { get; set; }
+        public virtual Permission SurveyPermissions { get; set; }
+        public virtual Permission ReportPermissions { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<CohortUser> CohortUsers { get; set; }
     }
