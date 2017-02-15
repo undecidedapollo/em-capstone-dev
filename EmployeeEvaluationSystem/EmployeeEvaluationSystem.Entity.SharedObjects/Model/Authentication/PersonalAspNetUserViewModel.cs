@@ -15,6 +15,7 @@ namespace EmployeeEvaluationSystem.Entity.SharedObjects.Model.Authentication
         public string MailingAddress { get; set; }
         public string Email { get; set; }
         public string PhoneNumber { get; set; }
+        public string EmployeeID { get; set; }
 
         public static PersonalAspNetUserViewModel Convert(AspNetUser x)
         {
@@ -26,6 +27,7 @@ namespace EmployeeEvaluationSystem.Entity.SharedObjects.Model.Authentication
             return new PersonalAspNetUserViewModel()
             {
                 Id = x.Id,
+                EmployeeID  = x.EmployeeID,
                 Email = x.Email,
                 FirstName = x.FirstName,
                 LastName = x.LastName,

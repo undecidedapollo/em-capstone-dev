@@ -82,7 +82,8 @@
           <Property Name="UserName" Type="nvarchar" MaxLength="256" Nullable="false" />
           <Property Name="FirstName" Type="nvarchar" MaxLength="128" Nullable="false" />
           <Property Name="LastName" Type="nvarchar" MaxLength="128" Nullable="false" />
-          <Property Name="MailingAddress" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="MailingAddress" Type="nvarchar" MaxLength="500" Nullable="false" />
+          <Property Name="EmployeeID" Type="nchar" MaxLength="128" Nullable="false" />
         </EntityType>
         <EntityType Name="Category">
           <Key>
@@ -120,6 +121,7 @@
         <EntityType Name="CohortUser">
           <Key>
             <PropertyRef Name="CohortID" />
+            <PropertyRef Name="UserID" />
           </Key>
           <Property Name="CohortID" Type="int" Nullable="false" />
           <Property Name="UserID" Type="nvarchar" MaxLength="128" Nullable="false" />
@@ -348,7 +350,7 @@
         </Association>
         <Association Name="FK_CohortUser_To_Cohort">
           <End Role="Cohort" Type="Self.Cohort" Multiplicity="1" />
-          <End Role="CohortUser" Type="Self.CohortUser" Multiplicity="0..1" />
+          <End Role="CohortUser" Type="Self.CohortUser" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Cohort">
               <PropertyRef Name="ID" />
@@ -838,7 +840,6 @@
           <EntitySet Name="Categories" EntityType="EmployeeEvaluationSystem.Entity.EntityModel.Category" />
           <EntitySet Name="Cohorts" EntityType="EmployeeEvaluationSystem.Entity.EntityModel.Cohort" />
           <EntitySet Name="CohortPermissions" EntityType="EmployeeEvaluationSystem.Entity.EntityModel.CohortPermission" />
-          <EntitySet Name="CohortUsers" EntityType="EmployeeEvaluationSystem.Entity.EntityModel.CohortUser" />
           <EntitySet Name="PendingSurveys" EntityType="EmployeeEvaluationSystem.Entity.EntityModel.PendingSurvey" />
           <EntitySet Name="Permissions" EntityType="EmployeeEvaluationSystem.Entity.EntityModel.Permission" />
           <EntitySet Name="Questions" EntityType="EmployeeEvaluationSystem.Entity.EntityModel.Question" />
@@ -866,10 +867,6 @@
             <End Role="Category" EntitySet="Categories" />
             <End Role="Question" EntitySet="Questions" />
           </AssociationSet>
-          <AssociationSet Name="FK_CohortUser_To_Cohort" Association="EmployeeEvaluationSystem.Entity.EntityModel.FK_CohortUser_To_Cohort">
-            <End Role="Cohort" EntitySet="Cohorts" />
-            <End Role="CohortUser" EntitySet="CohortUsers" />
-          </AssociationSet>
           <AssociationSet Name="FK_SurveysAvailable_To_Cohort" Association="EmployeeEvaluationSystem.Entity.EntityModel.FK_SurveysAvailable_To_Cohort">
             <End Role="Cohort" EntitySet="Cohorts" />
             <End Role="SurveysAvailable" EntitySet="SurveysAvailables" />
@@ -889,10 +886,6 @@
           <AssociationSet Name="FK_CohortPermission_To_Perm4" Association="EmployeeEvaluationSystem.Entity.EntityModel.FK_CohortPermission_To_Perm4">
             <End Role="Permission" EntitySet="Permissions" />
             <End Role="CohortPermission" EntitySet="CohortPermissions" />
-          </AssociationSet>
-          <AssociationSet Name="FK_CohortUser_To_Permissions" Association="EmployeeEvaluationSystem.Entity.EntityModel.FK_CohortUser_To_Permissions">
-            <End Role="CohortPermission" EntitySet="CohortPermissions" />
-            <End Role="CohortUser" EntitySet="CohortUsers" />
           </AssociationSet>
           <AssociationSet Name="FK_PendingSurvey_To_Survey" Association="EmployeeEvaluationSystem.Entity.EntityModel.FK_PendingSurvey_To_Survey">
             <End Role="Survey" EntitySet="Surveys" />
@@ -960,10 +953,6 @@
             <End Role="AspNetUser" EntitySet="AspNetUsers" />
             <End Role="AspNetUserLogin" EntitySet="AspNetUserLogins" />
           </AssociationSet>
-          <AssociationSet Name="FK_CohortUser_ToTable" Association="EmployeeEvaluationSystem.Entity.EntityModel.FK_CohortUser_ToTable">
-            <End Role="AspNetUser" EntitySet="AspNetUsers" />
-            <End Role="CohortUser" EntitySet="CohortUsers" />
-          </AssociationSet>
           <AssociationSet Name="FK_PendingSurvey_ToTable" Association="EmployeeEvaluationSystem.Entity.EntityModel.FK_PendingSurvey_ToTable">
             <End Role="AspNetUser" EntitySet="AspNetUsers" />
             <End Role="PendingSurvey" EntitySet="PendingSurveys" />
@@ -979,6 +968,19 @@
           <AssociationSet Name="AspNetUserRoles" Association="EmployeeEvaluationSystem.Entity.EntityModel.AspNetUserRoles">
             <End Role="AspNetRole" EntitySet="AspNetRoles" />
             <End Role="AspNetUser" EntitySet="AspNetUsers" />
+          </AssociationSet>
+          <EntitySet Name="CohortUsers" EntityType="EmployeeEvaluationSystem.Entity.EntityModel.CohortUser" />
+          <AssociationSet Name="FK_CohortUser_ToTable" Association="EmployeeEvaluationSystem.Entity.EntityModel.FK_CohortUser_ToTable">
+            <End Role="AspNetUser" EntitySet="AspNetUsers" />
+            <End Role="CohortUser" EntitySet="CohortUsers" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CohortUser_To_Cohort" Association="EmployeeEvaluationSystem.Entity.EntityModel.FK_CohortUser_To_Cohort">
+            <End Role="Cohort" EntitySet="Cohorts" />
+            <End Role="CohortUser" EntitySet="CohortUsers" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CohortUser_To_Permissions" Association="EmployeeEvaluationSystem.Entity.EntityModel.FK_CohortUser_To_Permissions">
+            <End Role="CohortPermission" EntitySet="CohortPermissions" />
+            <End Role="CohortUser" EntitySet="CohortUsers" />
           </AssociationSet>
         </EntityContainer>
         <EntityType Name="C__MigrationHistory">
@@ -1060,8 +1062,8 @@
           <Property Name="IsDeleted" Type="Boolean" Nullable="false" />
           <Property Name="DateDeleted" Type="DateTime" Precision="3" />
           <Property Name="DateCreated" Type="DateTime" Nullable="false" Precision="3" />
-          <NavigationProperty Name="CohortUser" Relationship="EmployeeEvaluationSystem.Entity.EntityModel.FK_CohortUser_To_Cohort" FromRole="Cohort" ToRole="CohortUser" />
           <NavigationProperty Name="SurveysAvailables" Relationship="EmployeeEvaluationSystem.Entity.EntityModel.FK_SurveysAvailable_To_Cohort" FromRole="Cohort" ToRole="SurveysAvailable" />
+          <NavigationProperty Name="CohortUsers" Relationship="EmployeeEvaluationSystem.Entity.EntityModel.FK_CohortUser_To_Cohort" FromRole="Cohort" ToRole="CohortUser" />
         </EntityType>
         <EntityType Name="CohortPermission">
           <Key>
@@ -1073,22 +1075,11 @@
           <Property Name="User" Type="Int32" Nullable="false" />
           <Property Name="Survey" Type="Int32" Nullable="false" />
           <Property Name="Report" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="Permission" Relationship="EmployeeEvaluationSystem.Entity.EntityModel.FK_CohortPermission_To_Perm1" FromRole="CohortPermission" ToRole="Permission" />
-          <NavigationProperty Name="Permission1" Relationship="EmployeeEvaluationSystem.Entity.EntityModel.FK_CohortPermission_To_Perm2" FromRole="CohortPermission" ToRole="Permission" />
-          <NavigationProperty Name="Permission2" Relationship="EmployeeEvaluationSystem.Entity.EntityModel.FK_CohortPermission_To_Perm3" FromRole="CohortPermission" ToRole="Permission" />
-          <NavigationProperty Name="Permission3" Relationship="EmployeeEvaluationSystem.Entity.EntityModel.FK_CohortPermission_To_Perm4" FromRole="CohortPermission" ToRole="Permission" />
+          <NavigationProperty Name="CohortPermissions" Relationship="EmployeeEvaluationSystem.Entity.EntityModel.FK_CohortPermission_To_Perm1" FromRole="CohortPermission" ToRole="Permission" />
+          <NavigationProperty Name="UserPermissions" Relationship="EmployeeEvaluationSystem.Entity.EntityModel.FK_CohortPermission_To_Perm2" FromRole="CohortPermission" ToRole="Permission" />
+          <NavigationProperty Name="SurveyPermissions" Relationship="EmployeeEvaluationSystem.Entity.EntityModel.FK_CohortPermission_To_Perm3" FromRole="CohortPermission" ToRole="Permission" />
+          <NavigationProperty Name="ReportPermissions" Relationship="EmployeeEvaluationSystem.Entity.EntityModel.FK_CohortPermission_To_Perm4" FromRole="CohortPermission" ToRole="Permission" />
           <NavigationProperty Name="CohortUsers" Relationship="EmployeeEvaluationSystem.Entity.EntityModel.FK_CohortUser_To_Permissions" FromRole="CohortPermission" ToRole="CohortUser" />
-        </EntityType>
-        <EntityType Name="CohortUser">
-          <Key>
-            <PropertyRef Name="CohortID" />
-          </Key>
-          <Property Name="CohortID" Type="Int32" Nullable="false" />
-          <Property Name="UserID" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
-          <Property Name="CohortPermissionId" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="Cohort" Relationship="EmployeeEvaluationSystem.Entity.EntityModel.FK_CohortUser_To_Cohort" FromRole="CohortUser" ToRole="Cohort" />
-          <NavigationProperty Name="CohortPermission" Relationship="EmployeeEvaluationSystem.Entity.EntityModel.FK_CohortUser_To_Permissions" FromRole="CohortUser" ToRole="CohortPermission" />
-          <NavigationProperty Name="AspNetUser" Relationship="EmployeeEvaluationSystem.Entity.EntityModel.FK_CohortUser_ToTable" FromRole="CohortUser" ToRole="AspNetUser" />
         </EntityType>
         <EntityType Name="PendingSurvey">
           <Key>
@@ -1303,18 +1294,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_CohortUser_To_Cohort">
-          <End Type="EmployeeEvaluationSystem.Entity.EntityModel.Cohort" Role="Cohort" Multiplicity="1" />
-          <End Type="EmployeeEvaluationSystem.Entity.EntityModel.CohortUser" Role="CohortUser" Multiplicity="0..1" />
-          <ReferentialConstraint>
-            <Principal Role="Cohort">
-              <PropertyRef Name="ID" />
-            </Principal>
-            <Dependent Role="CohortUser">
-              <PropertyRef Name="CohortID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_SurveysAvailable_To_Cohort">
           <End Type="EmployeeEvaluationSystem.Entity.EntityModel.Cohort" Role="Cohort" Multiplicity="1" />
           <End Type="EmployeeEvaluationSystem.Entity.EntityModel.SurveysAvailable" Role="SurveysAvailable" Multiplicity="*" />
@@ -1372,18 +1351,6 @@
             </Principal>
             <Dependent Role="CohortPermission">
               <PropertyRef Name="Report" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_CohortUser_To_Permissions">
-          <End Type="EmployeeEvaluationSystem.Entity.EntityModel.CohortPermission" Role="CohortPermission" Multiplicity="1" />
-          <End Type="EmployeeEvaluationSystem.Entity.EntityModel.CohortUser" Role="CohortUser" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="CohortPermission">
-              <PropertyRef Name="ID" />
-            </Principal>
-            <Dependent Role="CohortUser">
-              <PropertyRef Name="CohortPermissionId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -1585,14 +1552,15 @@
           <Property Name="UserName" Type="String" Nullable="false" MaxLength="256" FixedLength="false" Unicode="true" />
           <Property Name="FirstName" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
           <Property Name="LastName" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
-          <Property Name="MailingAddress" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="MailingAddress" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="AspNetUserClaims" Relationship="EmployeeEvaluationSystem.Entity.EntityModel.FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId" FromRole="AspNetUser" ToRole="AspNetUserClaim" />
           <NavigationProperty Name="AspNetUserLogins" Relationship="EmployeeEvaluationSystem.Entity.EntityModel.FK_dbo_AspNetUserLogins_dbo_AspNetUsers_UserId" FromRole="AspNetUser" ToRole="AspNetUserLogin" />
-          <NavigationProperty Name="CohortUsers" Relationship="EmployeeEvaluationSystem.Entity.EntityModel.FK_CohortUser_ToTable" FromRole="AspNetUser" ToRole="CohortUser" />
           <NavigationProperty Name="PendingSurveys" Relationship="EmployeeEvaluationSystem.Entity.EntityModel.FK_PendingSurvey_ToTable" FromRole="AspNetUser" ToRole="PendingSurvey" />
           <NavigationProperty Name="Surveys" Relationship="EmployeeEvaluationSystem.Entity.EntityModel.FK_Survey_ToTable" FromRole="AspNetUser" ToRole="Survey" />
           <NavigationProperty Name="SurveyInstances" Relationship="EmployeeEvaluationSystem.Entity.EntityModel.FK_SurveyInstance_ToTable" FromRole="AspNetUser" ToRole="SurveyInstance" />
           <NavigationProperty Name="AspNetRoles" Relationship="EmployeeEvaluationSystem.Entity.EntityModel.AspNetUserRoles" FromRole="AspNetUser" ToRole="AspNetRole" />
+          <Property Name="EmployeeID" Type="String" Nullable="false" MaxLength="128" FixedLength="true" Unicode="true" />
+          <NavigationProperty Name="CohortUsers" Relationship="EmployeeEvaluationSystem.Entity.EntityModel.FK_CohortUser_ToTable" FromRole="AspNetUser" ToRole="CohortUser" />
         </EntityType>
         <Association Name="FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId">
           <End Type="EmployeeEvaluationSystem.Entity.EntityModel.AspNetUser" Role="AspNetUser" Multiplicity="1">
@@ -1619,18 +1587,6 @@
             </Principal>
             <Dependent Role="AspNetUserLogin">
               <PropertyRef Name="UserId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_CohortUser_ToTable">
-          <End Type="EmployeeEvaluationSystem.Entity.EntityModel.AspNetUser" Role="AspNetUser" Multiplicity="1" />
-          <End Type="EmployeeEvaluationSystem.Entity.EntityModel.CohortUser" Role="CohortUser" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="AspNetUser">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="CohortUser">
-              <PropertyRef Name="UserID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -1673,6 +1629,54 @@
         <Association Name="AspNetUserRoles">
           <End Type="EmployeeEvaluationSystem.Entity.EntityModel.AspNetRole" Role="AspNetRole" Multiplicity="*" />
           <End Type="EmployeeEvaluationSystem.Entity.EntityModel.AspNetUser" Role="AspNetUser" Multiplicity="*" />
+        </Association>
+        <EntityType Name="CohortUser">
+          <Key>
+            <PropertyRef Name="CohortID" />
+            <PropertyRef Name="UserID" />
+          </Key>
+          <Property Name="CohortID" Type="Int32" Nullable="false" />
+          <Property Name="UserID" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="CohortPermissionId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="AspNetUser" Relationship="EmployeeEvaluationSystem.Entity.EntityModel.FK_CohortUser_ToTable" FromRole="CohortUser" ToRole="AspNetUser" />
+          <NavigationProperty Name="Cohort" Relationship="EmployeeEvaluationSystem.Entity.EntityModel.FK_CohortUser_To_Cohort" FromRole="CohortUser" ToRole="Cohort" />
+          <NavigationProperty Name="CohortPermission" Relationship="EmployeeEvaluationSystem.Entity.EntityModel.FK_CohortUser_To_Permissions" FromRole="CohortUser" ToRole="CohortPermission" />
+        </EntityType>
+        <Association Name="FK_CohortUser_ToTable">
+          <End Type="EmployeeEvaluationSystem.Entity.EntityModel.AspNetUser" Role="AspNetUser" Multiplicity="1" />
+          <End Type="EmployeeEvaluationSystem.Entity.EntityModel.CohortUser" Role="CohortUser" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AspNetUser">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="CohortUser">
+              <PropertyRef Name="UserID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CohortUser_To_Cohort">
+          <End Type="EmployeeEvaluationSystem.Entity.EntityModel.Cohort" Role="Cohort" Multiplicity="1" />
+          <End Type="EmployeeEvaluationSystem.Entity.EntityModel.CohortUser" Role="CohortUser" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Cohort">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="CohortUser">
+              <PropertyRef Name="CohortID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CohortUser_To_Permissions">
+          <End Type="EmployeeEvaluationSystem.Entity.EntityModel.CohortPermission" Role="CohortPermission" Multiplicity="1" />
+          <End Type="EmployeeEvaluationSystem.Entity.EntityModel.CohortUser" Role="CohortUser" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CohortPermission">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="CohortUser">
+              <PropertyRef Name="CohortPermissionId" />
+            </Dependent>
+          </ReferentialConstraint>
         </Association>
         </Schema>
     </edmx:ConceptualModels>
@@ -1767,15 +1771,6 @@
                 <ScalarProperty Name="Cohort" ColumnName="Cohort" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="CohortUsers">
-            <EntityTypeMapping TypeName="EmployeeEvaluationSystem.Entity.EntityModel.CohortUser">
-              <MappingFragment StoreEntitySet="CohortUser">
-                <ScalarProperty Name="CohortPermissionId" ColumnName="CohortPermissionId" />
-                <ScalarProperty Name="UserID" ColumnName="UserID" />
-                <ScalarProperty Name="CohortID" ColumnName="CohortID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -1931,6 +1926,7 @@
           <EntitySetMapping Name="AspNetUsers">
             <EntityTypeMapping TypeName="EmployeeEvaluationSystem.Entity.EntityModel.AspNetUser">
               <MappingFragment StoreEntitySet="AspNetUsers">
+                <ScalarProperty Name="EmployeeID" ColumnName="EmployeeID" />
                 <ScalarProperty Name="MailingAddress" ColumnName="MailingAddress" />
                 <ScalarProperty Name="LastName" ColumnName="LastName" />
                 <ScalarProperty Name="FirstName" ColumnName="FirstName" />
@@ -1957,6 +1953,15 @@
               <ScalarProperty Name="Id" ColumnName="RoleId" />
             </EndProperty>
           </AssociationSetMapping>
+          <EntitySetMapping Name="CohortUsers">
+            <EntityTypeMapping TypeName="EmployeeEvaluationSystem.Entity.EntityModel.CohortUser">
+              <MappingFragment StoreEntitySet="CohortUser">
+                <ScalarProperty Name="CohortPermissionId" ColumnName="CohortPermissionId" />
+                <ScalarProperty Name="UserID" ColumnName="UserID" />
+                <ScalarProperty Name="CohortID" ColumnName="CohortID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

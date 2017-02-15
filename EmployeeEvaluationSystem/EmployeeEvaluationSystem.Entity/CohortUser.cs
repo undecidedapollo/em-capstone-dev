@@ -18,8 +18,8 @@ namespace EmployeeEvaluationSystem.Entity
         public string UserID { get; set; }
         public int CohortPermissionId { get; set; }
     
+        public virtual AspNetUser AspNetUser { get; set; }
         public virtual Cohort Cohort { get; set; }
         public virtual CohortPermission CohortPermission { get; set; }
-        public virtual AspNetUser AspNetUser { get; set; }
     }
 }

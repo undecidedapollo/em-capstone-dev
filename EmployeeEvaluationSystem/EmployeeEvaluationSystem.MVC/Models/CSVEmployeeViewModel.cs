@@ -19,6 +19,7 @@ namespace EmployeeEvaluationSystem.MVC.Models
         {
             return new RegisterViewModel
             {
+                EmployeeID = EmployeeId,
                 Email = Email,
                 FirstName = FirstName,
                 LastName = LastName,
