@@ -58,10 +58,15 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Model\Authentication\PersonalAspNetUserViewModel.cs" />
+    <Compile Include="Model\Authentication\PersonalCohortViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repository\Core\IUnitOfWork.cs" />
+    <Compile Include="Repository\Core\Repositories\ICohortRepository.cs" />
+    <Compile Include="Repository\Core\Repositories\ICohortUserRepository.cs" />
     <Compile Include="Repository\Core\Repositories\IRepository.cs" />
     <Compile Include="Repository\Core\Repositories\IUserRepository.cs" />
+    <Compile Include="Repository\EF6\Repositories\CohortRepository.cs" />
+    <Compile Include="Repository\EF6\Repositories\CohortUserRepository.cs" />
     <Compile Include="Repository\EF6\Repositories\Repository.cs" />
     <Compile Include="Repository\EF6\Repositories\UserRepository.cs" />
     <Compile Include="Repository\EF6\UnitOfWork.cs" />

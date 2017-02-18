@@ -218,6 +218,7 @@
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\AspNetUsersController.cs" />
+    <Compile Include="Controllers\CohortController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Global.asax.cs">
@@ -226,6 +227,7 @@
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\Authentication\MultiRegisterResult.cs" />
     <Compile Include="Models\ConfirmEmailViewModel.cs" />
+    <Compile Include="Models\CreateCohortViewModel.cs" />
     <Compile Include="Models\CSVEmployeeViewModel.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
@@ -320,6 +322,11 @@
     <Content Include="Scripts\jquery-3.1.1.min.map" />
     <Content Include="Views\AspNetUsers\AddCSV.cshtml" />
     <Content Include="Views\AspNetUsers\SaveCSV.cshtml" />
+    <Content Include="Views\Cohort\Create.cshtml" />
+    <Content Include="Views\Cohort\Delete.cshtml" />
+    <Content Include="Views\Cohort\Details.cshtml" />
+    <Content Include="Views\Cohort\Edit.cshtml" />
+    <Content Include="Views\Cohort\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
