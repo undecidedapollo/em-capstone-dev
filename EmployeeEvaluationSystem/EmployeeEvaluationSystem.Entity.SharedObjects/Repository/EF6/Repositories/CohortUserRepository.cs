@@ -7,7 +7,7 @@ using EmployeeEvaluationSystem.Entity.SharedObjects.Repository.Core.Repositories
 
 namespace EmployeeEvaluationSystem.Entity.SharedObjects.Repository.EF6.Repositories
 {
-    class CohortUserRepository : Repository, ICohortUserRepository
+    public class CohortUserRepository : Repository, ICohortUserRepository
     {
         public CohortUserRepository(UnitOfWork unitOfWork, EmployeeDatabaseEntities dbcontext) : base(unitOfWork, dbcontext)
         {
@@ -45,6 +45,11 @@ namespace EmployeeEvaluationSystem.Entity.SharedObjects.Repository.EF6.Repositor
             //TODO : Edit CohortUser
 
             return null;
+        }
+
+        public void AddCohortUserToDb(CohortUser cohortUserToAdd)
+        {
+            this.dbcontext.CohortUsers.Add(cohortUserToAdd);
         }
     }
 }

@@ -79,9 +79,21 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create(CreateCohortViewModel model)
         {
+
+            var cohort = new Cohort()
+            {
+                ID = model.PersonalCohortViewModel.ID,
+                Name = model.PersonalCohortViewModel.Name,
+                Description = model.PersonalCohortViewModel.Description
+            };
+
+            var cohortPermission = new CohortPermission()
+            {
+                Name = 
+            }
+
             using (var unitOfWork = new UnitOfWork())
             {
-                var cohort = unitOfWork.Cohorts.CreateCohort(model.PersonalCohortViewModel.ID,model.PersonalCohortViewModel.Name,model.PersonalCohortViewModel.Description,model.PersonalCohortViewModel.DateCreated);
 
                 unitOfWork.Cohorts.AddCohortToDb(cohort);
 
