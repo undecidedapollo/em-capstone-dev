@@ -33,8 +33,24 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Castle.Core, Version=3.3.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
+      <HintPath>..\packages\Castle.Core.3.3.3\lib\net45\Castle.Core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+    <Reference Include="Moq, Version=4.5.30.0, Culture=neutral, PublicKeyToken=69f491c39445e920, processorArchitecture=MSIL">
+      <HintPath>..\packages\Moq.4.5.30\lib\net45\Moq.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="SendGrid.SmtpApi, Version=1.3.1.0, Culture=neutral, PublicKeyToken=2ae73662c35d80e4, processorArchitecture=MSIL">
       <HintPath>..\packages\SendGrid.SmtpApi.1.3.1\lib\net40\SendGrid.SmtpApi.dll</HintPath>
       <Private>True</Private>
@@ -90,8 +106,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Infrastructure\IUnitOfWorkBuilder.cs" />
+    <Compile Include="Infrastructure\UnitOfWorkBuilder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Controllers\HomeControllerTest.cs" />
+    <Compile Include="Repositories\UserRepositoryTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="App.config" />
@@ -100,11 +119,24 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\EmployeeEvaluationSystem.Entity.SharedObjects\EmployeeEvaluationSystem.Entity.SharedObjects.csproj">
+      <Project>{5aa6bce6-b37f-4b3a-ba9b-698e63928840}</Project>
+      <Name>EmployeeEvaluationSystem.Entity.SharedObjects</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\EmployeeEvaluationSystem.Entity\EmployeeEvaluationSystem.Entity.csproj">
+      <Project>{f77457d5-71ae-4d75-9c92-458485108c85}</Project>
+      <Name>EmployeeEvaluationSystem.Entity</Name>
+    </ProjectReference>
     <ProjectReference Include="..\EmployeeEvaluationSystem.MVC\EmployeeEvaluationSystem.MVC.csproj">
       <Project>{B36B9335-3A75-44B5-94A2-1352093FAD7F}</Project>
       <Name>EmployeeEvaluationSystem.MVC</Name>
     </ProjectReference>
+    <ProjectReference Include="..\EmployeeEvaluationSystem.SharedObjects\EmployeeEvaluationSystem.SharedObjects.csproj">
+      <Project>{b05bb64d-648d-4dfe-b999-95d14a9e6dc9}</Project>
+      <Name>EmployeeEvaluationSystem.SharedObjects</Name>
+    </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.
