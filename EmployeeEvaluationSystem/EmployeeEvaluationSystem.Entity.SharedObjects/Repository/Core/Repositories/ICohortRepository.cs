@@ -14,8 +14,7 @@ namespace EmployeeEvaluationSystem.Entity.SharedObjects.Repository.Core.Reposito
         Cohort GetCohort(string currentUserId, int? cohortIdToGet);
         void DeleteCohort(string currentUserId, int cohortIdToGet);
         Cohort EditCohort(string currentUserId, Cohort cohortToEdit);
-        Cohort CreateCohort(int id, string name, string description, DateTime dateCreated);
-        void AddCohortToDb(Cohort cohortToAdd);
+        void AddCohortToDb(string currentUserId, Cohort cohortToAdd);
         IEnumerable<AspNetUser> GetAllUsersThatAreNotPartOfACohort(string userId);
     }
 }

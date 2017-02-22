@@ -7,31 +7,27 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using EmployeeEvaluationSystem.Entity;
-using EmployeeEvaluationSystem.Entity.SharedObjects.Model.Authentication;
 using EmployeeEvaluationSystem.Entity.SharedObjects.Repository.EF6;
-using EmployeeEvaluationSystem.MVC.Models;
 using Microsoft.AspNet.Identity;
 
 namespace EmployeeEvaluationSystem.MVC.Controllers
 {
-    public class CohortController : Controller
+    public class PermissionsController : Controller
     {
-        // GET: Cohort
+        // GET: Permissions
         public ActionResult Index()
         {
             var userId = User?.Identity?.GetUserId();
 
             using (var unitOfWork = new UnitOfWork())
             {
-                var unconvertedCohorts = unitOfWork.Cohorts.GetAllCohorts(userId).ToList();
+                var permissions = unitOfWork.Permissions.GetAllPermissions(userId);
 
-                var convertedCohorts = unconvertedCohorts?.Select(x => PersonalCohortViewModel.Convert(x))?.ToList();
-
-                return View(convertedCohorts);
+                return View(permissions);
             }
         }
 
-        // GET: Cohort/Details/5
+        // GET: Permissions/Details/5
         public ActionResult Details(int? id)
         {
             if (id == null)
@@ -43,65 +39,48 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
 
             using (var unitOfWork = new UnitOfWork())
             {
-                Cohort cohort = unitOfWork.Cohorts.GetCohort(userId, id);
+                var permission = unitOfWork.Permissions.GetPermission(userId, id);
 
-
-                if (cohort == null)
+                if (permission == null)
                 {
                     return HttpNotFound();
                 }
 
-                return View(cohort);
+                return View(permission);
             }
         }
 
-        // GET: Cohort/Create
+        // GET: Permissions/Create
         public ActionResult Create()
+        {
+            return View();
+        }
+
+        // POST: Permissions/Create
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Create([Bind(Include = "ID,Name,Add,Edit,Delete,View")] Permission permission)
         {
             var userId = User?.Identity?.GetUserId();
 
             using (var unitOfWork = new UnitOfWork())
             {
-                var unconvertedUsers = unitOfWork.Cohorts.GetAllUsersThatAreNotPartOfACohort(userId).ToList();
+                if (ModelState.IsValid)
+                {
+                    unitOfWork.Permissions.AddPermissionToDb(userId, permission);
 
-                var convertedUsers = unconvertedUsers?.Select(x => PersonalAspNetUserViewModel.Convert(x))?.ToList();
+                    unitOfWork.Complete();
 
-                var viewModel = new CreateCohortViewModel(convertedUsers);
+                    return RedirectToAction("Index");
+                }
 
-                return View(viewModel);
+                return View(permission);
             }
         }
 
-        // POST: Cohort/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create(CreateCohortViewModel model)
-        {
-
-            var cohort = new Cohort()
-            {
-                ID = model.PersonalCohortViewModel.ID,
-                Name = model.PersonalCohortViewModel.Name,
-                Description = model.PersonalCohortViewModel.Description
-            };
-
-            var cohortPermission = new CohortPermission()
-            {
-                Name = 
-            }
-
-            using (var unitOfWork = new UnitOfWork())
-            {
-
-                unitOfWork.Cohorts.AddCohortToDb(cohort);
-
-                return RedirectToAction("Index");
-            }
-        }
-
-        // GET: Cohort/Edit/5
+        // GET: Permissions/Edit/5
         public ActionResult Edit(int? id)
         {
             if (id == null)
@@ -113,42 +92,42 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
 
             using (var unitOfWork = new UnitOfWork())
             {
-                Cohort cohort = unitOfWork.Cohorts.GetCohort(userId, id);
+                var permission = unitOfWork.Permissions.GetPermission(userId, id);
 
-                if (cohort == null)
+                if (permission == null)
                 {
                     return HttpNotFound();
                 }
 
-                return View(cohort);
+                return View(permission);
             }
         }
 
-        // POST: Cohort/Edit/5
+        // POST: Permissions/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "ID,Name,Description,IsDeleted,DateDeleted,DateCreated")] Cohort cohort)
+        public ActionResult Edit([Bind(Include = "ID,Name,Add,Edit,Delete,View")] Permission permission)
         {
-            if (cohort == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-
             var userId = User?.Identity?.GetUserId();
 
             using (var unitOfWork = new UnitOfWork())
             {
-                var newCohort = unitOfWork.Cohorts.EditCohort(userId, cohort);
+                if (ModelState.IsValid)
+                {
+                    unitOfWork.Permissions.EditPermission(userId, permission);
 
-                unitOfWork.Complete();
+                    unitOfWork.Complete();
 
-                return RedirectToAction("Index");
+                    return RedirectToAction("Index");
+                }
+
+                return View(permission);
             }
         }
 
-        // GET: Cohort/Delete/5
+        // GET: Permissions/Delete/5
         public ActionResult Delete(int? id)
         {
             if (id == null)
@@ -160,18 +139,18 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
 
             using (var unitOfWork = new UnitOfWork())
             {
-                Cohort cohort = unitOfWork.Cohorts.GetCohort(userId, id);
+                var permission = unitOfWork.Permissions.GetPermission(userId, id);
 
-                if (cohort == null)
+                if (permission == null)
                 {
                     return HttpNotFound();
                 }
 
-                return View(cohort);
+                return View(permission);
             }
         }
 
-        // POST: Cohort/Delete/5
+        // POST: Permissions/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
@@ -180,7 +159,7 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
 
             using (var unitOfWork = new UnitOfWork())
             {
-                unitOfWork.Cohorts.DeleteCohort(userId, id);
+                unitOfWork.Permissions.DeletePermission(userId, id);
 
                 unitOfWork.Complete();
 

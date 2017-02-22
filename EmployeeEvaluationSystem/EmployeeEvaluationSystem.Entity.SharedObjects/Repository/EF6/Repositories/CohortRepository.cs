@@ -64,10 +64,10 @@ namespace EmployeeEvaluationSystem.Entity.SharedObjects.Repository.EF6.Repositor
             return cohort;
         }
 
-        public IEnumerable<AspNetUser> GetAllUsersThatAreNotPartOfACohort(string userId)
+        public IEnumerable<AspNetUser> GetAllUsersThatAreNotPartOfACohort(string currentUserId)
         {
             
-            var users = unitOfWork.Users.GetAllUsers(userId).ToList();
+            var users = unitOfWork.Users.GetAllUsers(currentUserId).ToList();
             
 
             foreach (var user in users)
@@ -81,22 +81,7 @@ namespace EmployeeEvaluationSystem.Entity.SharedObjects.Repository.EF6.Repositor
             return users;
         }
 
-        public Cohort CreateCohort(int id, string name, string description, DateTime dateCreated)
-        {
-            var cohort = new Cohort
-            {
-                ID = id,
-                Name = name,
-                Description = description,
-                DateCreated = dateCreated,
-                IsDeleted = false,
-                DateDeleted = null
-            };
-
-            return cohort;
-        }
-
-        public void AddCohortToDb(Cohort cohortToAdd)
+        public void AddCohortToDb(string currentUserId, Cohort cohortToAdd)
         {
             this.dbcontext.Cohorts.Add(cohortToAdd);
         }

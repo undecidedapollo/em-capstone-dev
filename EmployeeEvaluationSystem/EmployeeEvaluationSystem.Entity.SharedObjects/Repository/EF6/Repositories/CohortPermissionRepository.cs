@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -23,12 +24,12 @@ namespace EmployeeEvaluationSystem.Entity.SharedObjects.Repository.EF6.Repositor
             return this.dbcontext.CohortPermissions;
         }
 
-        public CohortPermission GetCohortPermission(string currentUserId, string cohortPermissionIdToGet)
+        public CohortPermission GetCohortPermission(string currentUserId, int? cohortPermissionIdToGet)
         {
             return this.dbcontext.CohortPermissions.FirstOrDefault(x => x.ID.Equals(cohortPermissionIdToGet));
         }
 
-        public void DeleteCohortPermission(string currentUserId, string cohortPermissionIdToDelete)
+        public void DeleteCohortPermission(string currentUserId, int cohortPermissionIdToDelete)
         {
             var cohortPermission = this.GetCohortPermission(currentUserId, cohortPermissionIdToDelete);
 
@@ -40,14 +41,12 @@ namespace EmployeeEvaluationSystem.Entity.SharedObjects.Repository.EF6.Repositor
             //TODO : Delete CohortPermission
         }
 
-        public CohortPermission EditCohortPermission(string currentUserId, CohortPermission cohortPermissionToEdit)
+        public void EditCohortPermission(string currentUserId, CohortPermission cohortPermissionToEdit)
         {
-            //TODO : Edit CohortPermission
-
-            return null;
+            this.dbcontext.Entry(cohortPermissionToEdit).State = EntityState.Modified;
         }
 
-        public void AddCohortPermissionToDb(CohortPermission cohortPermissionToAdd)
+        public void AddCohortPermissionToDb(string currentUserId, CohortPermission cohortPermissionToAdd)
         {
             this.dbcontext.CohortPermissions.Add(cohortPermissionToAdd);
         }
