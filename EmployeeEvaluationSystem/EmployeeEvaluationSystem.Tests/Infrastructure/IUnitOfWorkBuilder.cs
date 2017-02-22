@@ -12,6 +12,8 @@ namespace EmployeeEvaluationSystem.Tests.Infrastructure
 {
     public interface IUnitOfWorkBuilder<T>
     {
-        void InitializeOne<T1>(Expression<Func<T, IEnumerable<T1>>> x, IList<T1> data = null) where T1 : class;
+        IUnitOfWorkBuilder<T> InitializeOne<T1>(Expression<Func<T, IEnumerable<T1>>> x, IList<T1> data = null) where T1 : class;
+
+        T GetContext();
     }
 }
