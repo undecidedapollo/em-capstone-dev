@@ -62,6 +62,7 @@ namespace EmployeeEvaluationSystem.Entity.SharedObjects.Repository.EF6.Repositor
             user.LastName = userToEdit.LastName;
             user.PhoneNumber = userToEdit.PhoneNumber;
             user.MailingAddress = userToEdit.MailingAddress;
+            user.EmployeeID = userToEdit.EmployeeID;
 
             return user;
         }

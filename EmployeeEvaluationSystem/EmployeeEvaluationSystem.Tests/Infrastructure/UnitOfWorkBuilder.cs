@@ -86,10 +86,10 @@ namespace EmployeeEvaluationSystem.Tests.Infrastructure
             }
         }
 
-        public void InitializeOne<T3>(Expression<Func<T, IEnumerable<T3>>> x, IList<T3> data = null) where T3 : class
+        public IUnitOfWorkBuilder<T> InitializeOne<T3>(Expression<Func<T, IEnumerable<T3>>> x, IList<T3> data = null) where T3 : class
         {
 
-            if(data == null)
+            if (data == null)
             {
                 data = new List<T3>();
             }
@@ -97,21 +97,36 @@ namespace EmployeeEvaluationSystem.Tests.Infrastructure
             var newData = data.AsQueryable();
 
             var mockSet = new Mock<DbSet<T3>>();
-            mockSet.As<IQueryable<T3>>().Setup(m => m.Provider).Returns(newData.Provider);
-            mockSet.As<IQueryable<T3>>().Setup(m => m.Expression).Returns(newData.Expression);
-            mockSet.As<IQueryable<T3>>().Setup(m => m.ElementType).Returns(newData.ElementType);
-            mockSet.As<IQueryable<T3>>().Setup(m => m.GetEnumerator()).Returns(newData.GetEnumerator());
+            mockSet.As<IQueryable<T3>>().Setup(m => m.Provider).Returns(() => { return data.AsQueryable().Provider; });
+            mockSet.As<IQueryable<T3>>().Setup(m => m.Expression).Returns(() => { return data.AsQueryable().Expression; });
+            mockSet.As<IQueryable<T3>>().Setup(m => m.ElementType).Returns(() => { return data.AsQueryable().ElementType; });
+            mockSet.As<IQueryable<T3>>().Setup(m => m.GetEnumerator()).Returns(() => { return data.AsQueryable().GetEnumerator(); });
+            mockSet.As<IEnumerable<T3>>().Setup(m => m.GetEnumerator()).Returns(() => { return data.GetEnumerator(); });
+            mockSet.As<IEnumerable>().Setup(m => m.GetEnumerator()).Returns(() => { return data.GetEnumerator(); });
 
-            
+            mockSet.As<IDbSet<T3>>().Setup(m => m.Add(It.IsAny<T3>())).Returns<T3>((a) => { data.Add(a); return a; });
             mockContext.Setup(x).Returns(mockSet.Object);
+
+            return this;
         }
 
         public T GetContext()
         {
             return this.mockContext.Object;
         }
+        public static IUnitOfWorkBuilder<T> Create()
+        {
+            return new EFUnitOfWorkBuilder<T>();
+        }
+    }
 
-        
+    public static class EFUnitOfWorkBuilder
+    {
+
+        public static IUnitOfWorkBuilder<TStatic> Create<TStatic>() where TStatic : DbContext
+        {
+            return new EFUnitOfWorkBuilder<TStatic>();
+        }
     }
 
     public static class TypeExtensions
