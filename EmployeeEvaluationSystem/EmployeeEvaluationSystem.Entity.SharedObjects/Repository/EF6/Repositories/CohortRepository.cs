@@ -68,14 +68,20 @@ namespace EmployeeEvaluationSystem.Entity.SharedObjects.Repository.EF6.Repositor
         {
             
             var users = unitOfWork.Users.GetAllUsers(currentUserId).ToList();
+            var usersPartOfCohort = new List<AspNetUser>();
             
 
             foreach (var user in users)
             {
                 if (this.dbcontext.CohortUsers.Any(x => x.UserID.Equals(user.Id)))
                 {
-                    users.Remove(user);
+                    usersPartOfCohort.Add(user);
                 }
+            }
+
+            foreach (var user in usersPartOfCohort)
+            {
+                users.Remove(user);
             }
 
             return users;

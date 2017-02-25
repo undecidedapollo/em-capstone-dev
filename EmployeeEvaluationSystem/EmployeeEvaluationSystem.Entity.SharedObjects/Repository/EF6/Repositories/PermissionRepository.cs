@@ -27,7 +27,9 @@ namespace EmployeeEvaluationSystem.Entity.SharedObjects.Repository.EF6.Repositor
 
         public Permission GetPermission(string currentUserId, int? permissionIdToGet)
         {
-            return this.dbcontext.Permissions.FirstOrDefault(x => x.ID.Equals(permissionIdToGet));
+            var permission = this.dbcontext.Permissions.FirstOrDefault(x => x.ID == permissionIdToGet);
+
+            return permission;
         }
 
         public void DeletePermission(string currentUserId, int permissionIdToDelete)

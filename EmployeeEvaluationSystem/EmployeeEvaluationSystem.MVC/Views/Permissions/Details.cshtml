@@ -1,13 +1,12 @@
-﻿@model EmployeeEvaluationSystem.Entity.Permission
+﻿@model EmployeeEvaluationSystem.Entity.SharedObjects.Model.Authentication.PersonalPermissionViewModel
 
 @{
-    ViewBag.Title = "Details";
+    ViewBag.Title = "Permission Details";
 }
 
-<h2>Details</h2>
+<h2>Permission Details</h2>
 
 <div>
-    <h4>Permission</h4>
     <hr />
     <dl class="dl-horizontal">
         <dt>
@@ -54,5 +53,5 @@
 </div>
 <p>
     @Html.ActionLink("Edit", "Edit", new { id = Model.ID }) |
-    @Html.ActionLink("Back to List", "Index")
+    @Html.ActionLink("Back to Permissions", "Index")
 </p>

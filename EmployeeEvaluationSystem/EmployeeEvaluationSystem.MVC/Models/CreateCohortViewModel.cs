@@ -12,11 +12,5 @@ namespace EmployeeEvaluationSystem.MVC.Models
     {
         public PersonalCohortViewModel Cohort { get; set; }
         public List<PersonalAspNetUserViewModel> Users { get; set; }
-
-        public CreateCohortViewModel(List<PersonalAspNetUserViewModel> users)
-        {
-            Users = users;
-            Cohort = new PersonalCohortViewModel();
-        }
     }
 }

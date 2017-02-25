@@ -7,6 +7,7 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using EmployeeEvaluationSystem.Entity;
+using EmployeeEvaluationSystem.Entity.SharedObjects.Model.Authentication;
 using EmployeeEvaluationSystem.Entity.SharedObjects.Repository.EF6;
 using Microsoft.AspNet.Identity;
 
@@ -21,9 +22,11 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
 
             using (var unitOfWork = new UnitOfWork())
             {
-                var permissions = unitOfWork.Permissions.GetAllPermissions(userId);
+                var unconvertedPermissions = unitOfWork.Permissions.GetAllPermissions(userId).ToList();
 
-                return View(permissions);
+                var convertedPermissions = unconvertedPermissions?.Select(x => PersonalPermissionViewModel.Convert(x))?.ToList();
+
+                return View(convertedPermissions);
             }
         }
 
@@ -39,14 +42,16 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
 
             using (var unitOfWork = new UnitOfWork())
             {
-                var permission = unitOfWork.Permissions.GetPermission(userId, id);
+                var unconvertedPermission = unitOfWork.Permissions.GetPermission(userId, id);
 
-                if (permission == null)
+                var convertedPermission = PersonalPermissionViewModel.Convert(unconvertedPermission);
+
+                if (convertedPermission == null)
                 {
                     return HttpNotFound();
                 }
 
-                return View(permission);
+                return View(convertedPermission);
             }
         }
 
@@ -61,22 +66,28 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "ID,Name,Add,Edit,Delete,View")] Permission permission)
+        public ActionResult Create(PersonalPermissionViewModel model)
         {
             var userId = User?.Identity?.GetUserId();
 
+            var permission = new Permission()
+            {
+                ID = model.ID,
+                Name = model.Name,
+                Add = model.Add,
+                Edit = model.Edit,
+                Delete = model.Delete,
+                View = model.View
+            };
+
             using (var unitOfWork = new UnitOfWork())
             {
-                if (ModelState.IsValid)
-                {
-                    unitOfWork.Permissions.AddPermissionToDb(userId, permission);
+                
+                unitOfWork.Permissions.AddPermissionToDb(userId, permission);
 
-                    unitOfWork.Complete();
+                unitOfWork.Complete();
 
-                    return RedirectToAction("Index");
-                }
-
-                return View(permission);
+                return RedirectToAction("Index");
             }
         }
 
@@ -92,14 +103,16 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
 
             using (var unitOfWork = new UnitOfWork())
             {
-                var permission = unitOfWork.Permissions.GetPermission(userId, id);
+                var unconvertedPermission = unitOfWork.Permissions.GetPermission(userId, id);
 
-                if (permission == null)
+                var convertedPermission = PersonalPermissionViewModel.Convert(unconvertedPermission);
+
+                if (convertedPermission == null)
                 {
                     return HttpNotFound();
                 }
 
-                return View(permission);
+                return View(convertedPermission);
             }
         }
 
@@ -108,22 +121,27 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "ID,Name,Add,Edit,Delete,View")] Permission permission)
+        public ActionResult Edit(PersonalPermissionViewModel model)
         {
             var userId = User?.Identity?.GetUserId();
 
+            var permission = new Permission()
+            {
+                ID = model.ID,
+                Name = model.Name,
+                Add = model.Add,
+                Edit = model.Edit,
+                Delete = model.Delete,
+                View = model.View
+            };
+
             using (var unitOfWork = new UnitOfWork())
             {
-                if (ModelState.IsValid)
-                {
-                    unitOfWork.Permissions.EditPermission(userId, permission);
+                unitOfWork.Permissions.EditPermission(userId, permission);
 
-                    unitOfWork.Complete();
+                unitOfWork.Complete();
 
-                    return RedirectToAction("Index");
-                }
-
-                return View(permission);
+                return RedirectToAction("Index");
             }
         }
 
@@ -139,14 +157,16 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
 
             using (var unitOfWork = new UnitOfWork())
             {
-                var permission = unitOfWork.Permissions.GetPermission(userId, id);
+                var unconvertedPermission = unitOfWork.Permissions.GetPermission(userId, id);
 
-                if (permission == null)
+                var convertedPermission = PersonalPermissionViewModel.Convert(unconvertedPermission);
+
+                if (convertedPermission == null)
                 {
                     return HttpNotFound();
                 }
 
-                return View(permission);
+                return View(convertedPermission);
             }
         }
 

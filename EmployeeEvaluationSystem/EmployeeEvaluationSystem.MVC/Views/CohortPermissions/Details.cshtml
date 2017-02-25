@@ -1,13 +1,12 @@
-﻿@model EmployeeEvaluationSystem.Entity.CohortPermission
+﻿@model EmployeeEvaluationSystem.Entity.SharedObjects.Model.Authentication.PersonalCohortPermissionViewModel
 
 @{
-    ViewBag.Title = "Details";
+    ViewBag.Title = "Cohort Permission Details";
 }
 
-<h2>Details</h2>
+<h2>Cohort Permission Details</h2>
 
 <div>
-    <h4>CohortPermission</h4>
     <hr />
     <dl class="dl-horizontal">
         <dt>
@@ -19,40 +18,40 @@
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.CohortPermissions.Name)
+            @Html.DisplayNameFor(model => model.Cohort)
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.CohortPermissions.Name)
+            @Html.DisplayFor(model => model.Cohort)
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.UserPermissions.Name)
+            @Html.DisplayNameFor(model => model.User)
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.UserPermissions.Name)
+            @Html.DisplayFor(model => model.User)
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.SurveyPermissions.Name)
+            @Html.DisplayNameFor(model => model.Survey)
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.SurveyPermissions.Name)
+            @Html.DisplayFor(model => model.Survey)
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.ReportPermissions.Name)
+            @Html.DisplayNameFor(model => model.Report)
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.ReportPermissions.Name)
+            @Html.DisplayFor(model => model.Report)
         </dd>
 
     </dl>
 </div>
 <p>
     @Html.ActionLink("Edit", "Edit", new { id = Model.ID }) |
-    @Html.ActionLink("Back to List", "Index")
+    @Html.ActionLink("Back to Cohort Permissions", "Index")
 </p>

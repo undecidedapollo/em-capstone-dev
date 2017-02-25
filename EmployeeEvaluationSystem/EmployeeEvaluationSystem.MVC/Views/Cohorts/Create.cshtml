@@ -1,6 +1,6 @@
 ﻿@model EmployeeEvaluationSystem.MVC.Models.CreateCohortViewModel
 @{
-    ViewBag.Title = "Create A Cohort";
+    ViewBag.Title = "Create Cohort";
 }
 
 <h2>@ViewBag.Title</h2>
@@ -10,7 +10,6 @@
     @Html.AntiForgeryToken()
 
     <div class="form-horizontal">
-        <h4>CohortPermission</h4>
         <hr/>
         @Html.ValidationSummary(true, "", new {@class = "text-danger"})
         <div class="form-group">
@@ -30,13 +29,8 @@
             </div>
         </div>
 
-        <p>
-            <strong>
-                Select 3 Employees for the Cohort.
-            </strong>
-        </p>
-
         <table class="table">
+            <caption style="font-size:20px">Select 3 Employees for the Cohort</caption>
             <tr>
                 <th>
                     <strong>Select</strong>
@@ -66,7 +60,7 @@
             {
                 <tr>
                     <td>
-                        <input type="checkbox" name="ids" value="@item.Id"/>
+                        <input type="checkbox" name="Ids" value="@item.Id"/>
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.LastName)

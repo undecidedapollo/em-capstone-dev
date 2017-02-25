@@ -20,7 +20,7 @@ namespace EmployeeEvaluationSystem.Entity
             this.SurveysAvailables = new HashSet<SurveysAvailable>();
             this.CohortUsers = new HashSet<CohortUser>();
 
-            this.DateCreated = DateTime.Today;
+            this.DateCreated = DateTime.Now;
             this.IsDeleted = false;
             this.DateDeleted = null;
         }

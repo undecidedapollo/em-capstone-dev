@@ -47,7 +47,7 @@ namespace EmployeeEvaluationSystem.Entity.SharedObjects.Repository.EF6.Repositor
             return null;
         }
 
-        public void AddCohortUserToDb(CohortUser cohortUserToAdd)
+        public void AddCohortUserToDb(string currentUserId, CohortUser cohortUserToAdd)
         {
             this.dbcontext.CohortUsers.Add(cohortUserToAdd);
         }

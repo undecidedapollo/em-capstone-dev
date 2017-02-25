@@ -1,10 +1,10 @@
-﻿@model EmployeeEvaluationSystem.Entity.CohortPermission
+﻿@model EmployeeEvaluationSystem.Entity.SharedObjects.Model.Authentication.PersonalCohortPermissionViewModel
 
 @{
-    ViewBag.Title = "Edit";
+    ViewBag.Title = "Edit Cohort Permission";
 }
 
-<h2>Edit</h2>
+<h2>Edit Cohort Permission</h2>
 
 
 @using (Html.BeginForm())
@@ -12,7 +12,6 @@
     @Html.AntiForgeryToken()
     
     <div class="form-horizontal">
-        <h4>CohortPermission</h4>
         <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         @Html.HiddenFor(model => model.ID)
@@ -66,7 +65,7 @@
 }
 
 <div>
-    @Html.ActionLink("Back to List", "Index")
+    @Html.ActionLink("Back to Cohort Permissions", "Index")
 </div>
 
 @section Scripts {

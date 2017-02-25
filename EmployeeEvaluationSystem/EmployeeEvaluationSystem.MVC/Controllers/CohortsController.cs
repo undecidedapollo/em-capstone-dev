@@ -66,7 +66,11 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
 
                 var convertedUsers = unconvertedUsers?.Select(x => PersonalAspNetUserViewModel.Convert(x))?.ToList();
 
-                var viewModel = new CreateCohortViewModel(convertedUsers);
+                var viewModel = new CreateCohortViewModel()
+                {
+                    Users = convertedUsers,
+                    Cohort = new PersonalCohortViewModel()
+                };
 
                 return View(viewModel);
             }
@@ -77,7 +81,7 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(CreateCohortViewModel model, string[] ids)
+        public ActionResult Create(CreateCohortViewModel model, string[] Ids)
         {
             var userId = User?.Identity?.GetUserId();
 
@@ -90,14 +94,16 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
                     Description = model.Cohort.Description
                 };
 
-                foreach (var item in ids)
+                foreach (var item in Ids)
                 {
                     var cohortUser = new CohortUser()
                     {
                         CohortID = cohort.ID,
                         UserID = item,
-                        CohortPermissionId = 1
+                        CohortPermissionId = 0
                     };
+
+                    unitOfWork.CohortUsers.AddCohortUserToDb(userId, cohortUser);
 
                     cohort.CohortUsers.Add(cohortUser);
                 }

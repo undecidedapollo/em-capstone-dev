@@ -7,6 +7,7 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using EmployeeEvaluationSystem.Entity;
+using EmployeeEvaluationSystem.Entity.SharedObjects.Model.Authentication;
 using EmployeeEvaluationSystem.Entity.SharedObjects.Repository.EF6;
 using Microsoft.AspNet.Identity;
 
@@ -21,9 +22,11 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
 
             using (var unitOfWork = new UnitOfWork())
             {
-                var cohortPermissions = unitOfWork.CohortPermissions.GetAllCohortPermissions(userId);
+                var unconvertedCohortPermissions = unitOfWork.CohortPermissions.GetAllCohortPermissions(userId).ToList();
 
-                return View(cohortPermissions);
+                var convertedCohortPermissions = unconvertedCohortPermissions?.Select(x =>  PersonalCohortPermissionViewModel.Convert(x))?.ToList();
+
+                return View(convertedCohortPermissions);
             }
         }
 
@@ -39,14 +42,16 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
 
             using (var unitOfWork = new UnitOfWork())
             {
-                var cohortPermission = unitOfWork.CohortPermissions.GetCohortPermission(userId, id);
+                var unconvertedCohortPermission = unitOfWork.CohortPermissions.GetCohortPermission(userId, id);
 
-                if (cohortPermission == null)
+                var convertedCohortPermission = PersonalCohortPermissionViewModel.Convert(unconvertedCohortPermission);
+
+                if (convertedCohortPermission == null)
                 {
                     return HttpNotFound();
                 }
 
-                return View(cohortPermission);
+                return View(convertedCohortPermission);
             }
         }
 
@@ -57,16 +62,18 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
 
             using (var unitOfWork = new UnitOfWork())
             {
-                //Uncomment the following if you want the user to select permission level. Otherwise permission is set to read on everything.
-                /*
-                var permissions = unitOfWork.Permissions.GetAllPermissions(userId);
+
+                var permissions =
+                    unitOfWork.Permissions.GetAllPermissions(userId)?
+                        .Select(x => PersonalPermissionViewModel.Convert(x))?.ToList();
 
                 ViewBag.Cohort = new SelectList(permissions, "ID", "Name");
                 ViewBag.User = new SelectList(permissions, "ID", "Name");
                 ViewBag.Survey = new SelectList(permissions, "ID", "Name");
-                ViewBag.Report = new SelectList(permissions, "ID", "Name");
-                */
+                ViewBag.Report = new SelectList(unitOfWork.Permissions.GetAllPermissions(userId).ToList(), "ID", "Name");
 
+
+                
                 return View();
             }
         }
@@ -76,37 +83,27 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "ID,Name,Cohort,User,Survey,Report")] CohortPermission cohortPermission)
+        public ActionResult Create(PersonalCohortPermissionViewModel model)
         {
-            cohortPermission.Cohort = 1;
-            cohortPermission.User = 1;
-            cohortPermission.Survey = 1;
-            cohortPermission.Report = 1;
+            var cohortPermission = new CohortPermission()
+            {
+                ID = model.ID,
+                Name = model.Name,
+                Cohort = model.Cohort,
+                User = model.User,
+                Survey = model.Survey,
+                Report = model.Report
+            };
 
             var userId = User?.Identity?.GetUserId();
 
             using (var unitOfWork = new UnitOfWork())
             {
-                if (ModelState.IsValid)
-                {
-                    unitOfWork.CohortPermissions.AddCohortPermissionToDb(userId, cohortPermission);
+                unitOfWork.CohortPermissions.AddCohortPermissionToDb(userId, cohortPermission);
 
-                    unitOfWork.Complete();
+                unitOfWork.Complete();
 
-                    return RedirectToAction("Index");
-                }
-
-                //Uncomment the following if you want the user to select permission level. Otherwise permission is set to read on everything.
-                /*
-                var permissions = unitOfWork.Permissions.GetAllPermissions(userId);
-
-                ViewBag.Cohort = new SelectList(permissions, "ID", "Name");
-                ViewBag.User = new SelectList(permissions, "ID", "Name");
-                ViewBag.Survey = new SelectList(permissions, "ID", "Name");
-                ViewBag.Report = new SelectList(permissions, "ID", "Name");
-                */
-
-                return View();
+                return RedirectToAction("Index");
             }
         }
 
@@ -122,19 +119,18 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
 
             using (var unitOfWork = new UnitOfWork())
             {
-                //Uncomment the following if you want the user to select permission level. Otherwise permission is set to read on everything.
-                /*
                 var permissions = unitOfWork.Permissions.GetAllPermissions(userId);
 
                 ViewBag.Cohort = new SelectList(permissions, "ID", "Name");
                 ViewBag.User = new SelectList(permissions, "ID", "Name");
                 ViewBag.Survey = new SelectList(permissions, "ID", "Name");
                 ViewBag.Report = new SelectList(permissions, "ID", "Name");
-                */
 
-                var cohortPermission = unitOfWork.CohortPermissions.GetCohortPermission(userId, id);
+                var unconvertedCohortPermission = unitOfWork.CohortPermissions.GetCohortPermission(userId, id);
 
-                return View(cohortPermission);
+                var convertedCohortPermission = PersonalCohortPermissionViewModel.Convert(unconvertedCohortPermission);
+
+                return View(convertedCohortPermission);
             }
         }
 
@@ -143,32 +139,27 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "ID,Name,Cohort,User,Survey,Report")] CohortPermission cohortPermission)
+        public ActionResult Edit(PersonalCohortPermissionViewModel model)
         {
             var userId = User?.Identity?.GetUserId();
 
+            var cohortPermission = new CohortPermission()
+            {
+                ID = model.ID,
+                Name = model.Name,
+                Cohort = model.Cohort,
+                User = model.User,
+                Survey = model.Survey,
+                Report = model.Report
+            };
+
             using (var unitOfWork = new UnitOfWork())
             {
-                if (ModelState.IsValid)
-                {
-                    unitOfWork.CohortPermissions.EditCohortPermission(userId, cohortPermission);
+                unitOfWork.CohortPermissions.EditCohortPermission(userId, cohortPermission);
 
-                    unitOfWork.Complete();
+                unitOfWork.Complete();
 
-                    return RedirectToAction("Index");
-                }
-
-                //Uncomment the following if you want the user to select permission level. Otherwise permission is set to read on everything.
-                /*
-                var permissions = unitOfWork.Permissions.GetAllPermissions(userId);
-
-                ViewBag.Cohort = new SelectList(permissions, "ID", "Name");
-                ViewBag.User = new SelectList(permissions, "ID", "Name");
-                ViewBag.Survey = new SelectList(permissions, "ID", "Name");
-                ViewBag.Report = new SelectList(permissions, "ID", "Name");
-                */
-
-                return View(cohortPermission);
+                return RedirectToAction("Index");
             }
         }
 
@@ -184,9 +175,11 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
 
             using (var unitOfWork = new UnitOfWork())
             {
-                var cohortPermission = unitOfWork.CohortPermissions.GetCohortPermission(userId, id);
+                var unconvertedCohortPermission = unitOfWork.CohortPermissions.GetCohortPermission(userId, id);
 
-                return View(cohortPermission);
+                var convertedCohortPermission = PersonalCohortPermissionViewModel.Convert(unconvertedCohortPermission);
+
+                return View(convertedCohortPermission);
             }
         }
 

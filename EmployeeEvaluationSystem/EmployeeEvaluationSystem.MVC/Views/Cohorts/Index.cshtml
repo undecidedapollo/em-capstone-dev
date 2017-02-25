@@ -1,13 +1,13 @@
 ﻿@model IEnumerable<EmployeeEvaluationSystem.Entity.SharedObjects.Model.Authentication.PersonalCohortViewModel>
 
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Cohorts";
 }
 
-<h2>Index</h2>
+<h2>Cohorts</h2>
 
 <p>
-    @Html.ActionLink("Create New", "Create")
+    @Html.ActionLink("Create Cohort", "Create")
 </p>
 <table class="table">
     <tr>
@@ -18,7 +18,7 @@
             @Html.DisplayNameFor(model => model.Description)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.DateCreated)
+            <strong>Date Created</strong>
         </th>
         <th></th>
     </tr>
