@@ -10,7 +10,7 @@ using EmployeeEvaluationSystem.Entity.SharedObjects.Repository.Core.Repositories
 
 namespace EmployeeEvaluationSystem.Entity.SharedObjects.Repository.EF6.Repositories
 {
-    class CohortRepository : Repository, ICohortRepository
+    public class CohortRepository : Repository, ICohortRepository
     {
         public CohortRepository(UnitOfWork unitOfWork, EmployeeDatabaseEntities dbcontext) : base(unitOfWork, dbcontext)
         {
@@ -64,41 +64,32 @@ namespace EmployeeEvaluationSystem.Entity.SharedObjects.Repository.EF6.Repositor
             return cohort;
         }
 
-        public IEnumerable<AspNetUser> GetAllUsersThatAreNotPartOfACohort(string userId)
+        public IEnumerable<AspNetUser> GetAllUsersThatAreNotPartOfACohort(string currentUserId)
         {
             
-            var users = unitOfWork.Users.GetAllUsers(userId).ToList();
+            var users = unitOfWork.Users.GetAllUsers(currentUserId).ToList();
+            var usersPartOfCohort = new List<AspNetUser>();
             
 
             foreach (var user in users)
             {
                 if (this.dbcontext.CohortUsers.Any(x => x.UserID.Equals(user.Id)))
                 {
-                    users.Remove(user);
+                    usersPartOfCohort.Add(user);
                 }
+            }
+
+            foreach (var user in usersPartOfCohort)
+            {
+                users.Remove(user);
             }
 
             return users;
         }
 
-        public Cohort CreateCohort(int id, string name, string description, DateTime dateCreated)
+        public void AddCohortToDb(string currentUserId, Cohort cohortToAdd)
         {
-            var cohort = new Cohort
-            {
-                ID = id,
-                Name = name,
-                Description = description,
-                DateCreated = dateCreated,
-                IsDeleted = false,
-                DateDeleted = null
-            };
-
-            return cohort;
-        }
-
-        public void AddCohortToDb(Cohort cohortToAdd)
-        {
-            this.dbcontext.Cohorts.AddOrUpdate(cohortToAdd);
+            this.dbcontext.Cohorts.Add(cohortToAdd);
         }
     }
 }

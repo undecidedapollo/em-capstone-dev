@@ -13,5 +13,6 @@ namespace EmployeeEvaluationSystem.Entity.SharedObjects.Repository.Core.Reposito
         CohortUser GetCohortUser(string currentUserId, string cohortUserIdToGet);
         void DeleteCohortUser(string currentUserId, string cohortUserIdToDelete);
         CohortUser EditCohortUser(string currentUserId, CohortUser cohortUserToEdit);
+        void AddCohortUserToDb(string currentUerId, CohortUser cohortUser);
     }
 }

@@ -218,9 +218,11 @@
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\AspNetUsersController.cs" />
-    <Compile Include="Controllers\CohortController.cs" />
+    <Compile Include="Controllers\CohortsController.cs" />
+    <Compile Include="Controllers\CohortPermissionsController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
+    <Compile Include="Controllers\PermissionsController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -322,11 +324,21 @@
     <Content Include="Scripts\jquery-3.1.1.min.map" />
     <Content Include="Views\AspNetUsers\AddCSV.cshtml" />
     <Content Include="Views\AspNetUsers\SaveCSV.cshtml" />
-    <Content Include="Views\Cohort\Create.cshtml" />
-    <Content Include="Views\Cohort\Delete.cshtml" />
-    <Content Include="Views\Cohort\Details.cshtml" />
-    <Content Include="Views\Cohort\Edit.cshtml" />
-    <Content Include="Views\Cohort\Index.cshtml" />
+    <Content Include="Views\Cohorts\Create.cshtml" />
+    <Content Include="Views\Cohorts\Delete.cshtml" />
+    <Content Include="Views\Cohorts\Details.cshtml" />
+    <Content Include="Views\Cohorts\Edit.cshtml" />
+    <Content Include="Views\Cohorts\Index.cshtml" />
+    <Content Include="Views\CohortPermissions\Create.cshtml" />
+    <Content Include="Views\CohortPermissions\Delete.cshtml" />
+    <Content Include="Views\CohortPermissions\Details.cshtml" />
+    <Content Include="Views\CohortPermissions\Edit.cshtml" />
+    <Content Include="Views\CohortPermissions\Index.cshtml" />
+    <Content Include="Views\Permissions\Create.cshtml" />
+    <Content Include="Views\Permissions\Delete.cshtml" />
+    <Content Include="Views\Permissions\Details.cshtml" />
+    <Content Include="Views\Permissions\Edit.cshtml" />
+    <Content Include="Views\Permissions\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

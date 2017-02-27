@@ -30,12 +30,16 @@ namespace EmployeeEvaluationSystem.Entity.SharedObjects.Repository.EF6
             this.Users = new UserRepository(this, this.dbContext);
             this.Cohorts = new CohortRepository(this, this.dbContext);
             this.CohortUsers = new CohortUserRepository(this, this.dbContext);
+            this.Permissions = new PermissionRepository(this, this.dbContext);
+            this.CohortPermissions = new CohortPermissionRepository(this,this.dbContext);
         }
 
 
         public IUserRepository Users { get; private set; }
         public ICohortRepository Cohorts { get; private set; }
         public ICohortUserRepository CohortUsers { get; private set; }
+        public ICohortPermissionRepository CohortPermissions { get; private set; }
+        public IPermissionRepository Permissions { get; private set; }
 
         public void Dispose()
         {

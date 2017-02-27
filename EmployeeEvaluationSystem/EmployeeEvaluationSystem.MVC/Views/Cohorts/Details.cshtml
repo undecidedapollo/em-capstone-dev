@@ -1,13 +1,12 @@
 ﻿@model EmployeeEvaluationSystem.Entity.Cohort
 
 @{
-    ViewBag.Title = "Details";
+    ViewBag.Title = "Cohort Details";
 }
 
-<h2>Details</h2>
+<h2>Cohort Details</h2>
 
 <div>
-    <h4>Cohort</h4>
     <hr />
     <dl class="dl-horizontal">
         <dt>
@@ -27,23 +26,7 @@
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.IsDeleted)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.IsDeleted)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.DateDeleted)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.DateDeleted)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.DateCreated)
+            <strong>Date Created</strong>
         </dt>
 
         <dd>
@@ -54,5 +37,5 @@
 </div>
 <p>
     @Html.ActionLink("Edit", "Edit", new { id = Model.ID }) |
-    @Html.ActionLink("Back to List", "Index")
+    @Html.ActionLink("Back to Cohorts", "Index")
 </p>

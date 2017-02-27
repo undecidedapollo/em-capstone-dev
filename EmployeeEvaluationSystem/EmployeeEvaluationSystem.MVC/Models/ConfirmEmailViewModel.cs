@@ -10,8 +10,7 @@ namespace EmployeeEvaluationSystem.MVC.Models
         public string userId { get; set; }
         public string emailCode { get; set; }
         public string password { get; set; }
-
-        public string confirmpassword { get; set; }
+        public string confirmPassword { get; set; }
 
     }
 }
