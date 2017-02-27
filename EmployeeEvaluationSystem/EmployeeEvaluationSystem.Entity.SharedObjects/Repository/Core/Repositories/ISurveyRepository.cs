@@ -12,6 +12,16 @@ namespace EmployeeEvaluationSystem.Entity.SharedObjects.Repository.Core.Reposito
         bool CanExistingUserTakeSurvey(string userId, Guid pendingSurveyId);
         bool CanGuestUserTakeSurvey(string userEmail, Guid pendingSurveyId);
 
+        PendingSurvey CreatePendingSurveyForExistingUser(string userId, int userRoleId, int surveyAvailableId);
+
+        PendingSurvey CreatePendingSurveyForGuestUser(string userEmail, int userRoleId, int surveyAvailableId);
+
+        PendingSurvey GetPendingSurvey(string userId, Guid pendingSurveyId);
+
+        PendingSurvey GetPendingSurveySYSTEM(Guid pendingSurveyId);
+
+        UserSurveyRole GetUserSurveyRole(int roleID);
+
         Survey GetSurvey(string userId, int surveyId);
 
         Survey GetSurveySYSTEM(int surveyId);
@@ -19,9 +29,6 @@ namespace EmployeeEvaluationSystem.Entity.SharedObjects.Repository.Core.Reposito
         SurveyType GetSurveyType(string userId, int surveyTypeId);
 
         SurveyType GetSurveyTypeSYSTEM(int surveyTypeId);
-
-        PendingSurvey GetPendingSurvey(string userId, Guid pendingSurveyId);
-        PendingSurvey GetPendingSurveySYSTEM(Guid pendingSurveyId);
 
         bool DoesSurveyInstanceAlreadyExistSYSTEM(Guid pendingSurveyId);
 

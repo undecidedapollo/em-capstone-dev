@@ -120,8 +120,59 @@ namespace EmployeeEvaluationSystem.Entity.SharedObjects.Repository.EF6.Repositor
 
         public PendingSurvey GetPendingSurveySYSTEM(Guid pendingSurveyId)
         {
-            return this.dbcontext.PendingSurveys.FirstOrDefault(x => x.Id == pendingSurveyId);
+            return this.dbcontext.PendingSurveys.FirstOrDefault(x => x.Id == pendingSurveyId && x.IsDeleted == false);
         }
+
+
+        private PendingSurvey CreatePendingSurvey(string userId, int userRoleId, int surveyAvailableId, bool isExistingUser)
+        {
+
+            var exists = this.GetUserSurveyRole(userRoleId) != null;
+
+            if (!exists)
+            {
+                throw new ItemNotFoundException($"The role {userRoleId} does not exist");
+            }
+
+            var user = this.unitOfWork.Users.GetUser(userId, userId);
+
+            if (user == null)
+            {
+                throw new ItemNotFoundException("Unable to find the user to create the pending survey");
+            }
+
+            var surveyAvailable = this.GetAnAvailableSurveyForCohortSYSTEM(surveyAvailableId);
+
+            if (surveyAvailable == null)
+            {
+                throw new ItemNotFoundException("Unable to find the survey available to create the pending survey");
+            }
+
+            var newPendingSurvey = new PendingSurvey
+            {
+                SurveyAvailToMeID = surveyAvailableId,
+                UserSurveyRoleID = userRoleId,
+                DateSent = DateTime.UtcNow,
+                UserSentById = userId,
+                Email = isExistingUser ? null : userId,
+                UserForId = isExistingUser ? userId : null,
+            };
+
+            this.dbcontext.PendingSurveys.Add(newPendingSurvey);
+
+            return newPendingSurvey;
+        }
+
+        public PendingSurvey CreatePendingSurveyForExistingUser(string userId, int userRoleId, int surveyAvailableId)
+        {
+            return this.CreatePendingSurvey(userId, userRoleId, surveyAvailableId, true);
+        }
+
+        public PendingSurvey CreatePendingSurveyForGuestUser(string userEmail, int userRoleId, int surveyAvailableId)
+        {
+            return this.CreatePendingSurvey(userEmail, userRoleId, surveyAvailableId, false);
+        }
+
 
         public SurveysAvailable CreateAnAvailableSurveyForCohort(string currentUserID, CreateAvailableSurveyModel model)
         {
@@ -179,9 +230,19 @@ namespace EmployeeEvaluationSystem.Entity.SharedObjects.Repository.EF6.Repositor
                         throw new InvalidModelException("The quantity for a role must be greater than 0.");
                     }
 
+                    var theRoleID = x.First().RoleId;
+
+                    var exists = this.GetUserSurveyRole(theRoleID) != null;
+
+                    if (!exists)
+                    {
+                        throw new ItemNotFoundException($"The role {theRoleID} does not exist");
+                    }
+
+
                     return new SurveysAvailableTo
                     {
-                        UserSurveyRoleId = x.First().RoleId,
+                        UserSurveyRoleId = theRoleID,
                         Quantity = x.First().Quantity
                     };
                 }).ToList();
@@ -260,6 +321,11 @@ namespace EmployeeEvaluationSystem.Entity.SharedObjects.Repository.EF6.Repositor
             survey.DateDeleted = DateTime.UtcNow;
 
             return survey;
+        }
+
+        public UserSurveyRole GetUserSurveyRole(int roleID)
+        {
+            return this.dbcontext.UserSurveyRoles.FirstOrDefault(x => x.ID == roleID && x.IsDeleted == false);
         }
     }
 }
