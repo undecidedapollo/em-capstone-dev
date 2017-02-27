@@ -108,7 +108,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Dependencies\DependencyInjectorTests.cs" />
     <Compile Include="Infrastructure\IUnitOfWorkBuilder.cs" />
     <Compile Include="Infrastructure\UnitOfWorkBuilder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

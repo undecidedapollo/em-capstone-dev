@@ -4,15 +4,12 @@ using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using EmployeeEvaluationSystem.Entity.SharedObjects.Infrastructure;
 
-namespace EmployeeEvaluationSystem.Tests.Dependencies
+namespace EmployeeEvaluationSystem.DependencyInjector.Tests.Dependencies
 {
     [TestClass]
     public class DependencyInjectorTests
     {
         public object testLock = new object();
-
-
-
 
         [TestMethod]
         public void DependencyGetInstanceReturnsInstance()
