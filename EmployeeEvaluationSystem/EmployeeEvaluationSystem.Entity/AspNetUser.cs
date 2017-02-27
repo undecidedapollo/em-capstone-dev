@@ -19,11 +19,12 @@ namespace EmployeeEvaluationSystem.Entity
         {
             this.AspNetUserClaims = new HashSet<AspNetUserClaim>();
             this.AspNetUserLogins = new HashSet<AspNetUserLogin>();
-            this.PendingSurveys = new HashSet<PendingSurvey>();
             this.Surveys = new HashSet<Survey>();
             this.SurveyInstances = new HashSet<SurveyInstance>();
             this.AspNetRoles = new HashSet<AspNetRole>();
             this.CohortUsers = new HashSet<CohortUser>();
+            this.PendingSurveys = new HashSet<PendingSurvey>();
+            this.PendingSurveys1 = new HashSet<PendingSurvey>();
         }
     
         public string Id { get; set; }
@@ -48,8 +49,6 @@ namespace EmployeeEvaluationSystem.Entity
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<AspNetUserLogin> AspNetUserLogins { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<PendingSurvey> PendingSurveys { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Survey> Surveys { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<SurveyInstance> SurveyInstances { get; set; }
@@ -57,5 +56,9 @@ namespace EmployeeEvaluationSystem.Entity
         public virtual ICollection<AspNetRole> AspNetRoles { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<CohortUser> CohortUsers { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<PendingSurvey> PendingSurveys { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<PendingSurvey> PendingSurveys1 { get; set; }
     }
 }

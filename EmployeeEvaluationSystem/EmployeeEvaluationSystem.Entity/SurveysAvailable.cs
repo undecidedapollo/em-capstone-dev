@@ -14,6 +14,12 @@ namespace EmployeeEvaluationSystem.Entity
     
     public partial class SurveysAvailable
     {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        public SurveysAvailable()
+        {
+            this.PendingSurveys = new HashSet<PendingSurvey>();
+        }
+    
         public int ID { get; set; }
         public int CohortID { get; set; }
         public int SurveyID { get; set; }
@@ -28,5 +34,7 @@ namespace EmployeeEvaluationSystem.Entity
         public virtual Survey Survey { get; set; }
         public virtual SurveyType SurveyType { get; set; }
         public virtual SurveysAvailableTo SurveysAvailableTo { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<PendingSurvey> PendingSurveys { get; set; }
     }
 }
