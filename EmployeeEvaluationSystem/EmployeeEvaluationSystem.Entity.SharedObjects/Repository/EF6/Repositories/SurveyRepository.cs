@@ -7,6 +7,8 @@ using System.Text;
 using System.Threading.Tasks;
 using EmployeeEvaluationSystem.Entity.SharedObjects.Model.Survey;
 using EmployeeEvaluationSystem.SharedObjects.Exceptions.Validitity;
+using System.Data.Entity;
+using EmployeeEvaluationSystem.SharedObjects.Enums;
 
 namespace EmployeeEvaluationSystem.Entity.SharedObjects.Repository.EF6.Repositories
 {
@@ -327,5 +329,104 @@ namespace EmployeeEvaluationSystem.Entity.SharedObjects.Repository.EF6.Repositor
         {
             return this.dbcontext.UserSurveyRoles.FirstOrDefault(x => x.ID == roleID && x.IsDeleted == false);
         }
+
+        public AnswerInstance AddAnswerInstanceToSurveyInstance(Guid pendingSurveyId, int questionId, CreateAnswerInstanceModel model)
+        {
+            throw new NotImplementedException();
+        }
+
+        public AnswerInstance AddAnswerInstanceToSurveyInstance(int surveyInstanceId, int questionId, CreateAnswerInstanceModel model)
+        {
+            if(model == null)
+            {
+                throw new ArgumentNullException("The model cannot be null");
+            }
+
+            var theSurveyInstance = this.GetSurveyInstanceByIdSYSTEM(surveyInstanceId);
+
+            if(theSurveyInstance == null)
+            {
+                throw new ItemNotFoundException("Unable to find the survey instance on the server.");
+            }
+
+            var theSurveyId = theSurveyInstance.SurveyID;
+
+
+            var isQuestionInSurvey = this.IsQuestionInSurvey(questionId, theSurveyId);
+
+            if (!isQuestionInSurvey)
+            {
+                throw new InvalidModelException("The current question is not in the specified survey.");
+            }
+
+            if(model.QuestionType == QuestionTypeEnum.Rating)
+            {
+                var questionType = this.GetQuestionTypeOfQuestion(questionId);
+
+                if (!questionType.IsRating)
+                {
+                    throw new InvalidModelException("The question types do not match.");
+                }
+
+                var isValid = questionType.RatingMin <= model.RatingResponse && model.RatingResponse <= questionType.RatingMax;
+
+                if (!isValid)
+                {
+                    throw new InvalidModelException("The rating does not fall between the specified min and max value.");
+                }
+
+                var answerResult = new AnswerInstance
+                {
+                    QuestionID = questionId,
+                    SurveyInstanceId = surveyInstanceId,
+                    ResponseNum = model.RatingResponse
+                };
+
+                theSurveyInstance.AnswerInstances.Add(answerResult);
+
+                return answerResult;
+            }
+            else
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        public Category GetCategory(int categoryId)
+        {
+            return this.dbcontext.Categories.FirstOrDefault(x => x.ID == categoryId && x.IsDeleted == false);
+        }
+
+        public Question GetQuestion(int questionId)
+        {
+            return this.dbcontext.Questions.FirstOrDefault(x => x.ID == questionId && x.IsDeleted == false);
+        }
+
+        public bool IsQuestionInSurvey(int questionId, int surveyId)
+        {
+            return this.dbcontext.Questions.Any(x => x.ID == questionId && x.Category.SurveyID == surveyId && x.IsDeleted == false && x.Category.IsDeleted == false && x.Category.Survey.IsDeleted == false );
+        }
+
+        public QuestionType GetQuestionType(int questionTypeId)
+        {
+            return this.dbcontext.QuestionTypes.FirstOrDefault(x => x.ID == questionTypeId);
+        }
+
+        public QuestionType GetQuestionTypeOfQuestion(int questionId)
+        {
+            return this.dbcontext.Questions.Where(x => x.ID == questionId && x.IsDeleted == false).Take(1).Select(x => x.QuestionType).FirstOrDefault();
+        }
+
+        public SurveyInstance GetSurveyInstanceById(string userIdTakingSurvey, int surveyInstanceId)
+        {
+            return this.GetSurveyInstanceByIdSYSTEM(surveyInstanceId);
+        }
+
+        public SurveyInstance GetSurveyInstanceByIdSYSTEM(int surveyInstanceId)
+        {
+            return this.dbcontext.SurveyInstances.FirstOrDefault(x => x.ID == surveyInstanceId);
+        }
+
+
     }
 }

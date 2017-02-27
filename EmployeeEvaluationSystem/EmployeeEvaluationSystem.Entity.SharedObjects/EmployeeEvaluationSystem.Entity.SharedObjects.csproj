@@ -66,6 +66,7 @@
     <Compile Include="Model\Authentication\PersonalCohortPermissionViewModel.cs" />
     <Compile Include="Model\Authentication\PersonalCohortViewModel.cs" />
     <Compile Include="Model\Authentication\PersonalPermissionViewModel.cs" />
+    <Compile Include="Model\Survey\CreateAnswerInstanceModel.cs" />
     <Compile Include="Model\Survey\CreateAvailableSurveyModel.cs" />
     <Compile Include="Model\Survey\CreateAvailableSurveyRolesModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

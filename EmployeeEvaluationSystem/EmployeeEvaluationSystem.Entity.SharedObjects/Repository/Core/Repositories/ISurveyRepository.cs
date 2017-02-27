@@ -38,6 +38,10 @@ namespace EmployeeEvaluationSystem.Entity.SharedObjects.Repository.Core.Reposito
 
         SurveyInstance GetPendingSurveyInstance(Guid pendingSurveyId);
 
+        SurveyInstance GetSurveyInstanceById(string userIdTakingSurvey, int surveyInstanceId);
+
+        SurveyInstance GetSurveyInstanceByIdSYSTEM(int surveyInstanceId);
+
         SurveysAvailable CreateAnAvailableSurveyForCohort(string currentUserID, CreateAvailableSurveyModel model);
 
         SurveysAvailable GetAnAvailableSurveyForCohort(string currentUserID, int surveyAvailableId);
@@ -47,5 +51,20 @@ namespace EmployeeEvaluationSystem.Entity.SharedObjects.Repository.Core.Reposito
         SurveysAvailable DeleteSurveyAvailable(string userId, int surveyAvailableId);
 
         bool IsSurveyAvailableStillOpen(int surveyAvailableId);
+
+        AnswerInstance AddAnswerInstanceToSurveyInstance(Guid pendingSurveyId, int questionId, CreateAnswerInstanceModel model);
+
+        AnswerInstance AddAnswerInstanceToSurveyInstance(int surveyInstanceId, int questionId, CreateAnswerInstanceModel model);
+
+        
+        Category GetCategory(int categoryId);
+
+        Question GetQuestion(int questionId);
+
+        QuestionType GetQuestionType(int questionTypeId);
+
+        QuestionType GetQuestionTypeOfQuestion(int questionId);
+
+        bool IsQuestionInSurvey(int questionId, int surveyId);
     }
 }

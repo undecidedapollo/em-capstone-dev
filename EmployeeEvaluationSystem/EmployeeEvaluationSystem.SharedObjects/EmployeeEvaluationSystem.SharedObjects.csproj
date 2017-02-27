@@ -48,6 +48,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Enums\QuestionTypeEnum.cs" />
     <Compile Include="Exceptions\Collections\ItemNotFoundException.cs" />
     <Compile Include="Exceptions\EESException.cs" />
     <Compile Include="Exceptions\Validitity\InvalidModelException.cs" />
