@@ -340,10 +340,10 @@
     <Content Include="Views\Permissions\Details.cshtml" />
     <Content Include="Views\Permissions\Edit.cshtml" />
     <Content Include="Views\Permissions\Index.cshtml" />
+    <Content Include="Views\Survey\StartSurvey.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Views\Survey\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
