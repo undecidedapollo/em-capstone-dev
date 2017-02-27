@@ -40,7 +40,6 @@ namespace EmployeeEvaluationSystem.Entity
         public virtual DbSet<SiteWidePermission> SiteWidePermissions { get; set; }
         public virtual DbSet<Survey> Surveys { get; set; }
         public virtual DbSet<SurveysAvailable> SurveysAvailables { get; set; }
-        public virtual DbSet<SurveysAvailableTo> SurveysAvailableToes { get; set; }
         public virtual DbSet<SurveyType> SurveyTypes { get; set; }
         public virtual DbSet<UserSurveyRole> UserSurveyRoles { get; set; }
         public virtual DbSet<LocationAddress> LocationAddresses { get; set; }
@@ -48,5 +47,6 @@ namespace EmployeeEvaluationSystem.Entity
         public virtual DbSet<CohortUser> CohortUsers { get; set; }
         public virtual DbSet<PendingSurvey> PendingSurveys { get; set; }
         public virtual DbSet<SurveyInstance> SurveyInstances { get; set; }
+        public virtual DbSet<SurveysAvailableTo> SurveysAvailableToes { get; set; }
     }
 }

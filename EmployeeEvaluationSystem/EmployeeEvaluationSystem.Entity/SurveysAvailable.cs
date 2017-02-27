@@ -18,6 +18,7 @@ namespace EmployeeEvaluationSystem.Entity
         public SurveysAvailable()
         {
             this.PendingSurveys = new HashSet<PendingSurvey>();
+            this.SurveysAvailableToes = new HashSet<SurveysAvailableTo>();
         }
     
         public int ID { get; set; }
@@ -33,8 +34,9 @@ namespace EmployeeEvaluationSystem.Entity
         public virtual Cohort Cohort { get; set; }
         public virtual Survey Survey { get; set; }
         public virtual SurveyType SurveyType { get; set; }
-        public virtual SurveysAvailableTo SurveysAvailableTo { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<PendingSurvey> PendingSurveys { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<SurveysAvailableTo> SurveysAvailableToes { get; set; }
     }
 }
