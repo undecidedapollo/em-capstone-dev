@@ -15,6 +15,8 @@ namespace EmployeeEvaluationSystem.Entity.SharedObjects.Repository.Core
         ICohortPermissionRepository CohortPermissions { get; }
         IPermissionRepository Permissions { get; }
 
+        ISurveyRepository Surveys { get; }
+
         int Complete();
     }
 }

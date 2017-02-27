@@ -25,8 +25,8 @@ namespace EmployeeEvaluationSystem.Entity
         public string UserSentById { get; set; }
         public string UserForId { get; set; }
     
-        public virtual AspNetUser AspNetUser { get; set; }
-        public virtual AspNetUser AspNetUser1 { get; set; }
+        public virtual AspNetUser UserSentBy { get; set; }
+        public virtual AspNetUser UserFor { get; set; }
         public virtual SurveysAvailable SurveysAvailable { get; set; }
         public virtual SurveyInstance SurveyInstance { get; set; }
         public virtual UserSurveyRole UserSurveyRole { get; set; }
