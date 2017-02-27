@@ -4,6 +4,7 @@ using System.Data;
 using System.Data.Entity;
 using System.Linq;
 using System.Net;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using EmployeeEvaluationSystem.Entity;
@@ -11,6 +12,7 @@ using EmployeeEvaluationSystem.Entity.SharedObjects.Model.Authentication;
 using EmployeeEvaluationSystem.Entity.SharedObjects.Repository.EF6;
 using EmployeeEvaluationSystem.MVC.Models;
 using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.Owin;
 
 namespace EmployeeEvaluationSystem.MVC.Controllers
 {
@@ -81,9 +83,10 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(CreateCohortViewModel model, string[] Ids)
+        public async Task<ActionResult> Create(CreateCohortViewModel model, string[] ids)
         {
             var userId = User?.Identity?.GetUserId();
+            var usersToRegister = new List<RegisterViewModel>();
 
             using (var unitOfWork = new UnitOfWork())
             {
@@ -94,8 +97,22 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
                     Description = model.Cohort.Description
                 };
 
-                foreach (var item in Ids)
+                foreach (var item in ids)
                 {
+                    var user = PersonalAspNetUserViewModel.Convert(unitOfWork.Users.GetUser(userId, item));
+
+                    var registerViewModel = new RegisterViewModel()
+                    {
+                        Email = user.Email,
+                        EmployeeID = user.EmployeeID,
+                        FirstName = user.FirstName,
+                        LastName = user.LastName,
+                        MailingAddress = user.MailingAddress,
+                        PhoneNumber = user.PhoneNumber
+                    };
+
+                    usersToRegister.Add(registerViewModel);
+
                     var cohortUser = new CohortUser()
                     {
                         CohortID = cohort.ID,
@@ -111,6 +128,14 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
                 unitOfWork.Cohorts.AddCohortToDb(userId, cohort);
 
                 unitOfWork.Complete();
+
+                var um = HttpContext.GetOwinContext().Get<ApplicationUserManager>();
+                var sm = HttpContext.GetOwinContext().Get<ApplicationSignInManager>();
+
+
+                var accController = new AccountController(um, sm, this.Request);
+
+                var result = await accController.RegisterMultipleUsers(usersToRegister);
 
                 return RedirectToAction("Index");
             }
