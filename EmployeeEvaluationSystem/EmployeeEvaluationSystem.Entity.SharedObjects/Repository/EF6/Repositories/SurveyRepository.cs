@@ -59,9 +59,33 @@ namespace EmployeeEvaluationSystem.Entity.SharedObjects.Repository.EF6.Repositor
             return true;
         }
 
+        public SurveyInstance CreateSurveyInstance(string userIdTakingSurvey, Guid pendingSurveyId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool DoesSurveyInstanceAlreadyExistSYSTEM(Guid pendingSurveyId)
+        {
+            var survey = this.GetPendingSurveySYSTEM(pendingSurveyId);
+
+            if(survey == null)
+            {
+                return false;
+            }
+
+            return survey.SurveyInstanceID != null;
+        }
+
         public PendingSurvey GetPendingSurvey(string userId, Guid pendingSurveyId)
         {
             return this.GetPendingSurveySYSTEM(pendingSurveyId);
+        }
+
+        public SurveyInstance GetPendingSurveyInstance(Guid pendingSurveyId)
+        {
+            var survey = this.GetPendingSurveySYSTEM(pendingSurveyId);
+
+            return survey?.SurveyInstance;
         }
 
         public PendingSurvey GetPendingSurveySYSTEM(Guid pendingSurveyId)

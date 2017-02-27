@@ -14,6 +14,11 @@ namespace EmployeeEvaluationSystem.Entity.SharedObjects.Repository.Core.Reposito
         PendingSurvey GetPendingSurvey(string userId, Guid pendingSurveyId);
         PendingSurvey GetPendingSurveySYSTEM(Guid pendingSurveyId);
 
+        bool DoesSurveyInstanceAlreadyExistSYSTEM(Guid pendingSurveyId);
+
+        SurveyInstance CreateSurveyInstance(string userIdTakingSurvey, Guid pendingSurveyId);
+        SurveyInstance GetPendingSurveyInstance(Guid pendingSurveyId);
+
 
 
     }
