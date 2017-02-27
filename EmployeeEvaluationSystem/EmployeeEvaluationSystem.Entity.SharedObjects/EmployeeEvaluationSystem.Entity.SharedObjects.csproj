@@ -57,6 +57,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Infrastructure\Dependency.cs" />
+    <Compile Include="Infrastructure\DependencyInstance.cs" />
+    <Compile Include="Infrastructure\DependencySingleton.cs" />
+    <Compile Include="Infrastructure\DependencySynchronousInstance.cs" />
+    <Compile Include="Infrastructure\IDependencyReference.cs" />
     <Compile Include="Model\Authentication\PersonalAspNetUserViewModel.cs" />
     <Compile Include="Model\Authentication\PersonalCohortViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
