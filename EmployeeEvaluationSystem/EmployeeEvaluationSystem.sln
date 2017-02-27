@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+VisualStudioVersion = 14.0.24720.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "EmployeeEvaluationSystem.Database", "EmployeeEvaluationSystem.Database\EmployeeEvaluationSystem.Database.sqlproj", "{5F5869A3-B712-408C-9B97-767A1BC5A001}"
 EndProject
@@ -14,6 +14,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmployeeEvaluationSystem.SharedObjects", "EmployeeEvaluationSystem.SharedObjects\EmployeeEvaluationSystem.SharedObjects.csproj", "{B05BB64D-648D-4DFE-B999-95D14A9E6DC9}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmployeeEvaluationSystem.Entity.SharedObjects", "EmployeeEvaluationSystem.Entity.SharedObjects\EmployeeEvaluationSystem.Entity.SharedObjects.csproj", "{5AA6BCE6-B37F-4B3A-BA9B-698E63928840}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmployeeEvaluationSystem.DependencyInjector.Tests", "EmployeeEvaluationSystem.DependencyInjector.Tests\EmployeeEvaluationSystem.DependencyInjector.Tests.csproj", "{6685E7D1-AF67-411B-9DD1-4B841D2B9A46}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -47,6 +49,10 @@ Global
 		{5AA6BCE6-B37F-4B3A-BA9B-698E63928840}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5AA6BCE6-B37F-4B3A-BA9B-698E63928840}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5AA6BCE6-B37F-4B3A-BA9B-698E63928840}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6685E7D1-AF67-411B-9DD1-4B841D2B9A46}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6685E7D1-AF67-411B-9DD1-4B841D2B9A46}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6685E7D1-AF67-411B-9DD1-4B841D2B9A46}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6685E7D1-AF67-411B-9DD1-4B841D2B9A46}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
