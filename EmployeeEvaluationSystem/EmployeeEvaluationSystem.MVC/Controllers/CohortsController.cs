@@ -19,7 +19,7 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
     public class CohortsController : Controller
     {
         // GET: Cohort
-        public ActionResult Index()
+        public ActionResult Index(int? id)
         {
             var userId = User?.Identity?.GetUserId();
 
@@ -29,7 +29,29 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
 
                 var convertedCohorts = unconvertedCohorts?.Select(x => PersonalCohortViewModel.Convert(x))?.ToList();
 
-                return View(convertedCohorts);
+                var viewModel = new CohortIndexViewModel();
+
+                viewModel.Cohorts = convertedCohorts;
+
+                if (id != null)
+                {
+                    ViewBag.CohortID = id.Value;
+
+                    var cohortUsers = unitOfWork.CohortUsers.GetAllCohortUsers(userId).Where(i => i.CohortID == id.Value);
+
+                    var users = new List<PersonalAspNetUserViewModel>();
+
+                    foreach (CohortUser cohortUser in cohortUsers)
+                    {
+                        var user = unitOfWork.Users.GetUser(userId, cohortUser.UserID);
+
+                        users.Add(PersonalAspNetUserViewModel.Convert(user));
+                    }
+
+                    viewModel.Users = users;
+                }
+
+                return View(viewModel);
             }
         }
 
