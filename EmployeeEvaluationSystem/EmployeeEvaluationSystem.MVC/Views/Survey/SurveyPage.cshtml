@@ -4,6 +4,22 @@
     ViewBag.Title = "Survey";
 }
 
+<script type="text/javascript">
+    (function () {
+        SurveyHelper = {};
+
+        SurveyHelper.UpdatePostID = function (id, val) {
+            debugger;
+            var element = document.getElementById(id);
+            element.value = val;
+        };
+
+
+        
+    })();
+</script>
+
+
 <h2>Category @Model.Category.Name</h2>
 <p>@Model.Category.Description</p>
 <hr />
@@ -32,7 +48,7 @@
                             {
                                 <label class="surveyLabel">
                                     <input class="surveyRadioInput" type="radio" name="@($"radioset{Model.Questions[i].Question.Id}")" id="@($"question-{Model.Questions[i].Question.Id}-{j}")" value="@j"
-                                           onclick="radioButtonClicked(@($"Answer{i}"), @j)"
+                                           onclick="SurveyHelper.UpdatePostID(@($"Answer{i}"), @j)"
                                             />
                                     @if (Model.Questions[i].Question.QuestionType.RatingMin == j || Model.Questions[i].Question.QuestionType.RatingMax == j)
                                     {

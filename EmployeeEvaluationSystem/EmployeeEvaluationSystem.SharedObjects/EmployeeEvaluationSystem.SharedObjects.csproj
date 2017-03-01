@@ -52,6 +52,7 @@
     <Compile Include="Exceptions\Collections\ItemNotFoundException.cs" />
     <Compile Include="Exceptions\EESException.cs" />
     <Compile Include="Exceptions\Validitity\InvalidModelException.cs" />
+    <Compile Include="Extensions\ObjectExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
