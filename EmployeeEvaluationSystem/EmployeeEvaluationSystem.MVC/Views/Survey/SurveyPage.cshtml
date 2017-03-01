@@ -1,0 +1,61 @@
+﻿@model EmployeeEvaluationSystem.MVC.Models.Survey.SurveyPageViewModel
+
+@{
+    ViewBag.Title = "Survey";
+}
+
+<h2>Category @Model.Category.Name</h2>
+<p>@Model.Category.Description</p>
+<hr />
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="form-group">
+            @Html.HiddenFor(model => model.SurveyInstanceId, htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.HiddenFor(model => model.Category.Id, htmlAttributes: new { @class = "control-label col-md-2" })
+        </div>
+        @for (var i = 0; i < Model.Questions.Count; i++)
+        {
+            <div class="form-group">
+                @Html.LabelFor(model => Model.Questions[i].Question.DisplayText, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @if (Model.Questions[i].Question.QuestionType.IsRating)
+                    {
+                        @Html.Hidden($"Answer{i}",Model.Questions[i].Answer.ResponseNum)
+                        <div>
+                            @for (var j = Model.Questions[i].Question.QuestionType.RatingMin; i <= Model.Questions[i].Question.QuestionType.RatingMax; i++)
+                            {
+                                <label class="surveyLabel">
+                                    <input class="surveyRadioInput" type="radio" name="@($"radioset{Model.Questions[i].Question.Id}")" id="@($"question-{Model.Questions[i].Question.Id}-{j}")" value="@j"
+                                           onclick="radioButtonClicked(@($"Answer{i}"), @j)"
+                                            />
+                                    @if (Model.Questions[i].Question.QuestionType.RatingMin == j || Model.Questions[i].Question.QuestionType.RatingMax == j)
+                                    {
+                                        @j
+                                    }
+                                    else {
+                                        @:&nbsp;
+                                    }
+                                </label>
+                            }
+                        </div>
+                    }
+                    else
+                    {
+                        @("An unknown error has occured. Please refresh the page")
+                    }
+                </div>
+            </div>
+        }
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Next Page" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+}

@@ -176,6 +176,8 @@
           <Property Name="IsDeleted" Type="bit" Nullable="false" />
           <Property Name="DateCreated" Type="datetime" Nullable="false" />
           <Property Name="DateDeleted" Type="datetime" />
+          <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="DisplayText" Type="nvarchar(max)" Nullable="false" />
         </EntityType>
         <EntityType Name="QuestionType">
           <Key>
@@ -823,24 +825,15 @@
           <EntitySet Name="Cohorts" EntityType="EmployeeEvaluationSystem.Entity.EntityModel.Cohort" />
           <EntitySet Name="CohortPermissions" EntityType="EmployeeEvaluationSystem.Entity.EntityModel.CohortPermission" />
           <EntitySet Name="Permissions" EntityType="EmployeeEvaluationSystem.Entity.EntityModel.Permission" />
-          <EntitySet Name="Questions" EntityType="EmployeeEvaluationSystem.Entity.EntityModel.Question" />
           <EntitySet Name="QuestionTypes" EntityType="EmployeeEvaluationSystem.Entity.EntityModel.QuestionType" />
           <EntitySet Name="SiteWidePermissions" EntityType="EmployeeEvaluationSystem.Entity.EntityModel.SiteWidePermission" />
           <EntitySet Name="Surveys" EntityType="EmployeeEvaluationSystem.Entity.EntityModel.Survey" />
           <EntitySet Name="SurveysAvailables" EntityType="EmployeeEvaluationSystem.Entity.EntityModel.SurveysAvailable" />
           <EntitySet Name="SurveyTypes" EntityType="EmployeeEvaluationSystem.Entity.EntityModel.SurveyType" />
           <EntitySet Name="UserSurveyRoles" EntityType="EmployeeEvaluationSystem.Entity.EntityModel.UserSurveyRole" />
-          <AssociationSet Name="FK_AnswerInstance_To_Question" Association="EmployeeEvaluationSystem.Entity.EntityModel.FK_AnswerInstance_To_Question">
-            <End Role="Question" EntitySet="Questions" />
-            <End Role="AnswerInstance" EntitySet="AnswerInstances" />
-          </AssociationSet>
           <AssociationSet Name="FK_Category_ToTable" Association="EmployeeEvaluationSystem.Entity.EntityModel.FK_Category_ToTable">
             <End Role="Survey" EntitySet="Surveys" />
             <End Role="Category" EntitySet="Categories" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Question_ToTable" Association="EmployeeEvaluationSystem.Entity.EntityModel.FK_Question_ToTable">
-            <End Role="Category" EntitySet="Categories" />
-            <End Role="Question" EntitySet="Questions" />
           </AssociationSet>
           <AssociationSet Name="FK_SurveysAvailable_To_Cohort" Association="EmployeeEvaluationSystem.Entity.EntityModel.FK_SurveysAvailable_To_Cohort">
             <End Role="Cohort" EntitySet="Cohorts" />
@@ -873,10 +866,6 @@
           <AssociationSet Name="FK_SiteWidePermission_To_Perm3" Association="EmployeeEvaluationSystem.Entity.EntityModel.FK_SiteWidePermission_To_Perm3">
             <End Role="Permission" EntitySet="Permissions" />
             <End Role="SiteWidePermission" EntitySet="SiteWidePermissions" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Question_ToTable_1" Association="EmployeeEvaluationSystem.Entity.EntityModel.FK_Question_ToTable_1">
-            <End Role="QuestionType" EntitySet="QuestionTypes" />
-            <End Role="Question" EntitySet="Questions" />
           </AssociationSet>
           <AssociationSet Name="FK_SurveysAvailable_To_Survey" Association="EmployeeEvaluationSystem.Entity.EntityModel.FK_SurveysAvailable_To_Survey">
             <End Role="Survey" EntitySet="Surveys" />
@@ -960,6 +949,19 @@
             <End Role="UserSurveyRole" EntitySet="UserSurveyRoles" />
             <End Role="SurveysAvailableTo" EntitySet="SurveysAvailableToes" />
           </AssociationSet>
+          <EntitySet Name="Questions" EntityType="EmployeeEvaluationSystem.Entity.EntityModel.Question" />
+          <AssociationSet Name="FK_AnswerInstance_To_Question" Association="EmployeeEvaluationSystem.Entity.EntityModel.FK_AnswerInstance_To_Question">
+            <End Role="Question" EntitySet="Questions" />
+            <End Role="AnswerInstance" EntitySet="AnswerInstances" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Question_ToTable" Association="EmployeeEvaluationSystem.Entity.EntityModel.FK_Question_ToTable">
+            <End Role="Category" EntitySet="Categories" />
+            <End Role="Question" EntitySet="Questions" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Question_ToTable_1" Association="EmployeeEvaluationSystem.Entity.EntityModel.FK_Question_ToTable_1">
+            <End Role="QuestionType" EntitySet="QuestionTypes" />
+            <End Role="Question" EntitySet="Questions" />
+          </AssociationSet>
           </EntityContainer>
         <EntityType Name="C__MigrationHistory">
           <Key>
@@ -985,8 +987,8 @@
           <Property Name="QuestionID" Type="Int32" Nullable="false" />
           <Property Name="ResponseNum" Type="Int32" Nullable="false" />
           <Property Name="SurveyInstanceId" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="Question" Relationship="EmployeeEvaluationSystem.Entity.EntityModel.FK_AnswerInstance_To_Question" FromRole="AnswerInstance" ToRole="Question" />
           <NavigationProperty Name="SurveyInstance" Relationship="EmployeeEvaluationSystem.Entity.EntityModel.FK_AnswerInstance_SurveyInstance" FromRole="AnswerInstance" ToRole="SurveyInstance" />
+          <NavigationProperty Name="Question" Relationship="EmployeeEvaluationSystem.Entity.EntityModel.FK_AnswerInstance_To_Question" FromRole="AnswerInstance" ToRole="Question" />
         </EntityType>
         <EntityType Name="AspNetRole">
           <Key>
@@ -1077,21 +1079,6 @@
           <NavigationProperty Name="SiteWidePermissions1" Relationship="EmployeeEvaluationSystem.Entity.EntityModel.FK_SiteWidePermission_To_Perm2" FromRole="Permission" ToRole="SiteWidePermission" />
           <NavigationProperty Name="SiteWidePermissions2" Relationship="EmployeeEvaluationSystem.Entity.EntityModel.FK_SiteWidePermission_To_Perm3" FromRole="Permission" ToRole="SiteWidePermission" />
         </EntityType>
-        <EntityType Name="Question">
-          <Key>
-            <PropertyRef Name="ID" />
-          </Key>
-          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="CategoryID" Type="Int32" Nullable="false" />
-          <Property Name="QuestionTypeId" Type="Int32" Nullable="false" />
-          <Property Name="IsRequired" Type="Boolean" Nullable="false" />
-          <Property Name="IsDeleted" Type="Boolean" Nullable="false" />
-          <Property Name="DateCreated" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="DateDeleted" Type="DateTime" Precision="3" />
-          <NavigationProperty Name="AnswerInstances" Relationship="EmployeeEvaluationSystem.Entity.EntityModel.FK_AnswerInstance_To_Question" FromRole="Question" ToRole="AnswerInstance" />
-          <NavigationProperty Name="Category" Relationship="EmployeeEvaluationSystem.Entity.EntityModel.FK_Question_ToTable" FromRole="Question" ToRole="Category" />
-          <NavigationProperty Name="QuestionType" Relationship="EmployeeEvaluationSystem.Entity.EntityModel.FK_Question_ToTable_1" FromRole="Question" ToRole="QuestionType" />
-        </EntityType>
         <EntityType Name="QuestionType">
           <Key>
             <PropertyRef Name="ID" />
@@ -1174,18 +1161,6 @@
           <NavigationProperty Name="PendingSurveys" Relationship="EmployeeEvaluationSystem.Entity.EntityModel.FK_PendingSurvey_To_UserSurveyRole" FromRole="UserSurveyRole" ToRole="PendingSurvey" />
           <NavigationProperty Name="SurveysAvailableToes" Relationship="EmployeeEvaluationSystem.Entity.EntityModel.FK_SurveysAvailableTo_UserTakenRole" FromRole="UserSurveyRole" ToRole="SurveysAvailableTo" />
         </EntityType>
-        <Association Name="FK_AnswerInstance_To_Question">
-          <End Type="EmployeeEvaluationSystem.Entity.EntityModel.Question" Role="Question" Multiplicity="1" />
-          <End Type="EmployeeEvaluationSystem.Entity.EntityModel.AnswerInstance" Role="AnswerInstance" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Question">
-              <PropertyRef Name="ID" />
-            </Principal>
-            <Dependent Role="AnswerInstance">
-              <PropertyRef Name="QuestionID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_Category_ToTable">
           <End Type="EmployeeEvaluationSystem.Entity.EntityModel.Survey" Role="Survey" Multiplicity="1" />
           <End Type="EmployeeEvaluationSystem.Entity.EntityModel.Category" Role="Category" Multiplicity="*" />
@@ -1195,18 +1170,6 @@
             </Principal>
             <Dependent Role="Category">
               <PropertyRef Name="SurveyID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Question_ToTable">
-          <End Type="EmployeeEvaluationSystem.Entity.EntityModel.Category" Role="Category" Multiplicity="1" />
-          <End Type="EmployeeEvaluationSystem.Entity.EntityModel.Question" Role="Question" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Category">
-              <PropertyRef Name="ID" />
-            </Principal>
-            <Dependent Role="Question">
-              <PropertyRef Name="CategoryID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -1303,18 +1266,6 @@
             </Principal>
             <Dependent Role="SiteWidePermission">
               <PropertyRef Name="Survey" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Question_ToTable_1">
-          <End Type="EmployeeEvaluationSystem.Entity.EntityModel.QuestionType" Role="QuestionType" Multiplicity="1" />
-          <End Type="EmployeeEvaluationSystem.Entity.EntityModel.Question" Role="Question" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="QuestionType">
-              <PropertyRef Name="ID" />
-            </Principal>
-            <Dependent Role="Question">
-              <PropertyRef Name="QuestionTypeId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -1640,6 +1591,59 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="Question">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CategoryID" Type="Int32" Nullable="false" />
+          <Property Name="QuestionTypeId" Type="Int32" Nullable="false" />
+          <Property Name="IsRequired" Type="Boolean" Nullable="false" />
+          <Property Name="IsDeleted" Type="Boolean" Nullable="false" />
+          <Property Name="DateCreated" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="DateDeleted" Type="DateTime" Precision="3" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="DisplayText" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="AnswerInstances" Relationship="EmployeeEvaluationSystem.Entity.EntityModel.FK_AnswerInstance_To_Question" FromRole="Question" ToRole="AnswerInstance" />
+          <NavigationProperty Name="Category" Relationship="EmployeeEvaluationSystem.Entity.EntityModel.FK_Question_ToTable" FromRole="Question" ToRole="Category" />
+          <NavigationProperty Name="QuestionType" Relationship="EmployeeEvaluationSystem.Entity.EntityModel.FK_Question_ToTable_1" FromRole="Question" ToRole="QuestionType" />
+        </EntityType>
+        <Association Name="FK_AnswerInstance_To_Question">
+          <End Type="EmployeeEvaluationSystem.Entity.EntityModel.Question" Role="Question" Multiplicity="1" />
+          <End Type="EmployeeEvaluationSystem.Entity.EntityModel.AnswerInstance" Role="AnswerInstance" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Question">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="AnswerInstance">
+              <PropertyRef Name="QuestionID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Question_ToTable">
+          <End Type="EmployeeEvaluationSystem.Entity.EntityModel.Category" Role="Category" Multiplicity="1" />
+          <End Type="EmployeeEvaluationSystem.Entity.EntityModel.Question" Role="Question" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Category">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Question">
+              <PropertyRef Name="CategoryID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Question_ToTable_1">
+          <End Type="EmployeeEvaluationSystem.Entity.EntityModel.QuestionType" Role="QuestionType" Multiplicity="1" />
+          <End Type="EmployeeEvaluationSystem.Entity.EntityModel.Question" Role="Question" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="QuestionType">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Question">
+              <PropertyRef Name="QuestionTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -1744,19 +1748,6 @@
                 <ScalarProperty Name="Edit" ColumnName="Edit" />
                 <ScalarProperty Name="Add" ColumnName="Add" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
-                <ScalarProperty Name="ID" ColumnName="ID" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="Questions">
-            <EntityTypeMapping TypeName="EmployeeEvaluationSystem.Entity.EntityModel.Question">
-              <MappingFragment StoreEntitySet="Question">
-                <ScalarProperty Name="DateDeleted" ColumnName="DateDeleted" />
-                <ScalarProperty Name="DateCreated" ColumnName="DateCreated" />
-                <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
-                <ScalarProperty Name="IsRequired" ColumnName="IsRequired" />
-                <ScalarProperty Name="QuestionTypeId" ColumnName="QuestionTypeId" />
-                <ScalarProperty Name="CategoryID" ColumnName="CategoryID" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
               </MappingFragment>
             </EntityTypeMapping>
@@ -1918,6 +1909,21 @@
                 <ScalarProperty Name="Quantity" ColumnName="Quantity" />
                 <ScalarProperty Name="UserSurveyRoleId" ColumnName="UserSurveyRoleId" />
                 <ScalarProperty Name="SurveyAvailableID" ColumnName="SurveyAvailableID" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Questions">
+            <EntityTypeMapping TypeName="EmployeeEvaluationSystem.Entity.EntityModel.Question">
+              <MappingFragment StoreEntitySet="Question">
+                <ScalarProperty Name="DisplayText" ColumnName="DisplayText" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="DateDeleted" ColumnName="DateDeleted" />
+                <ScalarProperty Name="DateCreated" ColumnName="DateCreated" />
+                <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
+                <ScalarProperty Name="IsRequired" ColumnName="IsRequired" />
+                <ScalarProperty Name="QuestionTypeId" ColumnName="QuestionTypeId" />
+                <ScalarProperty Name="CategoryID" ColumnName="CategoryID" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
               </MappingFragment>
             </EntityTypeMapping>

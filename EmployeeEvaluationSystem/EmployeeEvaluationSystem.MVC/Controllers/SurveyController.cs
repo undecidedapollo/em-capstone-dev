@@ -28,6 +28,11 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
             return View();
         }
 
+        public ActionResult SurveyPage()
+        {
+            return View();
+        }
+
         public ActionResult EndSurvey()
         {
             return View();
