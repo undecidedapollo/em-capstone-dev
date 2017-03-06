@@ -274,7 +274,7 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
 
             if (ModelState.IsValid)
             {
-                if(model.password != model.confirmpassword)
+                if(model.password != model.confirmPassword)
                 {
                     ModelState.AddModelError("", "Your passwords do not match.");
                     return View(model);

@@ -14,6 +14,7 @@ namespace EmployeeEvaluationSystem.Entity
     
     public partial class SurveysAvailableTo
     {
+        public int ID { get; set; }
         public int SurveyAvailableID { get; set; }
         public int UserSurveyRoleId { get; set; }
         public int Quantity { get; set; }

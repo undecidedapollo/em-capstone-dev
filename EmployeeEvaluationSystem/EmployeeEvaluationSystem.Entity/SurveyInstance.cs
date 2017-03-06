@@ -26,16 +26,12 @@ namespace EmployeeEvaluationSystem.Entity
         public string UserTakenBy { get; set; }
         public System.DateTime DateStarted { get; set; }
         public Nullable<System.DateTime> DateFinished { get; set; }
-        public int SurveyTypeId { get; set; }
-        public int UserSurveyRoleId { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<AnswerInstance> AnswerInstances { get; set; }
+        public virtual AspNetUser AspNetUser { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<PendingSurvey> PendingSurveys { get; set; }
         public virtual Survey Survey { get; set; }
-        public virtual SurveyType SurveyType { get; set; }
-        public virtual UserSurveyRole UserSurveyRole { get; set; }
-        public virtual AspNetUser AspNetUser { get; set; }
     }
 }

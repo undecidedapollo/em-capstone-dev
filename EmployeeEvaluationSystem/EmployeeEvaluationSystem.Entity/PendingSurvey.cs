@@ -20,15 +20,15 @@ namespace EmployeeEvaluationSystem.Entity
         public System.DateTime DateSent { get; set; }
         public Nullable<int> SurveyInstanceID { get; set; }
         public string Email { get; set; }
-        public Nullable<System.DateTime> DateStarted { get; set; }
-        public Nullable<System.DateTime> DateCompleted { get; set; }
         public bool IsDeleted { get; set; }
         public Nullable<System.DateTime> DateDeleted { get; set; }
         public string UserSentById { get; set; }
+        public string UserForId { get; set; }
     
-        public virtual Survey Survey { get; set; }
-        public virtual SurveyInstance SurveyInstance { get; set; }
+        public virtual AspNetUser UserSentBy { get; set; }
+        public virtual AspNetUser UserFor { get; set; }
+        public virtual SurveysAvailable SurveysAvailable { get; set; }
         public virtual UserSurveyRole UserSurveyRole { get; set; }
-        public virtual AspNetUser AspNetUser { get; set; }
+        public virtual SurveyInstance SurveyInstance { get; set; }
     }
 }

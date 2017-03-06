@@ -18,7 +18,6 @@ namespace EmployeeEvaluationSystem.Entity
         public UserSurveyRole()
         {
             this.PendingSurveys = new HashSet<PendingSurvey>();
-            this.SurveyInstances = new HashSet<SurveyInstance>();
             this.SurveysAvailableToes = new HashSet<SurveysAvailableTo>();
         }
     
@@ -30,8 +29,6 @@ namespace EmployeeEvaluationSystem.Entity
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<PendingSurvey> PendingSurveys { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<SurveyInstance> SurveyInstances { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<SurveysAvailableTo> SurveysAvailableToes { get; set; }
     }

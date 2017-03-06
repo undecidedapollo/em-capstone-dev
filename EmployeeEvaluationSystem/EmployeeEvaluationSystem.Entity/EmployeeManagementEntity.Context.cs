@@ -34,19 +34,19 @@ namespace EmployeeEvaluationSystem.Entity
         public virtual DbSet<Category> Categories { get; set; }
         public virtual DbSet<Cohort> Cohorts { get; set; }
         public virtual DbSet<CohortPermission> CohortPermissions { get; set; }
-        public virtual DbSet<PendingSurvey> PendingSurveys { get; set; }
         public virtual DbSet<Permission> Permissions { get; set; }
         public virtual DbSet<Question> Questions { get; set; }
         public virtual DbSet<QuestionType> QuestionTypes { get; set; }
         public virtual DbSet<SiteWidePermission> SiteWidePermissions { get; set; }
         public virtual DbSet<Survey> Surveys { get; set; }
-        public virtual DbSet<SurveyInstance> SurveyInstances { get; set; }
         public virtual DbSet<SurveysAvailable> SurveysAvailables { get; set; }
-        public virtual DbSet<SurveysAvailableTo> SurveysAvailableToes { get; set; }
         public virtual DbSet<SurveyType> SurveyTypes { get; set; }
         public virtual DbSet<UserSurveyRole> UserSurveyRoles { get; set; }
         public virtual DbSet<LocationAddress> LocationAddresses { get; set; }
         public virtual DbSet<AspNetUser> AspNetUsers { get; set; }
         public virtual DbSet<CohortUser> CohortUsers { get; set; }
+        public virtual DbSet<PendingSurvey> PendingSurveys { get; set; }
+        public virtual DbSet<SurveyInstance> SurveyInstances { get; set; }
+        public virtual DbSet<SurveysAvailableTo> SurveysAvailableToes { get; set; }
     }
 }

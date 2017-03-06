@@ -1,6 +1,7 @@
 ﻿CREATE TABLE [dbo].[SurveysAvailableTo]
 (
-	[SurveyAvailableID] INT NOT NULL PRIMARY KEY, 
+	[ID] INT NOT NULL PRIMARY KEY IDENTITY, 
+	[SurveyAvailableID] INT NOT NULL, 
     [UserSurveyRoleId] INT NOT NULL, 
     [Quantity] INT NOT NULL, 
     CONSTRAINT [FK_SurveysAvailableTo_SurveysAvailable] FOREIGN KEY ([SurveyAvailableID]) REFERENCES [SurveysAvailable]([ID]), 
