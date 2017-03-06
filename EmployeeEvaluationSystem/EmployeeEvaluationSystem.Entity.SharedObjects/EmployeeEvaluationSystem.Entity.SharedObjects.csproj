@@ -9,8 +9,9 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>EmployeeEvaluationSystem.Entity.SharedObjects</RootNamespace>
     <AssemblyName>EmployeeEvaluationSystem.Entity.SharedObjects</AssemblyName>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -57,11 +58,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Infrastructure\Dependency.cs" />
-    <Compile Include="Infrastructure\DependencyInstance.cs" />
-    <Compile Include="Infrastructure\DependencySingleton.cs" />
-    <Compile Include="Infrastructure\DependencySynchronousInstance.cs" />
-    <Compile Include="Infrastructure\IDependencyReference.cs" />
     <Compile Include="Model\Authentication\CohortIndexViewModel.cs" />
     <Compile Include="Model\Authentication\PersonalAspNetUserViewModel.cs" />
     <Compile Include="Model\Authentication\PersonalCohortPermissionViewModel.cs" />

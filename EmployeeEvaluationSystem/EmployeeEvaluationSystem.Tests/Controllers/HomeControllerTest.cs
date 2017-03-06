@@ -6,6 +6,8 @@ using System.Web.Mvc;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using EmployeeEvaluationSystem.MVC;
 using EmployeeEvaluationSystem.MVC.Controllers;
+using EmployeeEvaluationSystem.Tests.Infrastructure;
+using EmployeeEvaluationSystem.Entity;
 
 namespace EmployeeEvaluationSystem.Tests.Controllers
 {
@@ -15,18 +17,25 @@ namespace EmployeeEvaluationSystem.Tests.Controllers
         [TestMethod]
         public void Index()
         {
+            var theObj = DependencyBuilder.BuildDependency();
 
+            var theMock = theObj.Item1.FindMy<IUnitOfWorkBuilder<EmployeeDatabaseEntities>>();
 
-
-            Assert.IsTrue(true);
-            return;
+            theMock.InitializeOne(y => y.AspNetUsers, new List<AspNetUser>
+                {
+                    new AspNetUser { FirstName = "BBB", LastName = "LLL", UserName = "123" },
+                    new AspNetUser { FirstName = "CCC", LastName = "LLL", UserName = "456" },
+                    new AspNetUser { FirstName = "DDD", LastName = "LLL", UserName = "789" }
+                });
 
             // Arrange
-            HomeController controller = new HomeController();
+            HomeController controller = new HomeController() { DependencyObject = theObj.Item2};
 
             // Act
             ViewResult result = controller.Index() as ViewResult;
 
+            Assert.AreEqual(result.ViewBag.NumUsers, 3);
+            
             // Assert
             Assert.IsNotNull(result);
         }

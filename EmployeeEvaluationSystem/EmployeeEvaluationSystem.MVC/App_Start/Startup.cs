@@ -9,6 +9,7 @@ namespace EmployeeEvaluationSystem.MVC
         public void Configuration(IAppBuilder app)
         {
             ConfigureAuth(app);
+            DependencyStartup.Setup();
         }
     }
 }

@@ -36,7 +36,7 @@
         <AssociationConnector Association="EmployeeEvaluationSystem.Entity.EntityModel.FK_Question_ToTable_1" />
         <AssociationConnector Association="EmployeeEvaluationSystem.Entity.EntityModel.FK_SurveysAvailable_To_Survey" />
         <AssociationConnector Association="EmployeeEvaluationSystem.Entity.EntityModel.FK_SurveysAvailable_To_SurveyType" />
-        <EntityTypeShape EntityType="EmployeeEvaluationSystem.Entity.EntityModel.LocationAddress" Width="1.5" PointX="12.875" PointY="1" />
+        <EntityTypeShape EntityType="EmployeeEvaluationSystem.Entity.EntityModel.LocationAddress" Width="1.5" PointX="13.75" PointY="1.125" />
         <EntityTypeShape EntityType="EmployeeEvaluationSystem.Entity.EntityModel.AspNetUser" Width="1.5" PointX="3" PointY="14.75" />
         <AssociationConnector Association="EmployeeEvaluationSystem.Entity.EntityModel.FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId" />
         <AssociationConnector Association="EmployeeEvaluationSystem.Entity.EntityModel.FK_dbo_AspNetUserLogins_dbo_AspNetUsers_UserId" />

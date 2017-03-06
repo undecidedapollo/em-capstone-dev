@@ -114,9 +114,9 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
             {
                 var cohort = new Cohort()
                 {
-                    ID = model.Cohort.ID,
                     Name = model.Cohort.Name,
-                    Description = model.Cohort.Description
+                    Description = model.Cohort.Description,
+                    DateCreated = DateTime.UtcNow
                 };
 
                 foreach (var item in ids)
@@ -137,12 +137,11 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
 
                     var cohortUser = new CohortUser()
                     {
-                        CohortID = cohort.ID,
                         UserID = item,
                         CohortPermissionId = 0
                     };
 
-                    unitOfWork.CohortUsers.AddCohortUserToDb(userId, cohortUser);
+                    //unitOfWork.CohortUsers.AddCohortUserToDb(userId, cohortUser);
 
                     cohort.CohortUsers.Add(cohortUser);
                 }
