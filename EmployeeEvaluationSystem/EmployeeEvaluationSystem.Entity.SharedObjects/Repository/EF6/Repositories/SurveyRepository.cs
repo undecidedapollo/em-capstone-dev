@@ -427,6 +427,19 @@ namespace EmployeeEvaluationSystem.Entity.SharedObjects.Repository.EF6.Repositor
             return this.dbcontext.SurveyInstances.FirstOrDefault(x => x.ID == surveyInstanceId);
         }
 
+        public LockAndGetSurvey_Result LockAndGetSurvey(Guid pendingSurveyId, Guid? statusGuid = default(Guid?))
+        {
+            return this.dbcontext.LockAndGetSurvey(pendingSurveyId, statusGuid).FirstOrDefault();
+        }
 
+        public int CancelSurveyLock(Guid pendingSurveyId)
+        {
+            return this.dbcontext.CancelSurveyLock(pendingSurveyId);
+        }
+
+        public int UpdateSurveyLockTime(Guid pendingSurveyId)
+        {
+            return this.dbcontext.UpdateLockedSurveyTime(pendingSurveyId);
+        }
     }
 }

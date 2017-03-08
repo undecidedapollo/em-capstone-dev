@@ -110,6 +110,9 @@
     <Compile Include="LocationAddress.cs">
       <DependentUpon>EmployeeManagementEntity.tt</DependentUpon>
     </Compile>
+    <Compile Include="LockAndGetSurvey_Result.cs">
+      <DependentUpon>EmployeeManagementEntity.tt</DependentUpon>
+    </Compile>
     <Compile Include="PendingSurvey.cs">
       <DependentUpon>EmployeeManagementEntity.tt</DependentUpon>
     </Compile>
@@ -124,6 +127,9 @@
       <DependentUpon>EmployeeManagementEntity.tt</DependentUpon>
     </Compile>
     <Compile Include="SiteWidePermission.cs">
+      <DependentUpon>EmployeeManagementEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Status.cs">
       <DependentUpon>EmployeeManagementEntity.tt</DependentUpon>
     </Compile>
     <Compile Include="Survey.cs">

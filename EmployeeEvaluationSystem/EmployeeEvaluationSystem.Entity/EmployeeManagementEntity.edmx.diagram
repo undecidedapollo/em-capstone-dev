@@ -59,6 +59,8 @@
         <AssociationConnector Association="EmployeeEvaluationSystem.Entity.EntityModel.FK_AnswerInstance_To_Question" />
         <AssociationConnector Association="EmployeeEvaluationSystem.Entity.EntityModel.FK_Question_ToTable" />
         <AssociationConnector Association="EmployeeEvaluationSystem.Entity.EntityModel.FK_Question_ToTable_1" />
+        <EntityTypeShape EntityType="EmployeeEvaluationSystem.Entity.EntityModel.Status" Width="1.5" PointX="10.375" PointY="7.875" />
+        <AssociationConnector Association="EmployeeEvaluationSystem.Entity.EntityModel.FK_PendingSurvey_ToTable_2" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

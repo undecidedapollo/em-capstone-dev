@@ -10,12 +10,17 @@
 
         SurveyHelper.UpdatePostID = function (id, val) {
             debugger;
-            var element = document.getElementById(id);
-            element.value = val;
+            if(id == null){
+                return;
+            }
+
+            id.value = val;
+            //var element = document.getElementById(id);
+            //element.value = val;
         };
 
 
-        
+
     })();
 </script>
 
@@ -32,24 +37,27 @@
         <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         <div class="form-group">
+            <label class="col-md-9">Question:</label>
+            <div class="col-md-3"><b>Response:</b></div>
             @Html.HiddenFor(model => model.SurveyInstanceId, htmlAttributes: new { @class = "control-label col-md-2" })
             @Html.HiddenFor(model => model.Category.Id, htmlAttributes: new { @class = "control-label col-md-2" })
         </div>
         @for (var i = 0; i < Model.Questions.Count; i++)
         {
             <div class="form-group">
-                @Html.LabelFor(model => Model.Questions[i].Question.DisplayText, htmlAttributes: new { @class = "control-label col-md-2" })
-                <div class="col-md-10">
+                <div class="col-md-9">@(Model.Questions[i].Question.DisplayText)</div>
+                <div class="col-md-3">
+                    @Html.HiddenFor(model => model.Questions[i].Question.Id);
                     @if (Model.Questions[i].Question.QuestionType.IsRating)
                     {
-                        @Html.Hidden($"Answer{i}",Model.Questions[i].Answer.ResponseNum)
+                        @Html.HiddenFor(model => model.Questions[i].Answer.ResponseNum)
+                        @Html.Hidden($"Answer{i}", Model.Questions[i].Answer.ResponseNum)
                         <div>
-                            @for (var j = Model.Questions[i].Question.QuestionType.RatingMin; i <= Model.Questions[i].Question.QuestionType.RatingMax; i++)
+                            @for (var j = Model.Questions[i].Question.QuestionType.RatingMin; j <= Model.Questions[i].Question.QuestionType.RatingMax; j++)
                             {
                                 <label class="surveyLabel">
                                     <input class="surveyRadioInput" type="radio" name="@($"radioset{Model.Questions[i].Question.Id}")" id="@($"question-{Model.Questions[i].Question.Id}-{j}")" value="@j"
-                                           onclick="SurveyHelper.UpdatePostID(@($"Answer{i}"), @j)"
-                                            />
+                                           onclick="SurveyHelper.UpdatePostID(@($"Questions_{i}__Answer_ResponseNum"), @j)" />
                                     @if (Model.Questions[i].Question.QuestionType.RatingMin == j || Model.Questions[i].Question.QuestionType.RatingMax == j)
                                     {
                                         @j

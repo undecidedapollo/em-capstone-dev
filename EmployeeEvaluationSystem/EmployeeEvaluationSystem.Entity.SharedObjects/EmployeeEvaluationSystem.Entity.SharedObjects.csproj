@@ -57,6 +57,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Helpers\Locks\SurveyLockManager.cs" />
     <Compile Include="Infrastructure\Dependency.cs" />
     <Compile Include="Infrastructure\DependencyInstance.cs" />
     <Compile Include="Infrastructure\DependencySingleton.cs" />

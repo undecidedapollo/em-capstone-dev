@@ -51,8 +51,11 @@
     <Compile Include="Enums\QuestionTypeEnum.cs" />
     <Compile Include="Exceptions\Collections\ItemNotFoundException.cs" />
     <Compile Include="Exceptions\EESException.cs" />
+    <Compile Include="Exceptions\Lock\DBLockException.cs" />
     <Compile Include="Exceptions\Validitity\InvalidModelException.cs" />
     <Compile Include="Extensions\ObjectExtensions.cs" />
+    <Compile Include="Helpers\Locks\ILockManager.cs" />
+    <Compile Include="Helpers\Locks\LockManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -1,6 +1,8 @@
 ﻿using EmployeeEvaluationSystem.Entity;
+using EmployeeEvaluationSystem.Entity.SharedObjects.Helpers.Locks;
 using EmployeeEvaluationSystem.Entity.SharedObjects.Repository.EF6;
 using EmployeeEvaluationSystem.MVC.Models.Survey;
+using EmployeeEvaluationSystem.SharedObjects.Exceptions.Lock;
 using EmployeeEvaluationSystem.SharedObjects.Extensions;
 using Microsoft.AspNet.Identity;
 using System;
@@ -65,15 +67,61 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
                     throw new Exception();
                 }
 
-                var pendingSurvey = unitOfWork.Surveys.GetPendingSurveySYSTEM(pendingSurveyId).ThrowIfNull();
+                using(var lockMan = new SurveyLockManager(pendingSurveyId))
+                {
+                    var lockPendingSurvey = lockMan.BeforeValue();
 
+                    if(lockPendingSurvey == null)
+                    {
+                        throw new DBLockException();
+                    }
 
+                    var dbPendingSurvey = unitOfWork.Surveys.GetPendingSurveySYSTEM(pendingSurveyId).ThrowIfNull();
 
+                    var instanceSurvey = dbPendingSurvey.SurveyInstance;
+
+                    SurveyInstance theInstance = null;
+
+                    if(instanceSurvey == null)
+                    {
+                        if (guestMode)
+                        {
+                            theInstance = unitOfWork.Surveys.CreateSurveyInstanceForGuestUser(email, pendingSurveyId);
+                        }
+                        else
+                        {
+                            theInstance = unitOfWork.Surveys.CreateSurveyInstanceForExistingUser(userId, pendingSurveyId);
+                        }
+
+                        unitOfWork.Complete();
+
+                        theInstance = unitOfWork.Surveys.GetSurveyInstanceByIdSYSTEM(theInstance.ID); //Need to get categories.
+                    } else if(instanceSurvey.DateFinished == null)
+                    {
+                        theInstance = instanceSurvey;
+                    }
+                    else
+                    {
+                        throw new Exception(); //The survey is already finished.
+                    }
+
+                   
+
+                    var firstCategory = theInstance.Survey.Categories.OrderBy(x => x.ID).First();
+
+                    var viewModel = new SurveyPageViewModel
+                    {
+                        SurveyInstanceId = theInstance.ID,
+                        Category = CategoryViewModel.Convert(firstCategory),
+                        Questions = firstCategory.Questions.Select(x => new QuestionAnswerViewModel { Question = QuestionViewModel.Convert(x)}).ToList()
+                    };
+
+                    return View("SurveyPage", viewModel);
+                }
             }
-
-            return View();
         }
 
+        [HttpPost]
         public ActionResult SurveyPage(SurveyPageViewModel model)
         {
             return View();

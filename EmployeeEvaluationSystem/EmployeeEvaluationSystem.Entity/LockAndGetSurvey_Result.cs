@@ -10,9 +10,8 @@
 namespace EmployeeEvaluationSystem.Entity
 {
     using System;
-    using System.Collections.Generic;
     
-    public partial class PendingSurvey
+    public partial class LockAndGetSurvey_Result
     {
         public System.Guid Id { get; set; }
         public int SurveyAvailToMeID { get; set; }
@@ -27,12 +26,5 @@ namespace EmployeeEvaluationSystem.Entity
         public int StatusId { get; set; }
         public Nullable<System.Guid> StatusGuid { get; set; }
         public Nullable<System.DateTime> StatusDate { get; set; }
-    
-        public virtual AspNetUser UserSentBy { get; set; }
-        public virtual AspNetUser UserFor { get; set; }
-        public virtual SurveysAvailable SurveysAvailable { get; set; }
-        public virtual UserSurveyRole UserSurveyRole { get; set; }
-        public virtual SurveyInstance SurveyInstance { get; set; }
-        public virtual Status Status { get; set; }
     }
 }

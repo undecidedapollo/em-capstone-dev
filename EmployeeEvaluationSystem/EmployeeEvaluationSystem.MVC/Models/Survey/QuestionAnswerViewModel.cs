@@ -9,6 +9,6 @@ namespace EmployeeEvaluationSystem.MVC.Models.Survey
     {
         public QuestionViewModel Question { get; set; }
 
-        public AnswerViewModel Answer { get; set; }
+        public AnswerViewModel Answer { get; set; } = new AnswerViewModel();
     }
 }

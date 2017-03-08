@@ -66,5 +66,11 @@ namespace EmployeeEvaluationSystem.Entity.SharedObjects.Repository.Core.Reposito
         QuestionType GetQuestionTypeOfQuestion(int questionId);
 
         bool IsQuestionInSurvey(int questionId, int surveyId);
+
+        LockAndGetSurvey_Result LockAndGetSurvey(Guid pendingSurveyId, Guid? statusGuid = null);
+
+        int CancelSurveyLock(Guid pendingSurveyId);
+
+        int UpdateSurveyLockTime(Guid pendingSurveyId);
     }
 }
