@@ -12,27 +12,18 @@ namespace EmployeeEvaluationSystem.Entity
     using System;
     using System.Collections.Generic;
     
-    public partial class Question
+    public partial class Status
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public Question()
+        public Status()
         {
-            this.AnswerInstances = new HashSet<AnswerInstance>();
+            this.PendingSurveys = new HashSet<PendingSurvey>();
         }
     
-        public int ID { get; set; }
-        public int CategoryID { get; set; }
-        public int QuestionTypeId { get; set; }
-        public bool IsRequired { get; set; }
-        public bool IsDeleted { get; set; }
-        public System.DateTime DateCreated { get; set; }
-        public Nullable<System.DateTime> DateDeleted { get; set; }
+        public int Id { get; set; }
         public string Name { get; set; }
-        public string DisplayText { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<AnswerInstance> AnswerInstances { get; set; }
-        public virtual Category Category { get; set; }
-        public virtual QuestionType QuestionType { get; set; }
+        public virtual ICollection<PendingSurvey> PendingSurveys { get; set; }
     }
 }

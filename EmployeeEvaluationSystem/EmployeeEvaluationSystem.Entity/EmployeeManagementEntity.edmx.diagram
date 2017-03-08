@@ -59,6 +59,8 @@
         <EntityTypeShape EntityType="EmployeeEvaluationSystem.Entity.EntityModel.SurveysAvailableTo" Width="1.5" PointX="12" PointY="4.125" />
         <AssociationConnector Association="EmployeeEvaluationSystem.Entity.EntityModel.FK_SurveysAvailableTo_SurveysAvailable" />
         <AssociationConnector Association="EmployeeEvaluationSystem.Entity.EntityModel.FK_SurveysAvailableTo_UserTakenRole" />
+        <EntityTypeShape EntityType="EmployeeEvaluationSystem.Entity.EntityModel.Status" Width="1.5" PointX="10.375" PointY="7.875" />
+        <AssociationConnector Association="EmployeeEvaluationSystem.Entity.EntityModel.FK_PendingSurvey_ToTable_2" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>
