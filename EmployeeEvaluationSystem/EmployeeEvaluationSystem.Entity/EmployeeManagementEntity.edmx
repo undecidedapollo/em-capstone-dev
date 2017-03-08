@@ -1007,14 +1007,14 @@
           </AssociationSet>
           <FunctionImport Name="CancelAllOldSurveyLocks" />
           <FunctionImport Name="CancelSurveyLock">
-            <Parameter Name="pendingSurveyId" Mode="In" Type="Guid" />
+          <Parameter Name="pendingSurveyId" Mode="In" Type="Guid" />
           </FunctionImport>
           <FunctionImport Name="LockAndGetSurvey" ReturnType="Collection(EmployeeEvaluationSystem.Entity.EntityModel.LockAndGetSurvey_Result)">
             <Parameter Name="pendingSurveyId" Mode="In" Type="Guid" />
             <Parameter Name="statusGuid" Mode="In" Type="Guid" />
           </FunctionImport>
           <FunctionImport Name="UpdateLockedSurveyTime">
-            <Parameter Name="pendingSurveyId" Mode="In" Type="Guid" />
+          <Parameter Name="pendingSurveyId" Mode="In" Type="Guid" />
           </FunctionImport>
           </EntityContainer>
         <EntityType Name="C__MigrationHistory">

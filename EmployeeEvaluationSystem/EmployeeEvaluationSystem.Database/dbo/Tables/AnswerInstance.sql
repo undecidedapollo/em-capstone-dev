@@ -5,5 +5,6 @@
     [ResponseNum] INT NOT NULL, 
     [SurveyInstanceId] INT NOT NULL, 
     CONSTRAINT [FK_AnswerInstance_SurveyInstance] FOREIGN KEY ([SurveyInstanceId]) REFERENCES [SurveyInstance]([ID]), 
-    CONSTRAINT [FK_AnswerInstance_To_Question] FOREIGN KEY ([QuestionID]) REFERENCES [Question]([ID])
+    CONSTRAINT [FK_AnswerInstance_To_Question] FOREIGN KEY ([QuestionID]) REFERENCES [Question]([ID]), 
+    CONSTRAINT [AK_AnswerInstance_Column] UNIQUE ([SurveyInstanceId], [QuestionID])
 )

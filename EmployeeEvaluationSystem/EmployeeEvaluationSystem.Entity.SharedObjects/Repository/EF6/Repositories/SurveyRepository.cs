@@ -299,7 +299,7 @@ namespace EmployeeEvaluationSystem.Entity.SharedObjects.Repository.EF6.Repositor
         {
             var surv = this.GetAnAvailableSurveyForCohortSYSTEM(surveyAvailableId);
 
-            if(surv == null)
+            if (surv == null)
             {
                 return false;
             }
@@ -313,7 +313,7 @@ namespace EmployeeEvaluationSystem.Entity.SharedObjects.Repository.EF6.Repositor
         {
             var survey = this.GetAnAvailableSurveyForCohortSYSTEM(surveyAvailableId);
 
-            if(survey == null)
+            if (survey == null)
             {
                 throw new ItemNotFoundException();
             }
@@ -332,19 +332,26 @@ namespace EmployeeEvaluationSystem.Entity.SharedObjects.Repository.EF6.Repositor
 
         public AnswerInstance AddAnswerInstanceToSurveyInstance(Guid pendingSurveyId, int questionId, CreateAnswerInstanceModel model)
         {
-            throw new NotImplementedException();
+            var theId = this.GetPendingSurveySYSTEM(pendingSurveyId);
+
+            if (theId?.SurveyInstanceID == null)
+            {
+                throw new ItemNotFoundException();
+            }
+
+            return this.AddAnswerInstanceToSurveyInstance(theId.SurveyInstanceID ?? -1, questionId, model);
         }
 
         public AnswerInstance AddAnswerInstanceToSurveyInstance(int surveyInstanceId, int questionId, CreateAnswerInstanceModel model)
         {
-            if(model == null)
+            if (model == null)
             {
                 throw new ArgumentNullException("The model cannot be null");
             }
 
             var theSurveyInstance = this.GetSurveyInstanceByIdSYSTEM(surveyInstanceId);
 
-            if(theSurveyInstance == null)
+            if (theSurveyInstance == null)
             {
                 throw new ItemNotFoundException("Unable to find the survey instance on the server.");
             }
@@ -359,15 +366,10 @@ namespace EmployeeEvaluationSystem.Entity.SharedObjects.Repository.EF6.Repositor
                 throw new InvalidModelException("The current question is not in the specified survey.");
             }
 
-            if(model.QuestionType == QuestionTypeEnum.Rating)
+            var questionType = this.GetQuestionTypeOfQuestion(questionId);
+
+            if (questionType.IsRating)
             {
-                var questionType = this.GetQuestionTypeOfQuestion(questionId);
-
-                if (!questionType.IsRating)
-                {
-                    throw new InvalidModelException("The question types do not match.");
-                }
-
                 var isValid = questionType.RatingMin <= model.RatingResponse && model.RatingResponse <= questionType.RatingMax;
 
                 if (!isValid)
@@ -404,7 +406,7 @@ namespace EmployeeEvaluationSystem.Entity.SharedObjects.Repository.EF6.Repositor
 
         public bool IsQuestionInSurvey(int questionId, int surveyId)
         {
-            return this.dbcontext.Questions.Any(x => x.ID == questionId && x.Category.SurveyID == surveyId && x.IsDeleted == false && x.Category.IsDeleted == false && x.Category.Survey.IsDeleted == false );
+            return this.dbcontext.Questions.Any(x => x.ID == questionId && x.Category.SurveyID == surveyId && x.IsDeleted == false && x.Category.IsDeleted == false && x.Category.Survey.IsDeleted == false);
         }
 
         public QuestionType GetQuestionType(int questionTypeId)
@@ -440,6 +442,21 @@ namespace EmployeeEvaluationSystem.Entity.SharedObjects.Repository.EF6.Repositor
         public int UpdateSurveyLockTime(Guid pendingSurveyId)
         {
             return this.dbcontext.UpdateLockedSurveyTime(pendingSurveyId);
+        }
+
+        public Category GetFirstCategory(int surveyId)
+        {
+            return this.dbcontext.Categories.Where(x => x.SurveyID == surveyId).OrderBy(x => x.ID).FirstOrDefault();
+        }
+
+        public Category GetNextCategory(int categoryId)
+        {
+            return this.dbcontext.Categories.Where(x => x.ID == categoryId).Select(x => x.Survey.Categories.Where(y => y.ID > categoryId).OrderBy(y => y.ID).FirstOrDefault()).FirstOrDefault();
+        }
+
+        public Category GetPreviousCategory(int categoryId)
+        {
+            return this.dbcontext.Categories.Where(x => x.ID == categoryId).Select(x => x.Survey.Categories.Where(y => y.ID < categoryId).OrderByDescending(y => y.ID).FirstOrDefault()).FirstOrDefault();
         }
     }
 }

@@ -72,5 +72,11 @@ namespace EmployeeEvaluationSystem.Entity.SharedObjects.Repository.Core.Reposito
         int CancelSurveyLock(Guid pendingSurveyId);
 
         int UpdateSurveyLockTime(Guid pendingSurveyId);
+
+        Category GetFirstCategory(int surveyId);
+
+        Category GetNextCategory(int categoryId);
+
+        Category GetPreviousCategory(int categoryId);
     }
 }

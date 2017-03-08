@@ -9,8 +9,6 @@ namespace EmployeeEvaluationSystem.Entity.SharedObjects.Model.Survey
 {
     public class CreateAnswerInstanceModel
     {
-        public QuestionTypeEnum QuestionType { get; set; }
-
         public int RatingResponse { get; set; }
     }
 }

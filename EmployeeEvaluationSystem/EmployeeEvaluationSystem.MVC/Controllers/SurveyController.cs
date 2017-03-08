@@ -1,5 +1,6 @@
 ﻿using EmployeeEvaluationSystem.Entity;
 using EmployeeEvaluationSystem.Entity.SharedObjects.Helpers.Locks;
+using EmployeeEvaluationSystem.Entity.SharedObjects.Model.Survey;
 using EmployeeEvaluationSystem.Entity.SharedObjects.Repository.EF6;
 using EmployeeEvaluationSystem.MVC.Models.Survey;
 using EmployeeEvaluationSystem.SharedObjects.Exceptions.Lock;
@@ -21,7 +22,7 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
             var userId = User?.Identity?.GetUserId();
 
 
-            if(userId == null && email == null)
+            if (userId == null && email == null)
             {
                 throw new Exception();
             }
@@ -30,7 +31,7 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
 
             using (var unitOfWork = new UnitOfWork())
             {
-                bool canTake = guestMode ? unitOfWork.Surveys.CanGuestUserTakeSurvey(email, pendingSurveyId): unitOfWork.Surveys.CanExistingUserTakeSurvey(userId, pendingSurveyId);
+                bool canTake = guestMode ? unitOfWork.Surveys.CanGuestUserTakeSurvey(email, pendingSurveyId) : unitOfWork.Surveys.CanExistingUserTakeSurvey(userId, pendingSurveyId);
 
                 if (!canTake)
                 {
@@ -67,63 +68,106 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
                     throw new Exception();
                 }
 
-                using(var lockMan = new SurveyLockManager(pendingSurveyId))
+
+                var lockPendingSurvey = unitOfWork.Surveys.LockAndGetSurvey(pendingSurveyId);
+
+                if (lockPendingSurvey == null)
                 {
-                    var lockPendingSurvey = lockMan.BeforeValue();
+                    throw new DBLockException();
+                }
 
-                    if(lockPendingSurvey == null)
+                if (lockPendingSurvey.StatusGuid == null)
+                {
+                    throw new Exception();
+                }
+
+                var dbPendingSurvey = unitOfWork.Surveys.GetPendingSurveySYSTEM(pendingSurveyId).ThrowIfNull();
+
+                var instanceSurvey = dbPendingSurvey.SurveyInstance;
+
+                SurveyInstance theInstance = null;
+
+                if (instanceSurvey == null)
+                {
+                    if (guestMode)
                     {
-                        throw new DBLockException();
-                    }
-
-                    var dbPendingSurvey = unitOfWork.Surveys.GetPendingSurveySYSTEM(pendingSurveyId).ThrowIfNull();
-
-                    var instanceSurvey = dbPendingSurvey.SurveyInstance;
-
-                    SurveyInstance theInstance = null;
-
-                    if(instanceSurvey == null)
-                    {
-                        if (guestMode)
-                        {
-                            theInstance = unitOfWork.Surveys.CreateSurveyInstanceForGuestUser(email, pendingSurveyId);
-                        }
-                        else
-                        {
-                            theInstance = unitOfWork.Surveys.CreateSurveyInstanceForExistingUser(userId, pendingSurveyId);
-                        }
-
-                        unitOfWork.Complete();
-
-                        theInstance = unitOfWork.Surveys.GetSurveyInstanceByIdSYSTEM(theInstance.ID); //Need to get categories.
-                    } else if(instanceSurvey.DateFinished == null)
-                    {
-                        theInstance = instanceSurvey;
+                        theInstance = unitOfWork.Surveys.CreateSurveyInstanceForGuestUser(email, pendingSurveyId);
                     }
                     else
                     {
-                        throw new Exception(); //The survey is already finished.
+                        theInstance = unitOfWork.Surveys.CreateSurveyInstanceForExistingUser(userId, pendingSurveyId);
                     }
 
-                   
+                    unitOfWork.Complete();
 
-                    var firstCategory = theInstance.Survey.Categories.OrderBy(x => x.ID).First();
-
-                    var viewModel = new SurveyPageViewModel
-                    {
-                        SurveyInstanceId = theInstance.ID,
-                        Category = CategoryViewModel.Convert(firstCategory),
-                        Questions = firstCategory.Questions.Select(x => new QuestionAnswerViewModel { Question = QuestionViewModel.Convert(x)}).ToList()
-                    };
-
-                    return View("SurveyPage", viewModel);
+                    theInstance = unitOfWork.Surveys.GetSurveyInstanceByIdSYSTEM(theInstance.ID); //Need to get categories.
                 }
+                else if (instanceSurvey.DateFinished == null)
+                {
+                    theInstance = instanceSurvey;
+                }
+                else
+                {
+                    throw new Exception(); //The survey is already finished.
+                }
+
+
+
+                var firstCategory = unitOfWork.Surveys.GetFirstCategory(theInstance.SurveyID);
+
+
+
+
+                var viewModel = new SurveyPageViewModel
+                {
+                    SurveyInstanceId = theInstance.ID,
+                    PendingSurveyId = pendingSurveyId,
+                    StatusGuid = lockPendingSurvey.StatusGuid ?? Guid.NewGuid(),
+                    Category = CategoryViewModel.Convert(firstCategory),
+                    Questions = firstCategory.Questions.Select(x => new QuestionAnswerViewModel { Question = QuestionViewModel.Convert(x) }).ToList()
+                };
+
+                return View("SurveyPage", viewModel);
             }
+
         }
 
         [HttpPost]
         public ActionResult SurveyPage(SurveyPageViewModel model)
         {
+            using (var unitOfWork = new UnitOfWork())
+            {
+                var theSurvey = unitOfWork.Surveys.LockAndGetSurvey(model.PendingSurveyId, model.StatusGuid);
+
+                var surveyInstance = unitOfWork.Surveys.GetSurveyInstanceByIdSYSTEM(model.SurveyInstanceId);
+
+                foreach(var qa in model.Questions)
+                {
+                    var newAnswerInstanceModel = new CreateAnswerInstanceModel
+                    {
+                        RatingResponse = qa.Answer.ResponseNum
+                    };
+
+                    unitOfWork.Surveys.AddAnswerInstanceToSurveyInstance(model.SurveyInstanceId, qa.Question.Id, newAnswerInstanceModel);
+                }
+
+                unitOfWork.Complete();
+
+                var nextCategory = unitOfWork.Surveys.GetNextCategory(surveyInstance.SurveyID);
+
+
+
+
+                var viewModel = new SurveyPageViewModel
+                {
+                    SurveyInstanceId = model.SurveyInstanceId,
+                    PendingSurveyId = model.PendingSurveyId,
+                    StatusGuid = theSurvey.StatusGuid ?? Guid.NewGuid(),
+                    Category = CategoryViewModel.Convert(nextCategory),
+                    Questions = nextCategory.Questions.Select(x => new QuestionAnswerViewModel { Question = QuestionViewModel.Convert(x) }).ToList()
+                };
+            }
+
             return View();
         }
 
