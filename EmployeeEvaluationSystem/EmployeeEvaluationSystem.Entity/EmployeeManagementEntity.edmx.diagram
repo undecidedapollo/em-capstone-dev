@@ -4,7 +4,7 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="56f097f797f94f2da2af2218a4281a91" Name="Diagram1" ZoomLevel="56">
+      <Diagram DiagramId="56f097f797f94f2da2af2218a4281a91" Name="Diagram1" ZoomLevel="75">
         <EntityTypeShape EntityType="EmployeeEvaluationSystem.Entity.EntityModel.C__MigrationHistory" Width="1.5" PointX="9.75" PointY="2.5" />
         <EntityTypeShape EntityType="EmployeeEvaluationSystem.Entity.EntityModel.C__RefactorLog" Width="1.5" PointX="9.75" PointY="5.5" />
         <EntityTypeShape EntityType="EmployeeEvaluationSystem.Entity.EntityModel.AnswerInstance" Width="1.5" PointX="15.25" PointY="11.875" />
