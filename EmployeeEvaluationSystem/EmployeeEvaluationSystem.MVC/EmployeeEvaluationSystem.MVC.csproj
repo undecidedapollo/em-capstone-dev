@@ -353,6 +353,7 @@
     <Content Include="Views\Survey\StartSurvey.cshtml" />
     <Content Include="Views\Survey\ContinueSurvey.cshtml" />
     <Content Include="Views\Survey\SurveyPage.cshtml" />
+    <Content Include="Views\Survey\EndSurvey.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

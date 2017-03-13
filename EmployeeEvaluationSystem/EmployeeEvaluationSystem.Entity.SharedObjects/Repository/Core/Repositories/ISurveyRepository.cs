@@ -78,5 +78,11 @@ namespace EmployeeEvaluationSystem.Entity.SharedObjects.Repository.Core.Reposito
         Category GetNextCategory(int categoryId);
 
         Category GetPreviousCategory(int categoryId);
+
+        Category GetLastCategory(int surveyId);
+
+        ICollection<Tuple<Question, AnswerInstance>> GetQuestionsAndPreviousResponsesForCategoryInSurveyInstance(int categoryId, int surveyInstanceId);
+
+
     }
 }

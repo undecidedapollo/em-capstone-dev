@@ -8,7 +8,6 @@ namespace EmployeeEvaluationSystem.MVC.Models.Survey
 {
     public class AnswerViewModel
     {
-        [Required]
-        public int ResponseNum { get; set; }
+        public int? ResponseNum { get; set; }
     }
 }

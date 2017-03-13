@@ -115,9 +115,6 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
 
                 var firstCategory = unitOfWork.Surveys.GetFirstCategory(theInstance.SurveyID);
 
-
-
-
                 var viewModel = new SurveyPageViewModel
                 {
                     SurveyInstanceId = theInstance.ID,
@@ -139,13 +136,20 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
             {
                 var theSurvey = unitOfWork.Surveys.LockAndGetSurvey(model.PendingSurveyId, model.StatusGuid);
 
+                if (theSurvey == null) throw new DBLockException();
+
                 var surveyInstance = unitOfWork.Surveys.GetSurveyInstanceByIdSYSTEM(model.SurveyInstanceId);
 
                 foreach(var qa in model.Questions)
                 {
+                    if(qa?.Answer?.ResponseNum == null)
+                    {
+                        continue;
+                    }
+
                     var newAnswerInstanceModel = new CreateAnswerInstanceModel
                     {
-                        RatingResponse = qa.Answer.ResponseNum
+                        RatingResponse = qa.Answer.ResponseNum ?? -1
                     };
 
                     unitOfWork.Surveys.AddAnswerInstanceToSurveyInstance(model.SurveyInstanceId, qa.Question.Id, newAnswerInstanceModel);
@@ -153,8 +157,31 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
 
                 unitOfWork.Complete();
 
-                var nextCategory = unitOfWork.Surveys.GetNextCategory(surveyInstance.SurveyID);
+                Category nextCategory = null;
 
+                if(model?.Category?.Id == null)
+                {
+                    nextCategory = unitOfWork.Surveys.GetLastCategory(surveyInstance.SurveyID);
+                }
+                else if(model.BackOnePage)
+                {
+                    nextCategory = unitOfWork.Surveys.GetPreviousCategory(model.Category.Id);
+                }
+                else
+                {
+                    nextCategory = unitOfWork.Surveys.GetNextCategory(model.Category.Id);
+                }
+
+
+               
+
+                if(nextCategory == null)
+                {
+                    return RedirectToAction("EndSurvey", new { SurveyInstanceId = model.SurveyInstanceId, PendingSurveyId = model.PendingSurveyId, StatusGuid = model.StatusGuid });
+                }
+
+
+                var alreadyAnsweredQuestions = unitOfWork.Surveys.GetQuestionsAndPreviousResponsesForCategoryInSurveyInstance(nextCategory.ID, model.SurveyInstanceId);
 
 
 
@@ -164,14 +191,59 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
                     PendingSurveyId = model.PendingSurveyId,
                     StatusGuid = theSurvey.StatusGuid ?? Guid.NewGuid(),
                     Category = CategoryViewModel.Convert(nextCategory),
-                    Questions = nextCategory.Questions.Select(x => new QuestionAnswerViewModel { Question = QuestionViewModel.Convert(x) }).ToList()
+                    Questions = alreadyAnsweredQuestions.Select(x => new QuestionAnswerViewModel { Question = QuestionViewModel.Convert(x.Item1), Answer = new AnswerViewModel { ResponseNum = x?.Item2?.ResponseNum ?? null} }).ToList()
                 };
-            }
+                ModelState.Remove("Category.Id");
+                ModelState.Remove("BackOnePage");
 
-            return View();
+                return View(viewModel);
+            }
         }
 
-        public ActionResult EndSurvey()
+        [HttpGet]
+        public ActionResult SurveyPage(int SurveyInstanceId, Guid PendingSurveyId, Guid StatusGuid)
+        {
+            using (var unitOfWork = new UnitOfWork())
+            {
+                var theSurvey = unitOfWork.Surveys.LockAndGetSurvey(PendingSurveyId, StatusGuid);
+
+                if (theSurvey == null) throw new DBLockException();
+
+                var surveyInstance = unitOfWork.Surveys.GetSurveyInstanceByIdSYSTEM(SurveyInstanceId);
+
+
+
+                var nextCategory = unitOfWork.Surveys.GetLastCategory(surveyInstance.SurveyID);
+
+                if (nextCategory == null)
+                {
+                    throw new Exception();
+                }
+
+                var alreadyAnsweredQuestions = unitOfWork.Surveys.GetQuestionsAndPreviousResponsesForCategoryInSurveyInstance(nextCategory.ID, SurveyInstanceId);
+
+
+
+                var viewModel = new SurveyPageViewModel
+                {
+                    SurveyInstanceId = SurveyInstanceId,
+                    PendingSurveyId = PendingSurveyId,
+                    StatusGuid = theSurvey.StatusGuid ?? Guid.NewGuid(),
+                    Category = CategoryViewModel.Convert(nextCategory),
+                    Questions = alreadyAnsweredQuestions.Select(x => new QuestionAnswerViewModel { Question = QuestionViewModel.Convert(x.Item1), Answer = new AnswerViewModel { ResponseNum = x?.Item2?.ResponseNum ?? null } }).ToList()
+                };
+                ModelState.Remove("Category.Id");
+                ModelState.Remove("BackOnePage");
+
+                return View(viewModel);
+            }
+        }
+
+        public ActionResult EndSurvey(int SurveyInstanceId, Guid PendingSurveyId, Guid StatusGuid)
+        {
+            return View();
+        }
+        public ActionResult SaveSurvey(int SurveyInstanceId, Guid PendingSurveyId, Guid StatusGuid)
         {
             return View();
         }

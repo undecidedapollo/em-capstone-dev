@@ -19,6 +19,16 @@
             //element.value = val;
         };
 
+        SurveyHelper.GoBackOnePage = function(id){
+            debugger;
+            if(id == null){
+                return;
+            }
+
+            id.value = true;
+            document.getElementById("surveyform").submit();
+        };
+
 
 
     })();
@@ -29,7 +39,7 @@
 <p>@Model.Category.Description</p>
 <hr />
 
-@using (Html.BeginForm())
+@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "surveyform" }))
 {
     @Html.AntiForgeryToken()
 
@@ -39,6 +49,8 @@
         <div class="form-group">
             <label class="col-md-9">Question:</label>
             <div class="col-md-3"><b>Response:</b></div>
+            @Html.HiddenFor(model => model.BackOnePage, htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.HiddenFor(model => model.StatusGuid, htmlAttributes: new { @class = "control-label col-md-2" })
             @Html.HiddenFor(model => model.SurveyInstanceId, htmlAttributes: new { @class = "control-label col-md-2" })
             @Html.HiddenFor(model => model.PendingSurveyId, htmlAttributes: new { @class = "control-label col-md-2" })
             @Html.HiddenFor(model => model.Category.Id, htmlAttributes: new { @class = "control-label col-md-2" })
@@ -48,7 +60,12 @@
             <div class="form-group">
                 <div class="col-md-9">@(Model.Questions[i].Question.DisplayText)</div>
                 <div class="col-md-3">
-                    @Html.HiddenFor(model => model.Questions[i].Question.Id)
+                    @(Model.Questions[i].Question.Id)
+                    @*@Html.HiddenFor(model => model.Questions[i].Question.Id)*@
+                    <input data-val="true" data-val-number="The field Id must be a number." data-val-required="The Id field is required." id="@($"Questions_{i}__Question_Id")" name="@($"Questions[{i}].Question.Id")" type="hidden" value="@(Model.Questions[i].Question.Id)">
+
+
+
                     @if (Model.Questions[i].Question.QuestionType.IsRating)
                     {
                         @Html.HiddenFor(model => model.Questions[i].Answer.ResponseNum)
@@ -79,6 +96,7 @@
         }
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
+                <input type="button" value="Previous Page" onclick="SurveyHelper.GoBackOnePage(@($"BackOnePage"))" class="btn btn-default" />
                 <input type="submit" value="Next Page" class="btn btn-default" />
             </div>
         </div>

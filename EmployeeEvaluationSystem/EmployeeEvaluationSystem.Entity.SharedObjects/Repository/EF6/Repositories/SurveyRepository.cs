@@ -377,16 +377,28 @@ namespace EmployeeEvaluationSystem.Entity.SharedObjects.Repository.EF6.Repositor
                     throw new InvalidModelException("The rating does not fall between the specified min and max value.");
                 }
 
-                var answerResult = new AnswerInstance
+
+                var entity = this.dbcontext.AnswerInstances.FirstOrDefault(x => x.QuestionID == questionId && x.SurveyInstanceId == surveyInstanceId);
+
+                if(entity == null)
                 {
-                    QuestionID = questionId,
-                    SurveyInstanceId = surveyInstanceId,
-                    ResponseNum = model.RatingResponse
-                };
+                    var answerResult = new AnswerInstance
+                    {
+                        QuestionID = questionId,
+                        SurveyInstanceId = surveyInstanceId,
+                        ResponseNum = model.RatingResponse
+                    };
 
-                theSurveyInstance.AnswerInstances.Add(answerResult);
+                    theSurveyInstance.AnswerInstances.Add(answerResult);
 
-                return answerResult;
+                    return answerResult;
+                }
+                else
+                {
+                    entity.ResponseNum = model.RatingResponse;
+
+                    return entity;
+                }
             }
             else
             {
@@ -457,6 +469,18 @@ namespace EmployeeEvaluationSystem.Entity.SharedObjects.Repository.EF6.Repositor
         public Category GetPreviousCategory(int categoryId)
         {
             return this.dbcontext.Categories.Where(x => x.ID == categoryId).Select(x => x.Survey.Categories.Where(y => y.ID < categoryId).OrderByDescending(y => y.ID).FirstOrDefault()).FirstOrDefault();
+        }
+
+        public Category GetLastCategory(int surveyId)
+        {
+            return this.dbcontext.Categories.Where(x => x.SurveyID == surveyId).OrderByDescending(x => x.ID).FirstOrDefault();
+        }
+
+        public ICollection<Tuple<Question, AnswerInstance>> GetQuestionsAndPreviousResponsesForCategoryInSurveyInstance(int categoryId, int surveyInstanceId)
+        {
+            return this.dbcontext.Questions.Where(x => x.CategoryID == categoryId)
+                .GroupJoin(this.dbcontext.AnswerInstances.Where(x => x.SurveyInstanceId == surveyInstanceId), x => x.ID, x => x.QuestionID, (q, a) => new { Question = q, Answer = a.FirstOrDefault() })
+                .ToList().Select(x => Tuple.Create(x.Question, x.Answer)).ToList();
         }
     }
 }

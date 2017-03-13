@@ -16,10 +16,12 @@ namespace EmployeeEvaluationSystem.MVC.Models.Survey
 
         [Required]
         public Guid StatusGuid { get; set; }
-        [Required]
+
         public CategoryViewModel Category { get; set; }
 
-        [Required]
+        public bool BackOnePage { get; set; } = false;
+
+
         public List<QuestionAnswerViewModel> Questions { get; set; } = new List<QuestionAnswerViewModel>();
     }
 }
