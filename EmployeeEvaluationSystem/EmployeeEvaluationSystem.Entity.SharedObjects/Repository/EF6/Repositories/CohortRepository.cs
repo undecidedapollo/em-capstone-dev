@@ -66,25 +66,14 @@ namespace EmployeeEvaluationSystem.Entity.SharedObjects.Repository.EF6.Repositor
 
         public IEnumerable<AspNetUser> GetAllUsersThatAreNotPartOfACohort(string currentUserId)
         {
-            
-            var users = unitOfWork.Users.GetAllUsers(currentUserId).ToList();
-            var usersPartOfCohort = new List<AspNetUser>();
-            
+            var theCU = dbcontext.CohortUsers.Where(x => x.Cohort.IsDeleted == false).Select(x => x.AspNetUser).Distinct();
 
-            foreach (var user in users)
-            {
-                if (this.dbcontext.CohortUsers.Any(x => x.UserID.Equals(user.Id)))
-                {
-                    usersPartOfCohort.Add(user);
-                }
-            }
 
-            foreach (var user in usersPartOfCohort)
-            {
-                users.Remove(user);
-            }
+            return this.dbcontext.AspNetUsers.Except(theCU);
 
-            return users;
+            //this.dbcontext.AspNetUsers.GroupJoin(dbcontext.CohortUsers, x => x.Id, x => x.UserID, (user, cu) => new { User = user, CU = cu });
+
+            //return users;
         }
 
         public void AddCohortToDb(string currentUserId, Cohort cohortToAdd)
