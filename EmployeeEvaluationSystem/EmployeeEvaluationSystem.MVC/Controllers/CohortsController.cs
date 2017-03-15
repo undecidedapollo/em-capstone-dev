@@ -25,7 +25,7 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
 
             using (var unitOfWork = new UnitOfWork())
             {
-                var unconvertedCohorts = unitOfWork.Cohorts.GetAllCohorts(userId).ToList();
+                var unconvertedCohorts = unitOfWork.Cohorts.GetAllCohorts(userId).Where(x => x.IsDeleted == false).ToList();
 
                 var convertedCohorts = unconvertedCohorts?.Select(x => PersonalCohortViewModel.Convert(x))?.ToList();
 
@@ -105,10 +105,10 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create(CreateCohortViewModel model, string[] ids)
+        public ActionResult Create(CreateCohortViewModel model, List<string> ids)
         {
             var userId = User?.Identity?.GetUserId();
-            var usersToRegister = new List<RegisterViewModel>();
+            var usersToRegister = new List<string>();
 
             using (var unitOfWork = new UnitOfWork())
             {
@@ -119,25 +119,18 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
                     DateCreated = DateTime.UtcNow
                 };
 
-                foreach (var item in ids)
+                foreach (var id in ids)
                 {
-                    var user = PersonalAspNetUserViewModel.Convert(unitOfWork.Users.GetUser(userId, item));
+                    var user = PersonalAspNetUserViewModel.Convert(unitOfWork.Users.GetUser(userId, id));
 
-                    var registerViewModel = new RegisterViewModel()
+                    if(user.EmailConfirmed == false)
                     {
-                        Email = user.Email,
-                        EmployeeID = user.EmployeeID,
-                        FirstName = user.FirstName,
-                        LastName = user.LastName,
-                        MailingAddress = user.MailingAddress,
-                        PhoneNumber = user.PhoneNumber
-                    };
-
-                    usersToRegister.Add(registerViewModel);
+                        usersToRegister.Add(id);
+                    }
 
                     var cohortUser = new CohortUser()
                     {
-                        UserID = item,
+                        UserID = id,
                         CohortPermissionId = 0
                     };
 
@@ -149,17 +142,11 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
                 unitOfWork.Cohorts.AddCohortToDb(userId, cohort);
 
                 unitOfWork.Complete();
-
-                var um = HttpContext.GetOwinContext().Get<ApplicationUserManager>();
-                var sm = HttpContext.GetOwinContext().Get<ApplicationSignInManager>();
-
-
-                var accController = new AccountController(um, sm, this.Request);
-
-                var result = await accController.RegisterMultipleUsers(usersToRegister);
-
-                return RedirectToAction("Index");
             }
+
+            TempData["usersToRegister"] = usersToRegister.ToList();
+
+            return RedirectToAction("SendEmailConfirmationTokenAsync", "Account", new { subject = "Confirm Email" });
         }
 
         // GET: Cohort/Edit/5

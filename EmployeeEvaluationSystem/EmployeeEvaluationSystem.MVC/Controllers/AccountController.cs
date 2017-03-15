@@ -64,12 +64,13 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
                 return View(model);
 
             // Require the user to have a confirmed email before they can log on.
+            /*
             var user = await UserManager.FindByEmailAsync(model.Email);
             if (user != null)
             {
                 if (!await UserManager.IsEmailConfirmedAsync(user.Id))
                 {
-                    var callbackUrl = await SendEmailConfirmationTokenAsync(user.Id, "Confirm your account-Resend");
+                    var callbackUrl = await SendEmailConfirmationTokenAsync(user.Id, "Confirm your account");
 
                     ViewBag.errorMessage = "You must have a confirmed email to log on. "
                                             + "The confirmation email has been resent to your email account.";
@@ -77,6 +78,7 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
                     return View("Error");
                 }
             }
+            */
 
 
             // This doesn't count login failures towards account lockout
@@ -159,9 +161,9 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
 
                 if (status.Item1.Succeeded)
                 {
-                    var callbackUrl = await SendEmailConfirmationTokenAsync(status.Item2.Id, "Confirm your account");
+                    //var callbackUrl = await SendEmailConfirmationTokenAsync(status.Item2.Id, "Confirm your account");
 
-                    ViewBag.Message = "An Email has been sent to the employee(s) to complete registration.";
+                    //ViewBag.Message = "An Email has been sent to the employee(s) to complete registration.";
 
                     return View("Info");
                 }
@@ -247,6 +249,7 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
 
             //Send emails if all successful
 
+            /*
             foreach (var user in successfulRegistrations)
             {
                 try
@@ -258,6 +261,7 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
 
                 }
             }
+            */
             return new MultiRegisterResult { Successful = true };
 
 
@@ -548,6 +552,40 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
             return View();
         }
 
+        public async Task<ActionResult> SendEmailConfirmationTokenAsync(List<string> userIDs, string subject)
+        {
+            if(userIDs == null)
+            {
+                userIDs = TempData["usersToRegister"] as List<string>;
+            }
+
+            foreach (var userID in userIDs)
+            {
+
+                string code = await UserManager.GenerateEmailConfirmationTokenAsync(userID);
+
+
+                var scheme = Request?.Url?.Scheme ?? passedInRequest.Url.Scheme;
+                var hostname = Request?.Url?.Host ?? passedInRequest.Url.Host;
+
+                if ((Request?.Url?.Port ?? passedInRequest.Url.Port) != 80 || (Request?.Url?.Port ?? passedInRequest.Url.Port) != 43)
+                {
+                    hostname += ":" + (Request?.Url?.Port ?? passedInRequest.Url.Port);
+                }
+
+                var theUrl = $"{scheme}://{hostname}/Account/ConfirmEmail?userId={HttpUtility.UrlEncode(userID)}&code={HttpUtility.UrlEncode(code)}";
+
+
+                //var callbackUrl = Url.Action("ConfirmEmail", "Account",
+                //    new RouteValueDictionary(new { userId = userID, code = code }),
+                //        Request?.Url?.Scheme ?? passedInRequest.Url.Scheme, Request?.Url?.Host ?? passedInRequest.Url.Host);
+                await UserManager.SendEmailAsync(userID, subject,
+                    "Please confirm your account by clicking <a href=\"" + theUrl + "\">here</a>");
+            }
+
+            return View("EmailSent");
+        }
+
         protected override void Dispose(bool disposing)
         {
             if (disposing)
@@ -589,31 +627,6 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
             if (Url.IsLocalUrl(returnUrl))
                 return Redirect(returnUrl);
             return RedirectToAction("Index", "Home");
-        }
-
-        private async Task<string> SendEmailConfirmationTokenAsync(string userID, string subject)
-        {
-            string code = await UserManager.GenerateEmailConfirmationTokenAsync(userID);
-
-
-            var scheme = Request?.Url?.Scheme ?? passedInRequest.Url.Scheme;
-            var hostname = Request?.Url?.Host ?? passedInRequest.Url.Host;
-
-            if((Request?.Url?.Port ?? passedInRequest.Url.Port) != 80 || (Request?.Url?.Port ?? passedInRequest.Url.Port) != 43)
-            {
-                hostname += ":" + (Request?.Url?.Port ?? passedInRequest.Url.Port);
-            }
-
-            var theUrl = $"{scheme}://{hostname}/Account/ConfirmEmail?userId={HttpUtility.UrlEncode(userID)}&code={HttpUtility.UrlEncode(code)}";
-
-
-            //var callbackUrl = Url.Action("ConfirmEmail", "Account",
-            //    new RouteValueDictionary(new { userId = userID, code = code }),
-            //        Request?.Url?.Scheme ?? passedInRequest.Url.Scheme, Request?.Url?.Host ?? passedInRequest.Url.Host);
-            await UserManager.SendEmailAsync(userID, subject,
-                "Please confirm your account by clicking <a href=\"" + theUrl + "\">here</a>");
-
-            return theUrl;
         }
 
         internal class ChallengeResult : HttpUnauthorizedResult

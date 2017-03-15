@@ -12,6 +12,8 @@ namespace EmployeeEvaluationSystem.Entity
     using System;
     using System.Data.Entity;
     using System.Data.Entity.Infrastructure;
+    using System.Data.Entity.Core.Objects;
+    using System.Linq;
     
     public partial class EmployeeDatabaseEntities : DbContext
     {
@@ -35,7 +37,6 @@ namespace EmployeeEvaluationSystem.Entity
         public virtual DbSet<Cohort> Cohorts { get; set; }
         public virtual DbSet<CohortPermission> CohortPermissions { get; set; }
         public virtual DbSet<Permission> Permissions { get; set; }
-        public virtual DbSet<Question> Questions { get; set; }
         public virtual DbSet<QuestionType> QuestionTypes { get; set; }
         public virtual DbSet<SiteWidePermission> SiteWidePermissions { get; set; }
         public virtual DbSet<Survey> Surveys { get; set; }
@@ -48,5 +49,43 @@ namespace EmployeeEvaluationSystem.Entity
         public virtual DbSet<PendingSurvey> PendingSurveys { get; set; }
         public virtual DbSet<SurveyInstance> SurveyInstances { get; set; }
         public virtual DbSet<SurveysAvailableTo> SurveysAvailableToes { get; set; }
+        public virtual DbSet<Question> Questions { get; set; }
+        public virtual DbSet<Status> Status { get; set; }
+    
+        public virtual int CancelAllOldSurveyLocks()
+        {
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("CancelAllOldSurveyLocks");
+        }
+    
+        public virtual int CancelSurveyLock(Nullable<System.Guid> pendingSurveyId)
+        {
+            var pendingSurveyIdParameter = pendingSurveyId.HasValue ?
+                new ObjectParameter("pendingSurveyId", pendingSurveyId) :
+                new ObjectParameter("pendingSurveyId", typeof(System.Guid));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("CancelSurveyLock", pendingSurveyIdParameter);
+        }
+    
+        public virtual ObjectResult<LockAndGetSurvey_Result> LockAndGetSurvey(Nullable<System.Guid> pendingSurveyId, Nullable<System.Guid> statusGuid)
+        {
+            var pendingSurveyIdParameter = pendingSurveyId.HasValue ?
+                new ObjectParameter("pendingSurveyId", pendingSurveyId) :
+                new ObjectParameter("pendingSurveyId", typeof(System.Guid));
+    
+            var statusGuidParameter = statusGuid.HasValue ?
+                new ObjectParameter("statusGuid", statusGuid) :
+                new ObjectParameter("statusGuid", typeof(System.Guid));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<LockAndGetSurvey_Result>("LockAndGetSurvey", pendingSurveyIdParameter, statusGuidParameter);
+        }
+    
+        public virtual int UpdateLockedSurveyTime(Nullable<System.Guid> pendingSurveyId)
+        {
+            var pendingSurveyIdParameter = pendingSurveyId.HasValue ?
+                new ObjectParameter("pendingSurveyId", pendingSurveyId) :
+                new ObjectParameter("pendingSurveyId", typeof(System.Guid));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("UpdateLockedSurveyTime", pendingSurveyIdParameter);
+        }
     }
 }

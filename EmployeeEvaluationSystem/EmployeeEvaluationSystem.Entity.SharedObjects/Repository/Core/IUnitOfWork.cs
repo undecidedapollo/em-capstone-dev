@@ -9,6 +9,11 @@ namespace EmployeeEvaluationSystem.Entity.SharedObjects.Repository.Core
 {
     public interface IUnitOfWork: IDisposable
     {
+
+
+
+
+
         IUserRepository Users { get; }
         ICohortRepository Cohorts { get; }
         ICohortUserRepository CohortUsers { get; }

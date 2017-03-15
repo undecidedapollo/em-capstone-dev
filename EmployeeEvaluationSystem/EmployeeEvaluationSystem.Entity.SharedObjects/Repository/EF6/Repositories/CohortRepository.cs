@@ -29,7 +29,7 @@ namespace EmployeeEvaluationSystem.Entity.SharedObjects.Repository.EF6.Repositor
 
         public Cohort GetCohort(string currentUserId, int? cohortIdToGet)
         {
-            return this.dbcontext.Cohorts.FirstOrDefault(x => x.ID == cohortIdToGet);
+            return this.dbcontext.Cohorts.FirstOrDefault(x => x.ID == cohortIdToGet && x.IsDeleted == false);
         }
 
         public void DeleteCohort(string currentUserId, int cohortIdToGet)
@@ -66,29 +66,16 @@ namespace EmployeeEvaluationSystem.Entity.SharedObjects.Repository.EF6.Repositor
 
         public IEnumerable<AspNetUser> GetAllUsersThatAreNotPartOfACohort(string currentUserId)
         {
-
-
-            //return this.dbcontext.AspNetUsers.GroupJoin(this.dbcontext.CohortUsers, x => x.Id, x => x.UserID, (asp, coho) => new { User = asp, CohortUser = coho }).Where(x => x.CohortUser == null || x.CohortUser.Any(y => y.Cohort.IsDeleted == false) == false).Select(x => x.User);
-
-
+            var theCU = dbcontext.CohortUsers.Where(x => x.Cohort.IsDeleted == false).Select(x => x.AspNetUser).Distinct();
+            
             var users = unitOfWork.Users.GetAllUsers(currentUserId).ToList();
             var usersPartOfCohort = new List<AspNetUser>();
             
+            return this.dbcontext.AspNetUsers.Except(theCU);
 
-            foreach (var user in users)
-            {
-                if (this.dbcontext.CohortUsers.Any(x => x.UserID.Equals(user.Id)))
-                {
-                    usersPartOfCohort.Add(user);
-                }
-            }
+            //this.dbcontext.AspNetUsers.GroupJoin(dbcontext.CohortUsers, x => x.Id, x => x.UserID, (user, cu) => new { User = user, CU = cu });
 
-            foreach (var user in usersPartOfCohort)
-            {
-                users.Remove(user);
-            }
-
-            return users;
+            //return users;
         }
 
         public void AddCohortToDb(string currentUserId, Cohort cohortToAdd)

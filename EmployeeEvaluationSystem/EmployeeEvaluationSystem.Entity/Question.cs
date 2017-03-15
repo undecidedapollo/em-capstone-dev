@@ -27,6 +27,8 @@ namespace EmployeeEvaluationSystem.Entity
         public bool IsDeleted { get; set; }
         public System.DateTime DateCreated { get; set; }
         public Nullable<System.DateTime> DateDeleted { get; set; }
+        public string Name { get; set; }
+        public string DisplayText { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<AnswerInstance> AnswerInstances { get; set; }
