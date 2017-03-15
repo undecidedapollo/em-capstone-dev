@@ -2,9 +2,11 @@
     ViewBag.Title = "Start Survey";
 }
 
+@using EmployeeEvaluationSystem.MVC.Helpers.Request
+
 <h2>@ViewBag.Title.</h2>
 <h3>@ViewBag.Message</h3>
 
 <p>To begin taking your survey. Please click the button below.</p>
 <br />
-<input type="button" value="Begin Survey" onclick="window.location.href='@Url.Action("SurveyPage", "Survey" ) %>';" />
+<input type="button" value="Begin Survey" onclick="window.location.href='@Url.Action("SurveyPage", "Survey", Request.QueryString.ToRouteValues() )';" />

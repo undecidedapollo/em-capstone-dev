@@ -58,11 +58,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Helpers\Locks\SurveyLockManager.cs" />
     <Compile Include="Model\Authentication\CohortIndexViewModel.cs" />
     <Compile Include="Model\Authentication\PersonalAspNetUserViewModel.cs" />
     <Compile Include="Model\Authentication\PersonalCohortPermissionViewModel.cs" />
     <Compile Include="Model\Authentication\PersonalCohortViewModel.cs" />
     <Compile Include="Model\Authentication\PersonalPermissionViewModel.cs" />
+    <Compile Include="Model\Survey\CreateAnswerInstanceModel.cs" />
+    <Compile Include="Model\Survey\CreateAvailableSurveyModel.cs" />
+    <Compile Include="Model\Survey\CreateAvailableSurveyRolesModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repository\Core\IUnitOfWork.cs" />
     <Compile Include="Repository\Core\Repositories\ICohortPermissionRepository.cs" />
@@ -94,6 +98,9 @@
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Infrastructure\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

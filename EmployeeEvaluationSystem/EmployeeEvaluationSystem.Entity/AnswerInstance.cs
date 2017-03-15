@@ -19,7 +19,7 @@ namespace EmployeeEvaluationSystem.Entity
         public int ResponseNum { get; set; }
         public int SurveyInstanceId { get; set; }
     
-        public virtual Question Question { get; set; }
         public virtual SurveyInstance SurveyInstance { get; set; }
+        public virtual Question Question { get; set; }
     }
 }

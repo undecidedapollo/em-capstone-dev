@@ -1,0 +1,9 @@
+﻿
+@using EmployeeEvaluationSystem.MVC.Helpers.Request
+
+<h2>End of survey</h2>
+
+<p>To submit your survey please click "Finish Survey" below, otherwise hit "Go Back" to change your answer.</p>
+<br />
+<input type="button" value="Go Back" onclick="window.location.href='@Url.Action("SurveyPage", "Survey", Request.QueryString.ToRouteValues() )';" />
+<input type="button" value="Finish Survey" onclick="window.location.href='@Url.Action("SaveSurvey", "Survey", Request.QueryString.ToRouteValues() )';" />

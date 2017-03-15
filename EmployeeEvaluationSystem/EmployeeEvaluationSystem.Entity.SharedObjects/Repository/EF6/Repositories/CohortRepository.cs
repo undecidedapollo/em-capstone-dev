@@ -29,7 +29,7 @@ namespace EmployeeEvaluationSystem.Entity.SharedObjects.Repository.EF6.Repositor
 
         public Cohort GetCohort(string currentUserId, int? cohortIdToGet)
         {
-            return this.dbcontext.Cohorts.FirstOrDefault(x => x.ID == cohortIdToGet);
+            return this.dbcontext.Cohorts.FirstOrDefault(x => x.ID == cohortIdToGet && x.IsDeleted == false);
         }
 
         public void DeleteCohort(string currentUserId, int cohortIdToGet)
