@@ -12,9 +12,6 @@
 <table class="table">
     <tr>
         <th>
-            <strong>Select</strong>
-        </th>
-        <th>
             <strong>ID</strong>
         </th>
         <th>
@@ -26,7 +23,9 @@
         <th>
             <strong>Date Created</strong>
         </th>
-        <th></th>
+        <th>
+            <strong>Show Users</strong>
+        </th>
     </tr>
 
     @foreach (var item in Model.Cohorts) {
@@ -34,9 +33,6 @@
         string selectedRow = "";
         
         <tr class = "@selectedRow">
-            <td>
-                @Html.ActionLink("Select", "Index", new { id = item.ID })
-            </td>
             <td>
                 @Html.DisplayFor(modelItem => item.ID)
             </td>
@@ -50,9 +46,18 @@
                 @Html.DisplayFor(modelItem => item.DateCreated)
             </td>
             <td>
+                @Html.ActionLink("Show Users", "Index", new { id = item.ID })
+            </td>
+            <td>
                 @Html.ActionLink("Edit", "Edit", new {id = item.ID}) |
                 @Html.ActionLink("Details", "Details", new {id = item.ID}) |
                 @Html.ActionLink("Delete", "Delete", new {id = item.ID})
+            </td>
+            <td>
+                
+                    @Html.ActionLink("Start", null, null, new { @class = "btn btn-success btn-sm" })
+                
+                
             </td>
         </tr>
     }
@@ -75,6 +80,9 @@
             </th>
             <th>
                 <strong>Email</strong>
+            </th>
+            <th>
+                <strong>Email Confirmed</strong>
             </th>
             <th>
                 <strong>Phone</strong>
@@ -101,10 +109,23 @@
                     @item.Email
                 </td>
                 <td>
+                    @Html.DisplayFor(modelItem => item.EmailConfirmed)
+                </td>
+                <td>
                     @item.PhoneNumber
                 </td>
                 <td>
                     @item.EmployeeID
+                </td>
+                <td>
+                    @if (item.EmailConfirmed == false)
+                    {
+                        @Html.ActionLink("Resend Confirmation Email", "SendEmailConfirmationTokenAsync", "Account", new { userIDs = item.Id, subject = "Confirm Email" }, new { @class = "btn btn-success btn-sm" })
+                    }
+                    else
+                    {
+                        @Html.ActionLink("Email has been Confirmed", null, null, htmlAttributes: new { @class = "btn btn-danger btn-sm" })
+                    }
                 </td>
             </tr>
         }
