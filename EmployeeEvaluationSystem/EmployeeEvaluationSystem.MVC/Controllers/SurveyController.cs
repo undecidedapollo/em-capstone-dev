@@ -17,6 +17,8 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
     public class SurveyController : Controller
     {
 
+
+        //[Route("Survey/StartSurvey/{pendingSurveyId}/{email?}")]
         public ActionResult StartSurvey(Guid pendingSurveyId, string email = null)
         {
             var userId = User?.Identity?.GetUserId();
@@ -47,6 +49,7 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
             return View();
         }
 
+        //[Route("Survey/SurveyPage/{pendingSurveyId}/{email?}")]
         public ActionResult SurveyPage(Guid pendingSurveyId, string email = null)
         {
             var userId = User?.Identity?.GetUserId();
@@ -111,9 +114,10 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
                     throw new Exception(); //The survey is already finished.
                 }
 
-
-
                 var firstCategory = unitOfWork.Surveys.GetFirstCategory(theInstance.SurveyID);
+                var alreadyAnsweredQuestions = unitOfWork.Surveys.GetQuestionsAndPreviousResponsesForCategoryInSurveyInstance(firstCategory.ID, theInstance.ID);
+
+
 
                 var viewModel = new SurveyPageViewModel
                 {
@@ -121,7 +125,7 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
                     PendingSurveyId = pendingSurveyId,
                     StatusGuid = lockPendingSurvey.StatusGuid ?? Guid.NewGuid(),
                     Category = CategoryViewModel.Convert(firstCategory),
-                    Questions = firstCategory.Questions.Select(x => new QuestionAnswerViewModel { Question = QuestionViewModel.Convert(x) }).ToList()
+                    Questions = alreadyAnsweredQuestions.Select(x => new QuestionAnswerViewModel { Question = QuestionViewModel.Convert(x.Item1), Answer = new AnswerViewModel { ResponseNum = x?.Item2?.ResponseNum ?? null } }).ToList()
                 };
 
                 return View("SurveyPage", viewModel);
@@ -177,7 +181,7 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
 
                 if(nextCategory == null)
                 {
-                    return RedirectToAction("EndSurvey", new { SurveyInstanceId = model.SurveyInstanceId, PendingSurveyId = model.PendingSurveyId, StatusGuid = model.StatusGuid });
+                    return RedirectToAction("EndSurvey", new { SurveyInstanceId = model.SurveyInstanceId, penSurveyId = model.PendingSurveyId, statGuid = model.StatusGuid });
                 }
 
 
@@ -196,20 +200,30 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
                 ModelState.Remove("Category.Id");
                 ModelState.Remove("BackOnePage");
 
-                return View(viewModel);
+                return View("SurveyPage", viewModel);
             }
         }
 
+        [HttpPost]
+        public ActionResult GoBackSurvey(SurveyPageViewModel model)
+        {
+            return SurveyPage(model);
+        }
+
         [HttpGet]
-        public ActionResult SurveyPage(int SurveyInstanceId, Guid PendingSurveyId, Guid StatusGuid)
+        [ActionName("GoBackSurvey")]
+        //[Route("Survey/SurveyPage/{SurveyInstanceId}/{pendingSurveyId}/{statGuid}")]
+        public ActionResult SurveyPage(int SurveyInstanceId, Guid penSurveyId, Guid statGuid)
         {
             using (var unitOfWork = new UnitOfWork())
             {
-                var theSurvey = unitOfWork.Surveys.LockAndGetSurvey(PendingSurveyId, StatusGuid);
+                var theSurvey = unitOfWork.Surveys.LockAndGetSurvey(penSurveyId, statGuid);
 
                 if (theSurvey == null) throw new DBLockException();
 
-                var surveyInstance = unitOfWork.Surveys.GetSurveyInstanceByIdSYSTEM(SurveyInstanceId);
+                int surveyInstanceId = SurveyInstanceId;
+
+                var surveyInstance = unitOfWork.Surveys.GetSurveyInstanceByIdSYSTEM(surveyInstanceId);
 
 
 
@@ -220,14 +234,14 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
                     throw new Exception();
                 }
 
-                var alreadyAnsweredQuestions = unitOfWork.Surveys.GetQuestionsAndPreviousResponsesForCategoryInSurveyInstance(nextCategory.ID, SurveyInstanceId);
+                var alreadyAnsweredQuestions = unitOfWork.Surveys.GetQuestionsAndPreviousResponsesForCategoryInSurveyInstance(nextCategory.ID, surveyInstanceId);
 
 
 
                 var viewModel = new SurveyPageViewModel
                 {
-                    SurveyInstanceId = SurveyInstanceId,
-                    PendingSurveyId = PendingSurveyId,
+                    SurveyInstanceId = surveyInstanceId,
+                    PendingSurveyId = penSurveyId,
                     StatusGuid = theSurvey.StatusGuid ?? Guid.NewGuid(),
                     Category = CategoryViewModel.Convert(nextCategory),
                     Questions = alreadyAnsweredQuestions.Select(x => new QuestionAnswerViewModel { Question = QuestionViewModel.Convert(x.Item1), Answer = new AnswerViewModel { ResponseNum = x?.Item2?.ResponseNum ?? null } }).ToList()
@@ -235,15 +249,16 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
                 ModelState.Remove("Category.Id");
                 ModelState.Remove("BackOnePage");
 
-                return View(viewModel);
+                //return View("../Articles/Index", viewModel);
+                return View("SurveyPage", viewModel);
             }
         }
 
-        public ActionResult EndSurvey(int SurveyInstanceId, Guid PendingSurveyId, Guid StatusGuid)
+        public ActionResult EndSurvey(int? SurveyInstanceId, Guid penSurveyId, Guid statGuid)
         {
             return View();
         }
-        public ActionResult SaveSurvey(int SurveyInstanceId, Guid PendingSurveyId, Guid StatusGuid)
+        public ActionResult SaveSurvey(int? SurveyInstanceId, Guid penSurveyId, Guid statGuid)
         {
             return View();
         }
