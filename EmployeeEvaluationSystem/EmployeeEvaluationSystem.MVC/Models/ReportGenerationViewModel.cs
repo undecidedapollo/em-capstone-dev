@@ -16,13 +16,13 @@ namespace EmployeeEvaluationSystem.MVC.Models
         public string Stage { get; set; }
 
 
-        public CohortUser CohortId { get; set; }
-        public CohortUser CohortUserId { get; set; }
-        public AspNetUser EmployeeId { get; set; }
-        public AnswerInstance QuestionId { get; set; }
-        public AnswerInstance RatingValue { get; set; }
-        public Category CategoryName { get; set; }
-        public AspNetUser Username { get; set; }
+        public virtual CohortUser CohortId { get; set; }
+        public virtual CohortUser CohortUserId { get; set; }
+        public virtual AspNetUser EmployeeId { get; set; }
+        public virtual AnswerInstance QuestionId { get; set; }
+        public virtual AnswerInstance RatingValue { get; set; }
+        public virtual Category CategoryName { get; set; }
+        public virtual AspNetUser Username { get; set; }
        
     }
 }
