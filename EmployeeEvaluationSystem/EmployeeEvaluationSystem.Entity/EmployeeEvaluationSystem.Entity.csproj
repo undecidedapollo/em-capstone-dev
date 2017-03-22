@@ -81,9 +81,6 @@
     <Compile Include="Cohort.cs">
       <DependentUpon>EmployeeManagementEntity.tt</DependentUpon>
     </Compile>
-    <Compile Include="CohortPermission.cs">
-      <DependentUpon>EmployeeManagementEntity.tt</DependentUpon>
-    </Compile>
     <Compile Include="CohortUser.cs">
       <DependentUpon>EmployeeManagementEntity.tt</DependentUpon>
     </Compile>
@@ -117,17 +114,11 @@
     <Compile Include="PendingSurvey.cs">
       <DependentUpon>EmployeeManagementEntity.tt</DependentUpon>
     </Compile>
-    <Compile Include="Permission.cs">
-      <DependentUpon>EmployeeManagementEntity.tt</DependentUpon>
-    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Question.cs">
       <DependentUpon>EmployeeManagementEntity.tt</DependentUpon>
     </Compile>
     <Compile Include="QuestionType.cs">
-      <DependentUpon>EmployeeManagementEntity.tt</DependentUpon>
-    </Compile>
-    <Compile Include="SiteWidePermission.cs">
       <DependentUpon>EmployeeManagementEntity.tt</DependentUpon>
     </Compile>
     <Compile Include="Status.cs">

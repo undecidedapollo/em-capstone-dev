@@ -130,8 +130,7 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
 
                     var cohortUser = new CohortUser()
                     {
-                        UserID = id,
-                        CohortPermissionId = 0
+                        UserID = id
                     };
 
                     //unitOfWork.CohortUsers.AddCohortUserToDb(userId, cohortUser);

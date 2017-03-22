@@ -28,12 +28,12 @@ namespace EmployeeEvaluationSystem.Entity.SharedObjects.Repository.EF6.Repositor
                 return false;
             }
 
-            if (survey.UserForId == null)
+            if (survey.UserTakenById == null)
             {
                 return false;
             }
 
-            if (survey.UserForId != userId)
+            if (survey.UserTakenById != userId)
             {
                 return false;
             }
@@ -155,9 +155,9 @@ namespace EmployeeEvaluationSystem.Entity.SharedObjects.Repository.EF6.Repositor
                 SurveyAvailToMeID = surveyAvailableId,
                 UserSurveyRoleID = userRoleId,
                 DateSent = DateTime.UtcNow,
-                UserSentById = userId,
+                UserSurveyForId = userId,
                 Email = isExistingUser ? null : userId,
-                UserForId = isExistingUser ? userId : null,
+                UserTakenById = isExistingUser ? userId : null,
             };
 
             this.dbcontext.PendingSurveys.Add(newPendingSurvey);

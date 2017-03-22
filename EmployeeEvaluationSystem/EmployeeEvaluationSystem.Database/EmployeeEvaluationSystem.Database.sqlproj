@@ -83,17 +83,15 @@
   <ItemGroup>
     <Build Include="dbo\Tables\Category.sql" />
     <Build Include="dbo\Tables\Cohort.sql" />
-    <Build Include="dbo\Tables\CohortPermission.sql" />
     <Build Include="dbo\Tables\CohortUser.sql" />
     <Build Include="dbo\Tables\PendingSurvey.sql" />
-    <Build Include="dbo\Tables\Permission.sql" />
     <Build Include="dbo\Tables\Question.sql" />
     <Build Include="dbo\Tables\QuestionType.sql" />
-    <Build Include="dbo\Tables\SiteWidePermission.sql" />
     <Build Include="dbo\Tables\Survey.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="SchemaCompares\JonahSchemaCompare.scmp" />
+    <None Include="SchemaCompares\SqlSchemaCompare1.scmp" />
   </ItemGroup>
   <ItemGroup>
     <Build Include="dbo\Tables\SurveyInstance.sql" />
