@@ -124,6 +124,7 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
 
                 if (lockPendingSurvey == null)
                 {
+                    return RedirectToAction("SurveyLocked");
                     throw new DBLockException();
                 }
 
@@ -188,26 +189,50 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
             {
                 var theSurvey = unitOfWork.Surveys.LockAndGetSurvey(model.PendingSurveyId, model.StatusGuid);
 
-                if (theSurvey == null) throw new DBLockException();
+                if (theSurvey == null) return RedirectToAction("SurveyLocked"); ;
 
                 var surveyInstance = unitOfWork.Surveys.GetSurveyInstanceByIdSYSTEM(model.SurveyInstanceId);
 
-                foreach(var qa in model.Questions)
+                try
                 {
-                    if(qa?.Answer?.ResponseNum == null)
+                    var hasShownRequired = false;
+
+
+                    foreach (var qa in model.Questions)
                     {
-                        continue;
+                        if (qa?.Answer?.ResponseNum == null)
+                        {
+                            var isRequired = unitOfWork.Surveys.IsQuestionRequired(qa?.Question?.Id ?? throw new Exception());
+
+                            if (isRequired)
+                            {
+                                if (!hasShownRequired)
+                                {
+                                    ModelState.AddModelError("", "All required questions must be answered.");
+                                    hasShownRequired = true;
+                                }
+                                
+                            }
+
+                            continue;
+                        }
+
+                        var newAnswerInstanceModel = new CreateAnswerInstanceModel
+                        {
+                            RatingResponse = qa.Answer.ResponseNum ?? -1
+                        };
+
+                        unitOfWork.Surveys.AddAnswerInstanceToSurveyInstance(model.SurveyInstanceId, qa.Question.Id, newAnswerInstanceModel);
                     }
 
-                    var newAnswerInstanceModel = new CreateAnswerInstanceModel
-                    {
-                        RatingResponse = qa.Answer.ResponseNum ?? -1
-                    };
-
-                    unitOfWork.Surveys.AddAnswerInstanceToSurveyInstance(model.SurveyInstanceId, qa.Question.Id, newAnswerInstanceModel);
+                    unitOfWork.Complete();
                 }
-
-                unitOfWork.Complete();
+                catch(Exception e)
+                {
+                    ModelState.AddModelError("", "There was an error saving the answer's to your survey. Please correct any mistakes and try again!");
+                    return View(model);
+                }
+               
 
                 Category nextCategory = null;
 
@@ -267,7 +292,7 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
             {
                 var theSurvey = unitOfWork.Surveys.LockAndGetSurvey(penSurveyId, statGuid);
 
-                if (theSurvey == null) throw new DBLockException();
+                if (theSurvey == null) return RedirectToAction("SurveyLocked");
 
                 int surveyInstanceId = SurveyInstanceId;
 
@@ -306,8 +331,18 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
         {
             return View();
         }
+
+
+        public ActionResult SurveyLocked()
+        {
+
+            return View();
+        }
+
+
         public ActionResult SaveSurvey(int? SurveyInstanceId, Guid penSurveyId, Guid statGuid)
         {
+
             return View();
         }
     }

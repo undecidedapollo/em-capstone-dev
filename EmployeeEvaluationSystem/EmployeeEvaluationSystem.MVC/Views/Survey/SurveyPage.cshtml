@@ -61,6 +61,7 @@
     <div class="form-horizontal">
         <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <span style="color:red;">* - Required question</span>
         <div class="form-group">
             <label class="col-md-9">Question:</label>
             <div class="col-md-3"><b>Response:</b></div>
@@ -73,7 +74,7 @@
         @for (var i = 0; i < Model.Questions.Count; i++)
         {
             <div class="form-group">
-                <div class="col-md-9">@(Model.Questions[i].Question.DisplayText)</div>
+                <div class="col-md-9">@(Model.Questions[i].Question.DisplayText) @if (Model.Questions[i].Question.IsRequired) { <text><span style="color:red;">*</span></text>}</div>
                 <div class="col-md-3">
                     @(Model.Questions[i].Question.Id)
                     @*@Html.HiddenFor(model => model.Questions[i].Question.Id)*@

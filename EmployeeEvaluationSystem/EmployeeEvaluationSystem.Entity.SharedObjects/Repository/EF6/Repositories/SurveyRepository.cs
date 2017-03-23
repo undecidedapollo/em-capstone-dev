@@ -482,5 +482,10 @@ namespace EmployeeEvaluationSystem.Entity.SharedObjects.Repository.EF6.Repositor
                 .GroupJoin(this.dbcontext.AnswerInstances.Where(x => x.SurveyInstanceId == surveyInstanceId), x => x.ID, x => x.QuestionID, (q, a) => new { Question = q, Answer = a.FirstOrDefault() })
                 .ToList().Select(x => Tuple.Create(x.Question, x.Answer)).ToList();
         }
+
+        public bool IsQuestionRequired(int questionId)
+        {
+            return this.dbcontext.Questions.Any(x => x.ID == questionId && x.IsRequired == true);
+        }
     }
 }
