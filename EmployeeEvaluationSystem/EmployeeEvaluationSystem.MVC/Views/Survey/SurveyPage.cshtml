@@ -19,6 +19,21 @@
             //element.value = val;
         };
 
+        SurveyHelper.UpdateRadioButton = function (id, val) {
+            debugger;
+            if (id == null) {
+                return;
+            }
+
+            var item = document.getElementById(id);
+
+            if (item == null) {
+                return;
+            }
+
+            item.checked = true;
+        };
+
         SurveyHelper.GoBackOnePage = function(id){
             debugger;
             if(id == null){
@@ -69,6 +84,11 @@
                     @if (Model.Questions[i].Question.QuestionType.IsRating)
                     {
                         @Html.HiddenFor(model => model.Questions[i].Answer.ResponseNum)
+
+
+                        
+
+
                         @Html.Hidden($"Answer{i}", Model.Questions[i].Answer.ResponseNum)
                         <div>
                             @for (var j = Model.Questions[i].Question.QuestionType.RatingMin; j <= Model.Questions[i].Question.QuestionType.RatingMax; j++)
@@ -84,6 +104,11 @@
                                         @:&nbsp;
                                     }
                                 </label>
+
+                                if (Model.Questions[i].Answer.ResponseNum != null && Model.Questions[i].Answer.ResponseNum == j)
+                                {
+                                    <script>SurveyHelper.UpdateRadioButton("@($"question-{Model.Questions[i].Question.Id}-{j}")", @(Model.Questions[i].Answer.ResponseNum));</script>
+                                }
                             }
                         </div>
                     }

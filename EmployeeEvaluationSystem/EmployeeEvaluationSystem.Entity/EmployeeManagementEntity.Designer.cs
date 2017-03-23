@@ -1,4 +1,4 @@
-﻿// T4 code generation is enabled for model 'C:\Users\Bradley N\Documents\Visual Studio 2017\Projects\CapStone\EmployeeEvaluationSystem\EmployeeEvaluationSystem.Entity\EmployeeManagementEntity.edmx'. 
+﻿// T4 code generation is enabled for model 'C:\Users\jonah\Documents\employee-evaluation-system\EmployeeEvaluationSystem\EmployeeEvaluationSystem.Entity\EmployeeManagementEntity.edmx'. 
 // To enable legacy code generation, change the value of the 'Code Generation Strategy' designer
 // property to 'Legacy ObjectContext'. This property is available in the Properties Window when the model
 // is open in the designer.

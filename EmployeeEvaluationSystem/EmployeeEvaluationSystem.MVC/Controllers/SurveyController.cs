@@ -6,6 +6,7 @@ using EmployeeEvaluationSystem.MVC.Models.Survey;
 using EmployeeEvaluationSystem.SharedObjects.Exceptions.Lock;
 using EmployeeEvaluationSystem.SharedObjects.Extensions;
 using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.Owin;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,17 +18,64 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
     public class SurveyController : Controller
     {
 
+        private ApplicationSignInManager _signInManager;
+        private ApplicationUserManager _userManager;
+        private HttpRequestBase passedInRequest;
+
+        public SurveyController()
+        {
+        }
+
+        public SurveyController(ApplicationUserManager userManager, ApplicationSignInManager signInManager, HttpRequestBase request = null)
+        {
+            this.passedInRequest = request;
+            UserManager = userManager;
+            SignInManager = signInManager;
+        }
+
+        public ApplicationSignInManager SignInManager
+        {
+            get { return _signInManager ?? HttpContext.GetOwinContext().Get<ApplicationSignInManager>(); }
+            private set { _signInManager = value; }
+        }
+
+        public ApplicationUserManager UserManager
+        {
+            get { return _userManager ?? HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>(); }
+            private set { _userManager = value; }
+        }
 
         //[Route("Survey/StartSurvey/{pendingSurveyId}/{email?}")]
-        public ActionResult StartSurvey(Guid pendingSurveyId, string email = null)
+        public ActionResult StartSurvey(Guid pendingSurveyId, string email = null, string userId = null)
         {
-            var userId = User?.Identity?.GetUserId();
+            var identityUserId = User?.Identity?.GetUserId();
 
-
-            if (userId == null && email == null)
+            if(identityUserId == null)
             {
-                throw new Exception();
+                if (userId == null && email != null)
+                {
+                    
+                }if(userId != null && email == null)
+                {
+                    using (var unitOfWork = new UnitOfWork())
+                    {
+                        var auth = unitOfWork.Surveys.CanExistingUserTakeSurvey(userId, pendingSurveyId);
+
+                        if (!auth) throw new UnauthorizedAccessException();
+                    }
+
+                    var user = this.UserManager.FindById(userId) ?? throw new UnauthorizedAccessException();
+                    this.SignInManager.SignIn(user, true, false);
+                }else
+                {
+                    throw new UnauthorizedAccessException();
+                }
             }
+            else
+            {
+                userId = identityUserId;
+            }
+
 
             bool guestMode = userId == null;
 
