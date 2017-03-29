@@ -32,6 +32,13 @@ namespace EmployeeEvaluationSystem.Entity.SharedObjects.Repository.EF6.Repositor
             return this.dbcontext.AspNetUsers.FirstOrDefault(x => x.Id == userIdToGet);
         }
 
+        public bool isUserAdmin(string userId)
+        {
+            var user = this.dbcontext.AspNetUsers.Include(x => x.AspNetRoles).FirstOrDefault(x => x.Id == userId);
+
+            return user?.AspNetRoles?.Any(x => x.Id == "37e8b937-35a0-49fa-9492-1ac0d29c2227") ?? false;
+        }
+
         public void DeleteUser(string currentUserId, string userIdToGet)
         {
             var user = this.GetUser(currentUserId, userIdToGet);

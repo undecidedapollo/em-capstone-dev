@@ -62,6 +62,7 @@
     <Compile Include="Model\Authentication\CohortIndexViewModel.cs" />
     <Compile Include="Model\Authentication\PersonalAspNetUserViewModel.cs" />
     <Compile Include="Model\Authentication\PersonalCohortViewModel.cs" />
+    <Compile Include="Model\Authentication\UserHubIndexViewModel.cs" />
     <Compile Include="Model\Survey\CreateAnswerInstanceModel.cs" />
     <Compile Include="Model\Survey\CreateAvailableSurveyModel.cs" />
     <Compile Include="Model\Survey\CreateAvailableSurveyRolesModel.cs" />

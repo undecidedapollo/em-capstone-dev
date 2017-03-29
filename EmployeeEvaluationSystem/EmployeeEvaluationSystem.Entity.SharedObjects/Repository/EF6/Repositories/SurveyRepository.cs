@@ -380,7 +380,7 @@ namespace EmployeeEvaluationSystem.Entity.SharedObjects.Repository.EF6.Repositor
 
                 var entity = this.dbcontext.AnswerInstances.FirstOrDefault(x => x.QuestionID == questionId && x.SurveyInstanceId == surveyInstanceId);
 
-                if(entity == null)
+                if (entity == null)
                 {
                     var answerResult = new AnswerInstance
                     {
@@ -481,6 +481,27 @@ namespace EmployeeEvaluationSystem.Entity.SharedObjects.Repository.EF6.Repositor
             return this.dbcontext.Questions.Where(x => x.CategoryID == categoryId)
                 .GroupJoin(this.dbcontext.AnswerInstances.Where(x => x.SurveyInstanceId == surveyInstanceId), x => x.ID, x => x.QuestionID, (q, a) => new { Question = q, Answer = a.FirstOrDefault() })
                 .ToList().Select(x => Tuple.Create(x.Question, x.Answer)).ToList();
+        }
+
+        public ICollection<PendingSurvey> GetAllSurveysForUser(string userId)
+        {
+            return this.dbcontext.PendingSurveys.Where(x => x.UserTakenById == userId && x.IsDeleted == false).ToList();
+        }
+
+        public ICollection<PendingSurvey> GetPendingSurveysForUser(string userId)
+        {
+            return this.dbcontext.PendingSurveys.Where(x => x.UserTakenById == userId && x.IsDeleted == false && (x.SurveyInstance == null || x.SurveyInstance.DateFinished == null))
+                .Include(x => x.SurveysAvailable)
+                .Include(x => x.SurveysAvailable.Survey)
+                .ToList();
+        }
+
+        public ICollection<PendingSurvey> GetFinishedSurveysForUser(string userId)
+        {
+            return this.dbcontext.PendingSurveys.Where(x => x.UserTakenById == userId && x.IsDeleted == false && x.SurveyInstance != null && x.SurveyInstance.DateFinished != null)
+                                .Include(x => x.SurveysAvailable)
+                                .Include(x => x.SurveysAvailable.Survey)
+                                .ToList();
         }
     }
 }

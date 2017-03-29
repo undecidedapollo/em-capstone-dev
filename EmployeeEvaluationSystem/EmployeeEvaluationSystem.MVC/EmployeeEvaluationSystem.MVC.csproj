@@ -227,6 +227,7 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\SurveyController.cs" />
+    <Compile Include="Controllers\UserHubController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -348,6 +349,8 @@
     <Content Include="Views\Survey\ContinueSurvey.cshtml" />
     <Content Include="Views\Survey\SurveyPage.cshtml" />
     <Content Include="Views\Survey\EndSurvey.cshtml" />
+    <Content Include="Views\UserHub\Index.cshtml" />
+    <Content Include="Views\Cohorts\StartEvaluation.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
