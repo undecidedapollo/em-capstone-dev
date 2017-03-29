@@ -487,5 +487,23 @@ namespace EmployeeEvaluationSystem.Entity.SharedObjects.Repository.EF6.Repositor
         {
             return this.dbcontext.Questions.Any(x => x.ID == questionId && x.IsRequired == true);
         }
+
+        public bool FinishSurvey(int surveyInstanceId, Guid? statusGuid = default(Guid?))
+        {
+            var pendingSurvey = this.dbcontext.SurveyInstances.FirstOrDefault(x => x.ID == surveyInstanceId);
+
+            var surveyId = pendingSurvey.SurveyID;
+
+            var anyMissing = this.dbcontext.Questions.Where(x => x.Category.SurveyID == surveyId && x.IsRequired == true && x.IsDeleted == false && x.Category.IsDeleted == false).GroupJoin(this.dbcontext.AnswerInstances.Where(x => x.SurveyInstanceId == surveyInstanceId),x => x.ID, x => x.QuestionID, (x, y) => new { Count = y.Count()} ).Any(x => x.Count == 0);
+
+
+            if (anyMissing)
+            {
+                return false;
+            }
+
+            pendingSurvey.DateFinished = DateTime.UtcNow;
+            return true;
+        }
     }
 }

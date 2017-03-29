@@ -85,6 +85,9 @@ namespace EmployeeEvaluationSystem.Entity.SharedObjects.Repository.Core.Reposito
 
         ICollection<Tuple<Question, AnswerInstance>> GetQuestionsAndPreviousResponsesForCategoryInSurveyInstance(int categoryId, int surveyInstanceId);
 
+        bool FinishSurvey(int surveyInstanceId, Guid? statusGuid = null);
+
+
 
     }
 }

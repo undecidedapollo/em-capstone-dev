@@ -1,0 +1,8 @@
+﻿
+@using EmployeeEvaluationSystem.MVC.Helpers.Request
+
+<h2>Missing Items</h2>
+
+<p>There are required questions that are missing from your survey. Please go back through and answer all required questions.</p>
+<br />
+<input type="button" value="Go Back" onclick="window.location.href='@Url.Action("GoBackSurvey", "Survey", Request.QueryString.ToRouteValues() )';" />

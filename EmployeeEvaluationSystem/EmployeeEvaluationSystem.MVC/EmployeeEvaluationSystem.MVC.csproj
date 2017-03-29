@@ -359,6 +359,9 @@
     <Content Include="Views\Survey\SurveyPage.cshtml" />
     <Content Include="Views\Survey\EndSurvey.cshtml" />
     <Content Include="Views\Survey\SurveyLocked.cshtml" />
+    <Content Include="Views\Survey\SurveyError.cshtml" />
+    <Content Include="Views\Survey\SurveyMissingItems.cshtml" />
+    <Content Include="Views\Survey\SurveyDone.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

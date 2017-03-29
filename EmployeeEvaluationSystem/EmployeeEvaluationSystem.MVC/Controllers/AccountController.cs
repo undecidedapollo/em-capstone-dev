@@ -164,6 +164,7 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
                     //var callbackUrl = await SendEmailConfirmationTokenAsync(status.Item2.Id, "Confirm your account");
 
                     //ViewBag.Message = "An Email has been sent to the employee(s) to complete registration.";
+                    
 
                     return View("Info");
                 }

@@ -1,0 +1,8 @@
+﻿
+@using EmployeeEvaluationSystem.MVC.Helpers.Request
+
+<h2>Survey Error</h2>
+
+<p>There was an error with your survey. Please go back and try again.</p>
+<br />
+<input type="button" value="Go Back" onclick="window.location.href='@Url.Action("GoBackSurvey", "Survey", Request.QueryString.ToRouteValues() )';" />

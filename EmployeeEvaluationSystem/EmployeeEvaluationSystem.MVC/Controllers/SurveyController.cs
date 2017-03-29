@@ -339,11 +339,61 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
             return View();
         }
 
-
-        public ActionResult SaveSurvey(int? SurveyInstanceId, Guid penSurveyId, Guid statGuid)
+        public ActionResult SurveyMissingItems(int? SurveyInstanceId, Guid penSurveyId, Guid statGuid)
         {
 
             return View();
         }
+
+        public ActionResult SurveyError(int? SurveyInstanceId, Guid penSurveyId, Guid statGuid)
+        {
+
+            return View();
+        }
+
+        public ActionResult SurveyDone()
+        {
+
+            return View();
+        }
+
+
+        public ActionResult SaveSurvey(int? SurveyInstanceId, Guid penSurveyId, Guid statGuid)
+        {
+            if(SurveyInstanceId == null)
+            {
+                throw new Exception();
+            }
+
+            try
+            {
+                using (var unitOfWork = new UnitOfWork())
+                {
+
+
+
+                    var result = unitOfWork.Surveys.FinishSurvey(SurveyInstanceId ?? -1, statGuid);
+
+                    if (result)
+                    {
+                        unitOfWork.Complete();
+                        return RedirectToAction("SurveyDone");
+                    }
+                    else
+                    {
+                        return RedirectToAction("SurveyMissingItems", new { SurveyInstanceId = SurveyInstanceId, penSurveyId = penSurveyId, statGuid = statGuid });
+                    }
+
+
+                }
+
+            }
+            catch (Exception e)
+            {
+                return RedirectToAction("SurveyError", new { SurveyInstanceId = SurveyInstanceId, penSurveyId = penSurveyId, statGuid = statGuid });
+            }
+        }
+
+
     }
 }
