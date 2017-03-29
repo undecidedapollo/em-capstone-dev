@@ -19,6 +19,21 @@
             //element.value = val;
         };
 
+        SurveyHelper.UpdateRadioButton = function (id, val) {
+            debugger;
+            if (id == null) {
+                return;
+            }
+
+            var item = document.getElementById(id);
+
+            if (item == null) {
+                return;
+            }
+
+            item.checked = true;
+        };
+
         SurveyHelper.GoBackOnePage = function(id){
             debugger;
             if(id == null){
@@ -46,6 +61,7 @@
     <div class="form-horizontal">
         <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <span style="color:red;">* - Required question</span>
         <div class="form-group">
             <label class="col-md-9">Question:</label>
             <div class="col-md-3"><b>Response:</b></div>
@@ -58,7 +74,7 @@
         @for (var i = 0; i < Model.Questions.Count; i++)
         {
             <div class="form-group">
-                <div class="col-md-9">@(Model.Questions[i].Question.DisplayText)</div>
+                <div class="col-md-9">@(Model.Questions[i].Question.DisplayText) @if (Model.Questions[i].Question.IsRequired) { <text><span style="color:red;">*</span></text>}</div>
                 <div class="col-md-3">
                     @(Model.Questions[i].Question.Id)
                     @*@Html.HiddenFor(model => model.Questions[i].Question.Id)*@
@@ -69,6 +85,11 @@
                     @if (Model.Questions[i].Question.QuestionType.IsRating)
                     {
                         @Html.HiddenFor(model => model.Questions[i].Answer.ResponseNum)
+
+
+                        
+
+
                         @Html.Hidden($"Answer{i}", Model.Questions[i].Answer.ResponseNum)
                         <div>
                             @for (var j = Model.Questions[i].Question.QuestionType.RatingMin; j <= Model.Questions[i].Question.QuestionType.RatingMax; j++)
@@ -84,6 +105,11 @@
                                         @:&nbsp;
                                     }
                                 </label>
+
+                                if (Model.Questions[i].Answer.ResponseNum != null && Model.Questions[i].Answer.ResponseNum == j)
+                                {
+                                    <script>SurveyHelper.UpdateRadioButton("@($"question-{Model.Questions[i].Question.Id}-{j}")", @(Model.Questions[i].Answer.ResponseNum));</script>
+                                }
                             }
                         </div>
                     }

@@ -4,7 +4,7 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="56f097f797f94f2da2af2218a4281a91" Name="Diagram1" ZoomLevel="56">
+      <Diagram DiagramId="56f097f797f94f2da2af2218a4281a91" Name="Diagram1" ZoomLevel="67">
         <EntityTypeShape EntityType="EmployeeEvaluationSystem.Entity.EntityModel.C__MigrationHistory" Width="1.5" PointX="9.75" PointY="2.5" />
         <EntityTypeShape EntityType="EmployeeEvaluationSystem.Entity.EntityModel.C__RefactorLog" Width="1.5" PointX="9.75" PointY="5.5" />
         <EntityTypeShape EntityType="EmployeeEvaluationSystem.Entity.EntityModel.AnswerInstance" Width="1.5" PointX="15.25" PointY="11.875" />
@@ -13,23 +13,13 @@
         <EntityTypeShape EntityType="EmployeeEvaluationSystem.Entity.EntityModel.AspNetUserLogin" Width="1.5" PointX="5.25" PointY="14.125" />
         <EntityTypeShape EntityType="EmployeeEvaluationSystem.Entity.EntityModel.Category" Width="1.5" PointX="10.75" PointY="16.25" />
         <EntityTypeShape EntityType="EmployeeEvaluationSystem.Entity.EntityModel.Cohort" Width="1.5" PointX="3" PointY="10.75" />
-        <EntityTypeShape EntityType="EmployeeEvaluationSystem.Entity.EntityModel.CohortPermission" Width="1.5" PointX="3" PointY="6.125" />
-        <EntityTypeShape EntityType="EmployeeEvaluationSystem.Entity.EntityModel.Permission" Width="1.5" PointX="0.75" PointY="4.25" />
         <EntityTypeShape EntityType="EmployeeEvaluationSystem.Entity.EntityModel.QuestionType" Width="1.5" PointX="10.75" PointY="19.5" />
-        <EntityTypeShape EntityType="EmployeeEvaluationSystem.Entity.EntityModel.SiteWidePermission" Width="1.5" PointX="2.875" PointY="1.25" />
         <EntityTypeShape EntityType="EmployeeEvaluationSystem.Entity.EntityModel.Survey" Width="1.5" PointX="5.5" PointY="9.75" />
         <EntityTypeShape EntityType="EmployeeEvaluationSystem.Entity.EntityModel.SurveysAvailable" Width="1.5" PointX="7.75" PointY="0.75" />
         <EntityTypeShape EntityType="EmployeeEvaluationSystem.Entity.EntityModel.SurveyType" Width="1.5" PointX="5.5" PointY="2.625" />
         <EntityTypeShape EntityType="EmployeeEvaluationSystem.Entity.EntityModel.UserSurveyRole" Width="1.5" PointX="7.75" PointY="7.25" />
         <AssociationConnector Association="EmployeeEvaluationSystem.Entity.EntityModel.FK_Category_ToTable" />
         <AssociationConnector Association="EmployeeEvaluationSystem.Entity.EntityModel.FK_SurveysAvailable_To_Cohort" />
-        <AssociationConnector Association="EmployeeEvaluationSystem.Entity.EntityModel.FK_CohortPermission_To_Perm1" />
-        <AssociationConnector Association="EmployeeEvaluationSystem.Entity.EntityModel.FK_CohortPermission_To_Perm2" />
-        <AssociationConnector Association="EmployeeEvaluationSystem.Entity.EntityModel.FK_CohortPermission_To_Perm3" />
-        <AssociationConnector Association="EmployeeEvaluationSystem.Entity.EntityModel.FK_CohortPermission_To_Perm4" />
-        <AssociationConnector Association="EmployeeEvaluationSystem.Entity.EntityModel.FK_SiteWidePermission_To_Perm1" />
-        <AssociationConnector Association="EmployeeEvaluationSystem.Entity.EntityModel.FK_SiteWidePermission_To_Perm2" />
-        <AssociationConnector Association="EmployeeEvaluationSystem.Entity.EntityModel.FK_SiteWidePermission_To_Perm3" />
         <AssociationConnector Association="EmployeeEvaluationSystem.Entity.EntityModel.FK_SurveysAvailable_To_Survey" />
         <AssociationConnector Association="EmployeeEvaluationSystem.Entity.EntityModel.FK_SurveysAvailable_To_SurveyType" />
         <EntityTypeShape EntityType="EmployeeEvaluationSystem.Entity.EntityModel.LocationAddress" Width="1.5" PointX="13.75" PointY="1.125" />
@@ -38,19 +28,9 @@
         <AssociationConnector Association="EmployeeEvaluationSystem.Entity.EntityModel.FK_dbo_AspNetUserLogins_dbo_AspNetUsers_UserId" />
         <AssociationConnector Association="EmployeeEvaluationSystem.Entity.EntityModel.FK_Survey_ToTable" />
         <AssociationConnector Association="EmployeeEvaluationSystem.Entity.EntityModel.AspNetUserRoles" />
-        <EntityTypeShape EntityType="EmployeeEvaluationSystem.Entity.EntityModel.CohortUser" Width="1.5" PointX="8.25" PointY="16.125" />
-        <AssociationConnector Association="EmployeeEvaluationSystem.Entity.EntityModel.FK_CohortUser_ToTable" />
-        <AssociationConnector Association="EmployeeEvaluationSystem.Entity.EntityModel.FK_CohortUser_To_Cohort" />
-        <AssociationConnector Association="EmployeeEvaluationSystem.Entity.EntityModel.FK_CohortUser_To_Permissions" />
-        <EntityTypeShape EntityType="EmployeeEvaluationSystem.Entity.EntityModel.PendingSurvey" Width="1.5" PointX="15.25" PointY="6.625" />
-        <AssociationConnector Association="EmployeeEvaluationSystem.Entity.EntityModel.FK_PendingSurvey_ToTable" />
-        <AssociationConnector Association="EmployeeEvaluationSystem.Entity.EntityModel.FK_PendingSurvey_ToTable_1" />
-        <AssociationConnector Association="EmployeeEvaluationSystem.Entity.EntityModel.FK_PendingSurvey_To_Survey" />
-        <AssociationConnector Association="EmployeeEvaluationSystem.Entity.EntityModel.FK_PendingSurvey_To_UserSurveyRole" />
         <EntityTypeShape EntityType="EmployeeEvaluationSystem.Entity.EntityModel.SurveyInstance" Width="1.5" PointX="7.75" PointY="11.75" />
         <AssociationConnector Association="EmployeeEvaluationSystem.Entity.EntityModel.FK_AnswerInstance_SurveyInstance" />
         <AssociationConnector Association="EmployeeEvaluationSystem.Entity.EntityModel.FK_SurveyInstance_ToTable" />
-        <AssociationConnector Association="EmployeeEvaluationSystem.Entity.EntityModel.FK_PendingSurvey_To_SurveyInstance" />
         <AssociationConnector Association="EmployeeEvaluationSystem.Entity.EntityModel.FK_SurveyInstance_To_Survey" />
         <EntityTypeShape EntityType="EmployeeEvaluationSystem.Entity.EntityModel.SurveysAvailableTo" Width="1.5" PointX="12" PointY="4.125" />
         <AssociationConnector Association="EmployeeEvaluationSystem.Entity.EntityModel.FK_SurveysAvailableTo_SurveysAvailable" />
@@ -60,6 +40,15 @@
         <AssociationConnector Association="EmployeeEvaluationSystem.Entity.EntityModel.FK_Question_ToTable" />
         <AssociationConnector Association="EmployeeEvaluationSystem.Entity.EntityModel.FK_Question_ToTable_1" />
         <EntityTypeShape EntityType="EmployeeEvaluationSystem.Entity.EntityModel.Status" Width="1.5" PointX="10.375" PointY="7.875" />
+        <EntityTypeShape EntityType="EmployeeEvaluationSystem.Entity.EntityModel.CohortUser" Width="1.5" PointX="8.25" PointY="15.625" />
+        <EntityTypeShape EntityType="EmployeeEvaluationSystem.Entity.EntityModel.PendingSurvey" Width="1.5" PointX="12.625" PointY="8.25" />
+        <AssociationConnector Association="EmployeeEvaluationSystem.Entity.EntityModel.FK_CohortUser_ToTable" />
+        <AssociationConnector Association="EmployeeEvaluationSystem.Entity.EntityModel.FK_PendingSurvey_ToTable" />
+        <AssociationConnector Association="EmployeeEvaluationSystem.Entity.EntityModel.FK_PendingSurvey_ToTable_1" />
+        <AssociationConnector Association="EmployeeEvaluationSystem.Entity.EntityModel.FK_CohortUser_To_Cohort" />
+        <AssociationConnector Association="EmployeeEvaluationSystem.Entity.EntityModel.FK_PendingSurvey_To_Survey" />
+        <AssociationConnector Association="EmployeeEvaluationSystem.Entity.EntityModel.FK_PendingSurvey_To_SurveyInstance" />
+        <AssociationConnector Association="EmployeeEvaluationSystem.Entity.EntityModel.FK_PendingSurvey_To_UserSurveyRole" />
         <AssociationConnector Association="EmployeeEvaluationSystem.Entity.EntityModel.FK_PendingSurvey_ToTable_2" />
         </Diagram>
     </edmx:Diagrams>

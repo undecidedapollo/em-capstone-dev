@@ -203,4 +203,18 @@
     <Property Name="ParentElementType" Value="SqlTable" />
     <Property Name="NewName" Value="FirstName" />
   </Operation>
+  <Operation Name="Rename Refactor" Key="422bbeae-9dd8-42eb-bd12-09fc7b9b609d" ChangeDateTime="03/22/2017 23:30:16">
+    <Property Name="ElementName" Value="[dbo].[PendingSurvey].[UserForId]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[PendingSurvey]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="UserTakenById" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="b2cf460c-95d1-497c-8b9d-56dc9493ede0" ChangeDateTime="03/22/2017 23:30:24">
+    <Property Name="ElementName" Value="[dbo].[PendingSurvey].[UserSentById]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[PendingSurvey]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="UserSurveyForId" />
+  </Operation>
 </Operations>

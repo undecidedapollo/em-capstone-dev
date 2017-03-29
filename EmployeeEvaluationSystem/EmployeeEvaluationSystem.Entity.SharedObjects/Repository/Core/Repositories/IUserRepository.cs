@@ -16,6 +16,7 @@ namespace EmployeeEvaluationSystem.Entity.SharedObjects.Repository.Core.Reposito
         void DeleteUser(string currentUserId, string userIdToGet);
 
         AspNetUser EditUser(string currentUserId, PersonalAspNetUserViewModel userToEdit);
+        bool isUserAdmin(string userId);
 
 
     }

@@ -18,6 +18,12 @@ namespace EmployeeEvaluationSystem.Entity.SharedObjects.Repository.Core.Reposito
 
         PendingSurvey GetPendingSurvey(string userId, Guid pendingSurveyId);
 
+        ICollection<PendingSurvey> GetAllSurveysForUser(string userId);
+
+        ICollection<PendingSurvey> GetPendingSurveysForUser(string userId);
+
+        ICollection<PendingSurvey> GetFinishedSurveysForUser(string userId);
+
         PendingSurvey GetPendingSurveySYSTEM(Guid pendingSurveyId);
 
         UserSurveyRole GetUserSurveyRole(int roleID);
@@ -67,6 +73,8 @@ namespace EmployeeEvaluationSystem.Entity.SharedObjects.Repository.Core.Reposito
 
         bool IsQuestionInSurvey(int questionId, int surveyId);
 
+        bool IsQuestionRequired(int questionId);
+
         LockAndGetSurvey_Result LockAndGetSurvey(Guid pendingSurveyId, Guid? statusGuid = null);
 
         int CancelSurveyLock(Guid pendingSurveyId);
@@ -82,6 +90,9 @@ namespace EmployeeEvaluationSystem.Entity.SharedObjects.Repository.Core.Reposito
         Category GetLastCategory(int surveyId);
 
         ICollection<Tuple<Question, AnswerInstance>> GetQuestionsAndPreviousResponsesForCategoryInSurveyInstance(int categoryId, int surveyInstanceId);
+
+        bool FinishSurvey(int surveyInstanceId, Guid? statusGuid = null);
+
 
 
     }

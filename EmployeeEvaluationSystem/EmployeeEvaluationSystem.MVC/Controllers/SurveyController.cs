@@ -6,6 +6,7 @@ using EmployeeEvaluationSystem.MVC.Models.Survey;
 using EmployeeEvaluationSystem.SharedObjects.Exceptions.Lock;
 using EmployeeEvaluationSystem.SharedObjects.Extensions;
 using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.Owin;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,17 +18,64 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
     public class SurveyController : Controller
     {
 
+        private ApplicationSignInManager _signInManager;
+        private ApplicationUserManager _userManager;
+        private HttpRequestBase passedInRequest;
+
+        public SurveyController()
+        {
+        }
+
+        public SurveyController(ApplicationUserManager userManager, ApplicationSignInManager signInManager, HttpRequestBase request = null)
+        {
+            this.passedInRequest = request;
+            UserManager = userManager;
+            SignInManager = signInManager;
+        }
+
+        public ApplicationSignInManager SignInManager
+        {
+            get { return _signInManager ?? HttpContext.GetOwinContext().Get<ApplicationSignInManager>(); }
+            private set { _signInManager = value; }
+        }
+
+        public ApplicationUserManager UserManager
+        {
+            get { return _userManager ?? HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>(); }
+            private set { _userManager = value; }
+        }
 
         //[Route("Survey/StartSurvey/{pendingSurveyId}/{email?}")]
-        public ActionResult StartSurvey(Guid pendingSurveyId, string email = null)
+        public ActionResult StartSurvey(Guid pendingSurveyId, string email = null, string userId = null)
         {
-            var userId = User?.Identity?.GetUserId();
+            var identityUserId = User?.Identity?.GetUserId();
 
-
-            if (userId == null && email == null)
+            if(identityUserId == null)
             {
-                throw new Exception();
+                if (userId == null && email != null)
+                {
+                    
+                }if(userId != null && email == null)
+                {
+                    using (var unitOfWork = new UnitOfWork())
+                    {
+                        var auth = unitOfWork.Surveys.CanExistingUserTakeSurvey(userId, pendingSurveyId);
+
+                        if (!auth) throw new UnauthorizedAccessException();
+                    }
+
+                    var user = this.UserManager.FindById(userId) ?? throw new UnauthorizedAccessException();
+                    this.SignInManager.SignIn(user, true, false);
+                }else
+                {
+                    throw new UnauthorizedAccessException();
+                }
             }
+            else
+            {
+                userId = identityUserId;
+            }
+
 
             bool guestMode = userId == null;
 
@@ -76,6 +124,7 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
 
                 if (lockPendingSurvey == null)
                 {
+                    return RedirectToAction("SurveyLocked");
                     throw new DBLockException();
                 }
 
@@ -140,26 +189,50 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
             {
                 var theSurvey = unitOfWork.Surveys.LockAndGetSurvey(model.PendingSurveyId, model.StatusGuid);
 
-                if (theSurvey == null) throw new DBLockException();
+                if (theSurvey == null) return RedirectToAction("SurveyLocked"); ;
 
                 var surveyInstance = unitOfWork.Surveys.GetSurveyInstanceByIdSYSTEM(model.SurveyInstanceId);
 
-                foreach(var qa in model.Questions)
+                try
                 {
-                    if(qa?.Answer?.ResponseNum == null)
+                    var hasShownRequired = false;
+
+
+                    foreach (var qa in model.Questions)
                     {
-                        continue;
+                        if (qa?.Answer?.ResponseNum == null)
+                        {
+                            var isRequired = unitOfWork.Surveys.IsQuestionRequired(qa?.Question?.Id ?? throw new Exception());
+
+                            if (isRequired)
+                            {
+                                if (!hasShownRequired)
+                                {
+                                    ModelState.AddModelError("", "All required questions must be answered.");
+                                    hasShownRequired = true;
+                                }
+                                
+                            }
+
+                            continue;
+                        }
+
+                        var newAnswerInstanceModel = new CreateAnswerInstanceModel
+                        {
+                            RatingResponse = qa.Answer.ResponseNum ?? -1
+                        };
+
+                        unitOfWork.Surveys.AddAnswerInstanceToSurveyInstance(model.SurveyInstanceId, qa.Question.Id, newAnswerInstanceModel);
                     }
 
-                    var newAnswerInstanceModel = new CreateAnswerInstanceModel
-                    {
-                        RatingResponse = qa.Answer.ResponseNum ?? -1
-                    };
-
-                    unitOfWork.Surveys.AddAnswerInstanceToSurveyInstance(model.SurveyInstanceId, qa.Question.Id, newAnswerInstanceModel);
+                    unitOfWork.Complete();
                 }
-
-                unitOfWork.Complete();
+                catch(Exception e)
+                {
+                    ModelState.AddModelError("", "There was an error saving the answer's to your survey. Please correct any mistakes and try again!");
+                    return View(model);
+                }
+               
 
                 Category nextCategory = null;
 
@@ -219,7 +292,7 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
             {
                 var theSurvey = unitOfWork.Surveys.LockAndGetSurvey(penSurveyId, statGuid);
 
-                if (theSurvey == null) throw new DBLockException();
+                if (theSurvey == null) return RedirectToAction("SurveyLocked");
 
                 int surveyInstanceId = SurveyInstanceId;
 
@@ -258,9 +331,69 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
         {
             return View();
         }
-        public ActionResult SaveSurvey(int? SurveyInstanceId, Guid penSurveyId, Guid statGuid)
+
+
+        public ActionResult SurveyLocked()
         {
+
             return View();
         }
+
+        public ActionResult SurveyMissingItems(int? SurveyInstanceId, Guid penSurveyId, Guid statGuid)
+        {
+
+            return View();
+        }
+
+        public ActionResult SurveyError(int? SurveyInstanceId, Guid penSurveyId, Guid statGuid)
+        {
+
+            return View();
+        }
+
+        public ActionResult SurveyDone()
+        {
+
+            return View();
+        }
+
+
+        public ActionResult SaveSurvey(int? SurveyInstanceId, Guid penSurveyId, Guid statGuid)
+        {
+            if(SurveyInstanceId == null)
+            {
+                throw new Exception();
+            }
+
+            try
+            {
+                using (var unitOfWork = new UnitOfWork())
+                {
+
+
+
+                    var result = unitOfWork.Surveys.FinishSurvey(SurveyInstanceId ?? -1, statGuid);
+
+                    if (result)
+                    {
+                        unitOfWork.Complete();
+                        return RedirectToAction("SurveyDone");
+                    }
+                    else
+                    {
+                        return RedirectToAction("SurveyMissingItems", new { SurveyInstanceId = SurveyInstanceId, penSurveyId = penSurveyId, statGuid = statGuid });
+                    }
+
+
+                }
+
+            }
+            catch (Exception e)
+            {
+                return RedirectToAction("SurveyError", new { SurveyInstanceId = SurveyInstanceId, penSurveyId = penSurveyId, statGuid = statGuid });
+            }
+        }
+
+
     }
 }

@@ -30,8 +30,8 @@ namespace EmployeeEvaluationSystem.Entity
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<AnswerInstance> AnswerInstances { get; set; }
         public virtual AspNetUser AspNetUser { get; set; }
+        public virtual Survey Survey { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<PendingSurvey> PendingSurveys { get; set; }
-        public virtual Survey Survey { get; set; }
     }
 }

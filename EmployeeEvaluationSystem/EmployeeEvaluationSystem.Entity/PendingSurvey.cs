@@ -22,17 +22,17 @@ namespace EmployeeEvaluationSystem.Entity
         public string Email { get; set; }
         public bool IsDeleted { get; set; }
         public Nullable<System.DateTime> DateDeleted { get; set; }
-        public string UserSentById { get; set; }
-        public string UserForId { get; set; }
+        public string UserSurveyForId { get; set; }
+        public string UserTakenById { get; set; }
         public int StatusId { get; set; }
         public Nullable<System.Guid> StatusGuid { get; set; }
         public Nullable<System.DateTime> StatusDate { get; set; }
     
-        public virtual AspNetUser UserSentBy { get; set; }
-        public virtual AspNetUser UserFor { get; set; }
+        public virtual AspNetUser UserSurveyFor { get; set; }
+        public virtual AspNetUser UserTakenBy { get; set; }
         public virtual SurveysAvailable SurveysAvailable { get; set; }
-        public virtual UserSurveyRole UserSurveyRole { get; set; }
         public virtual SurveyInstance SurveyInstance { get; set; }
+        public virtual UserSurveyRole UserSurveyRole { get; set; }
         public virtual Status Status { get; set; }
     }
 }
