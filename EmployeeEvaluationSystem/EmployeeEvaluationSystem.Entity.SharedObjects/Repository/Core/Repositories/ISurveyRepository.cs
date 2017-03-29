@@ -73,6 +73,8 @@ namespace EmployeeEvaluationSystem.Entity.SharedObjects.Repository.Core.Reposito
 
         bool IsQuestionInSurvey(int questionId, int surveyId);
 
+        bool IsQuestionRequired(int questionId);
+
         LockAndGetSurvey_Result LockAndGetSurvey(Guid pendingSurveyId, Guid? statusGuid = null);
 
         int CancelSurveyLock(Guid pendingSurveyId);

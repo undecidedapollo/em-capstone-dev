@@ -46,15 +46,15 @@ namespace EmployeeEvaluationSystem.MVC
         public async Task SendAsync(IdentityMessage message)
         {
             string apiKey = ConfigurationManager.AppSettings["mailApiKey"];
-            dynamic sg = new SendGridAPIClient(apiKey);
+            var client = new SendGridClient(apiKey);
 
-            Email from = new Email(ConfigurationManager.AppSettings["mailAddress"]);
+            EmailAddress from = new EmailAddress(ConfigurationManager.AppSettings["mailAddress"]);
             string subject = message.Subject;
-            Email to = new Email(message.Destination);
-            Content content = new Content("text/html", message.Body);
-            Mail mail = new Mail(from, subject, to, content);
+            EmailAddress to = new EmailAddress(message.Destination);
+            string content = message.Body;
+            var msg = MailHelper.CreateSingleEmail(from, to, subject, content, content);
 
-            dynamic response = await sg.client.mail.send.post(requestBody: mail.Get());
+            dynamic response = await client.SendEmailAsync(msg);
         }
     }
 

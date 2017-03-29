@@ -773,17 +773,6 @@
             <End Role="Question" EntitySet="Questions" />
           </AssociationSet>
           <EntitySet Name="Status" EntityType="EmployeeEvaluationSystem.Entity.EntityModel.Status" />
-          <FunctionImport Name="CancelAllOldSurveyLocks" />
-          <FunctionImport Name="CancelSurveyLock">
-          <Parameter Name="pendingSurveyId" Mode="In" Type="Guid" />
-          </FunctionImport>
-          <FunctionImport Name="LockAndGetSurvey" ReturnType="Collection(EmployeeEvaluationSystem.Entity.EntityModel.LockAndGetSurvey_Result)">
-            <Parameter Name="pendingSurveyId" Mode="In" Type="Guid" />
-            <Parameter Name="statusGuid" Mode="In" Type="Guid" />
-          </FunctionImport>
-          <FunctionImport Name="UpdateLockedSurveyTime">
-          <Parameter Name="pendingSurveyId" Mode="In" Type="Guid" />
-          </FunctionImport>
           <EntitySet Name="CohortUsers" EntityType="EmployeeEvaluationSystem.Entity.EntityModel.CohortUser" />
           <EntitySet Name="PendingSurveys" EntityType="EmployeeEvaluationSystem.Entity.EntityModel.PendingSurvey" />
           <AssociationSet Name="FK_CohortUser_ToTable" Association="EmployeeEvaluationSystem.Entity.EntityModel.FK_CohortUser_ToTable">
@@ -818,6 +807,17 @@
             <End Role="Status" EntitySet="Status" />
             <End Role="PendingSurvey" EntitySet="PendingSurveys" />
           </AssociationSet>
+          <FunctionImport Name="CancelAllOldSurveyLocks" />
+          <FunctionImport Name="CancelSurveyLock">
+            <Parameter Name="pendingSurveyId" Mode="In" Type="Guid" />
+          </FunctionImport>
+          <FunctionImport Name="LockAndGetSurvey" ReturnType="Collection(EmployeeEvaluationSystem.Entity.EntityModel.LockAndGetSurvey_Result)">
+            <Parameter Name="pendingSurveyId" Mode="In" Type="Guid" />
+            <Parameter Name="statusGuid" Mode="In" Type="Guid" />
+          </FunctionImport>
+          <FunctionImport Name="UpdateLockedSurveyTime">
+            <Parameter Name="pendingSurveyId" Mode="In" Type="Guid" />
+          </FunctionImport>
           </EntityContainer>
         <EntityType Name="C__MigrationHistory">
           <Key>
@@ -1249,21 +1249,6 @@
           <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="PendingSurveys" Relationship="EmployeeEvaluationSystem.Entity.EntityModel.FK_PendingSurvey_ToTable_2" FromRole="Status" ToRole="PendingSurvey" />
         </EntityType>
-        <ComplexType Name="LockAndGetSurvey_Result">
-          <Property Type="Guid" Name="Id" Nullable="false" />
-          <Property Type="Int32" Name="SurveyAvailToMeID" Nullable="false" />
-          <Property Type="Int32" Name="UserSurveyRoleID" Nullable="false" />
-          <Property Type="DateTime" Name="DateSent" Nullable="false" Precision="23" />
-          <Property Type="Int32" Name="SurveyInstanceID" Nullable="true" />
-          <Property Type="String" Name="Email" Nullable="true" MaxLength="200" />
-          <Property Type="Boolean" Name="IsDeleted" Nullable="false" />
-          <Property Type="DateTime" Name="DateDeleted" Nullable="true" Precision="23" />
-          <Property Type="String" Name="UserSentById" Nullable="false" MaxLength="128" />
-          <Property Type="String" Name="UserForId" Nullable="true" MaxLength="128" />
-          <Property Type="Int32" Name="StatusId" Nullable="false" />
-          <Property Type="Guid" Name="StatusGuid" Nullable="true" />
-          <Property Type="DateTime" Name="StatusDate" Nullable="true" Precision="23" />
-        </ComplexType>
         <EntityType Name="CohortUser">
           <Key>
             <PropertyRef Name="CohortID" />
@@ -1395,6 +1380,21 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <ComplexType Name="LockAndGetSurvey_Result">
+          <Property Type="Guid" Name="Id" Nullable="false" />
+          <Property Type="Int32" Name="SurveyAvailToMeID" Nullable="false" />
+          <Property Type="Int32" Name="UserSurveyRoleID" Nullable="false" />
+          <Property Type="DateTime" Name="DateSent" Nullable="false" Precision="23" />
+          <Property Type="Int32" Name="SurveyInstanceID" Nullable="true" />
+          <Property Type="String" Name="Email" Nullable="true" MaxLength="200" />
+          <Property Type="Boolean" Name="IsDeleted" Nullable="false" />
+          <Property Type="DateTime" Name="DateDeleted" Nullable="true" Precision="23" />
+          <Property Type="String" Name="UserSurveyForId" Nullable="false" MaxLength="128" />
+          <Property Type="String" Name="UserTakenById" Nullable="true" MaxLength="128" />
+          <Property Type="Int32" Name="StatusId" Nullable="false" />
+          <Property Type="Guid" Name="StatusGuid" Nullable="true" />
+          <Property Type="DateTime" Name="StatusDate" Nullable="true" Precision="23" />
+        </ComplexType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -1627,28 +1627,6 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <FunctionImportMapping FunctionImportName="CancelAllOldSurveyLocks" FunctionName="EmployeeEvaluationSystem.Entity.EntityModel.Store.CancelAllOldSurveyLocks" />
-          <FunctionImportMapping FunctionImportName="CancelSurveyLock" FunctionName="EmployeeEvaluationSystem.Entity.EntityModel.Store.CancelSurveyLock" />
-          <FunctionImportMapping FunctionImportName="LockAndGetSurvey" FunctionName="EmployeeEvaluationSystem.Entity.EntityModel.Store.LockAndGetSurvey">
-            <ResultMapping>
-              <ComplexTypeMapping TypeName="EmployeeEvaluationSystem.Entity.EntityModel.LockAndGetSurvey_Result">
-                <ScalarProperty Name="Id" ColumnName="Id" />
-                <ScalarProperty Name="SurveyAvailToMeID" ColumnName="SurveyAvailToMeID" />
-                <ScalarProperty Name="UserSurveyRoleID" ColumnName="UserSurveyRoleID" />
-                <ScalarProperty Name="DateSent" ColumnName="DateSent" />
-                <ScalarProperty Name="SurveyInstanceID" ColumnName="SurveyInstanceID" />
-                <ScalarProperty Name="Email" ColumnName="Email" />
-                <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
-                <ScalarProperty Name="DateDeleted" ColumnName="DateDeleted" />
-                <ScalarProperty Name="UserSentById" ColumnName="UserSentById" />
-                <ScalarProperty Name="UserForId" ColumnName="UserForId" />
-                <ScalarProperty Name="StatusId" ColumnName="StatusId" />
-                <ScalarProperty Name="StatusGuid" ColumnName="StatusGuid" />
-                <ScalarProperty Name="StatusDate" ColumnName="StatusDate" />
-              </ComplexTypeMapping>
-            </ResultMapping>
-          </FunctionImportMapping>
-          <FunctionImportMapping FunctionImportName="UpdateLockedSurveyTime" FunctionName="EmployeeEvaluationSystem.Entity.EntityModel.Store.UpdateLockedSurveyTime" />
           <EntitySetMapping Name="CohortUsers">
             <EntityTypeMapping TypeName="EmployeeEvaluationSystem.Entity.EntityModel.CohortUser">
               <MappingFragment StoreEntitySet="CohortUser">
@@ -1677,6 +1655,28 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="CancelAllOldSurveyLocks" FunctionName="EmployeeEvaluationSystem.Entity.EntityModel.Store.CancelAllOldSurveyLocks" />
+          <FunctionImportMapping FunctionImportName="CancelSurveyLock" FunctionName="EmployeeEvaluationSystem.Entity.EntityModel.Store.CancelSurveyLock" />
+          <FunctionImportMapping FunctionImportName="LockAndGetSurvey" FunctionName="EmployeeEvaluationSystem.Entity.EntityModel.Store.LockAndGetSurvey">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="EmployeeEvaluationSystem.Entity.EntityModel.LockAndGetSurvey_Result">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="SurveyAvailToMeID" ColumnName="SurveyAvailToMeID" />
+                <ScalarProperty Name="UserSurveyRoleID" ColumnName="UserSurveyRoleID" />
+                <ScalarProperty Name="DateSent" ColumnName="DateSent" />
+                <ScalarProperty Name="SurveyInstanceID" ColumnName="SurveyInstanceID" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
+                <ScalarProperty Name="DateDeleted" ColumnName="DateDeleted" />
+                <ScalarProperty Name="UserSurveyForId" ColumnName="UserSurveyForId" />
+                <ScalarProperty Name="UserTakenById" ColumnName="UserTakenById" />
+                <ScalarProperty Name="StatusId" ColumnName="StatusId" />
+                <ScalarProperty Name="StatusGuid" ColumnName="StatusGuid" />
+                <ScalarProperty Name="StatusDate" ColumnName="StatusDate" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="UpdateLockedSurveyTime" FunctionName="EmployeeEvaluationSystem.Entity.EntityModel.Store.UpdateLockedSurveyTime" />
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>
