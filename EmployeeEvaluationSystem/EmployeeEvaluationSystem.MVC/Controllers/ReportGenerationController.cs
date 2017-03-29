@@ -9,6 +9,7 @@ using iTextSharp.tool.xml;
 using iTextSharp.text.html.simpleparser;
 using System.Web.Mvc;
 using EmployeeEvaluationSystem.Entity;
+using Microsoft.AspNet.Identity;
 
 namespace EmployeeEvaluationSystem.MVC.Controllers
 {
@@ -39,7 +40,16 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
             }
         }
 
-
+        public ActionResult Create()
+        {
+            return View();
+        }
+        public int GetRating(int id)
+        {
+            var userId = User?.Identity?.GetUserId();
+            var rating = id;
+            return rating;
+        }
 
 
     }
