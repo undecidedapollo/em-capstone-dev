@@ -504,6 +504,11 @@ namespace EmployeeEvaluationSystem.Entity.SharedObjects.Repository.EF6.Repositor
                                 .ToList();
         }
 
+        public bool IsQuestionRequired(int questionId)
+        {
+            return this.dbcontext.Questions.Any(x => x.ID == questionId && x.IsRequired == true);
+        }
+
         public bool FinishSurvey(int surveyInstanceId, Guid? statusGuid = default(Guid?))
         {
             var pendingSurvey = this.dbcontext.SurveyInstances.FirstOrDefault(x => x.ID == surveyInstanceId);
