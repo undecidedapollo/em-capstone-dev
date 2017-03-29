@@ -1,0 +1,50 @@
+﻿@model EmployeeEvaluationSystem.Entity.SharedObjects.Model.Authentication.UserHubIndexViewModel
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <caption>Pending Surveys</caption>
+    <tr>
+        <td>Name</td>
+        <td></td>
+    </tr>
+    
+        
+  
+
+@foreach (var item in Model.PendingSurveys) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.SurveysAvailable.Survey.Name)
+        </td>
+        <td>
+            <input type="button" value="Start Survey" onclick="window.location.href='@Url.Action("StartSurvey", "Survey", new { pendingSurveyId = item.Id} )';" />
+        </td>
+    </tr>
+}
+
+</table>
+
+<table class="table">
+    <caption>Completed Surveys</caption>
+    <tr>
+        <td>Name</td>
+    </tr>
+
+    @foreach (var item in Model.FinishedSurveys)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.SurveysAvailable.Survey.Name)
+            </td>
+        </tr>
+    }
+
+</table>

@@ -218,6 +218,7 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
             }
         }
 
+        /*
         // POST: Cohort/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
@@ -234,6 +235,30 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
                 return RedirectToAction("Index");
             }
         }
+
+        // GET: Cohort/StartEvaluation
+        public ActionResult StartEvaluation()
+        {
+            return View();   
+        }
+
+        // POST: Cohort/StartEvaluation
+        [HttpPost, ActionName("StartEvaluation")]
+        [ValidateAntiForgeryToken]
+        public ActionResult StartEvaluation()
+        {
+            var userId = User?.Identity?.GetUserId();
+
+            using (var unitOfWork = new UnitOfWork())
+            {
+                unitOfWork.Cohorts.DeleteCohort(userId, id);
+
+                unitOfWork.Complete();
+
+                return RedirectToAction("Index");
+            }
+        }
+        */
 
         /*
         protected override void Dispose(bool disposing)

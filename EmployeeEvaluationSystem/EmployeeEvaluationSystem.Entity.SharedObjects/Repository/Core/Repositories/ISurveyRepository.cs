@@ -18,6 +18,12 @@ namespace EmployeeEvaluationSystem.Entity.SharedObjects.Repository.Core.Reposito
 
         PendingSurvey GetPendingSurvey(string userId, Guid pendingSurveyId);
 
+        ICollection<PendingSurvey> GetAllSurveysForUser(string userId);
+
+        ICollection<PendingSurvey> GetPendingSurveysForUser(string userId);
+
+        ICollection<PendingSurvey> GetFinishedSurveysForUser(string userId);
+
         PendingSurvey GetPendingSurveySYSTEM(Guid pendingSurveyId);
 
         UserSurveyRole GetUserSurveyRole(int roleID);
