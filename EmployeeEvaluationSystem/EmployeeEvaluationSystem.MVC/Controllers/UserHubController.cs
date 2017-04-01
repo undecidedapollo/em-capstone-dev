@@ -13,11 +13,12 @@ using Microsoft.AspNet.Identity;
 
 namespace EmployeeEvaluationSystem.MVC.Controllers
 {
+    [Authorize(Roles = "Employee")]
     public class UserHubController : Controller
     {
 
         // GET: UserHub
-        public ActionResult Index()
+        public ActionResult Index(Guid? pendingSurveyID, int? categoryID)
         {
             var userId = User?.Identity?.GetUserId();
 
@@ -28,6 +29,26 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
                     PendingSurveys = unitOfWork.Surveys.GetPendingSurveysForUser(userId),
                     FinishedSurveys = unitOfWork.Surveys.GetFinishedSurveysForUser(userId)
                 };
+
+                if (pendingSurveyID != null)
+                {
+                    ViewBag.PendingSurveyID = pendingSurveyID.Value;
+
+                    var pendingSurvey = unitOfWork.Surveys.GetPendingSurvey(userId, pendingSurveyID.Value);
+
+                    var surveyInstanceID = pendingSurvey.SurveyInstanceID;
+
+                    var categories = pendingSurvey.SurveysAvailable.Survey.Categories;
+
+                    viewModel.Categories = categories;
+
+                    if (categoryID != null)
+                    {
+                        ViewBag.CategoryID = categoryID.Value;
+
+                        viewModel.Questions = unitOfWork.Surveys.GetQuestionsAndPreviousResponsesForCategoryInSurveyInstance(categoryID.Value, surveyInstanceID.Value);
+                    }
+                }
 
                 return View(viewModel);
             }
