@@ -115,6 +115,7 @@ namespace EmployeeEvaluationSystem.MVC
             manager.UserLockoutEnabledByDefault = true;
             manager.DefaultAccountLockoutTimeSpan = TimeSpan.FromMinutes(5);
             manager.MaxFailedAccessAttemptsBeforeLockout = 5;
+            
 
 
             manager.EmailService = SendgridEmailService.GetInstance();

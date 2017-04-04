@@ -638,7 +638,16 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
                 ModelState.AddModelError("", error);
         }
 
-        private ActionResult RedirectToLocal(string userId, string returnUrl)
+        [Authorize]
+        public ActionResult RedirectToAppropriatePage(string userId, string returnUrl)
+        {
+            var user = userId ?? User.Identity.GetUserId();
+
+            return RedirectToLocal(userId, returnUrl);
+        }
+
+
+        public ActionResult RedirectToLocal(string userId, string returnUrl)
         {
 
             using (var unitOfWork = new UnitOfWork())

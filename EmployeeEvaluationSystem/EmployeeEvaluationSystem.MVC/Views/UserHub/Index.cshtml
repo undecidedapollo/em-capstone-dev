@@ -38,7 +38,7 @@
             @Html.DisplayFor(modelItem => item.SurveysAvailable.DateClosed)
         </td>
         <td>
-            <input type="button" value="Start Survey" onclick="window.location.href='@Url.Action("StartSurvey", "Survey", new { pendingSurveyId = item.Id })';" />
+            <input type="button" value="Start Survey" onclick="window.location.href='@Url.Action("SurveyPage", "Survey", new { pendingSurveyId = item.Id })';" />
         </td>
     </tr>
 }

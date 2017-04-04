@@ -50,12 +50,13 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
         {
             var identityUserId = User?.Identity?.GetUserId();
 
-            if(identityUserId == null)
+            if (identityUserId == null)
             {
                 if (userId == null && email != null)
                 {
-                    
-                }if(userId != null && email == null)
+
+                }
+                if (userId != null && email == null)
                 {
                     using (var unitOfWork = new UnitOfWork())
                     {
@@ -66,7 +67,8 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
 
                     var user = this.UserManager.FindById(userId) ?? throw new UnauthorizedAccessException();
                     this.SignInManager.SignIn(user, true, false);
-                }else
+                }
+                else
                 {
                     throw new UnauthorizedAccessException();
                 }
@@ -193,54 +195,59 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
 
                 var surveyInstance = unitOfWork.Surveys.GetSurveyInstanceByIdSYSTEM(model.SurveyInstanceId);
 
-                try
+                var hasShownRequired = false;
+
+                if (model.BackOnePage == false)
                 {
-                    var hasShownRequired = false;
-
-
-                    foreach (var qa in model.Questions)
+                    try
                     {
-                        if (qa?.Answer?.ResponseNum == null)
+                        foreach (var qa in model.Questions)
                         {
-                            var isRequired = unitOfWork.Surveys.IsQuestionRequired(qa?.Question?.Id ?? throw new Exception());
-
-                            if (isRequired)
+                            if (qa?.Answer?.ResponseNum == null)
                             {
-                                if (!hasShownRequired)
+                                var isRequired = unitOfWork.Surveys.IsQuestionRequired(qa?.Question?.Id ?? throw new Exception());
+
+                                if (isRequired)
                                 {
-                                    ModelState.AddModelError("", "All required questions must be answered.");
-                                    hasShownRequired = true;
+                                    if (!hasShownRequired)
+                                    {
+                                        hasShownRequired = true;
+                                    }
+
                                 }
-                                
+
+                                continue;
                             }
 
-                            continue;
+                            var newAnswerInstanceModel = new CreateAnswerInstanceModel
+                            {
+                                RatingResponse = qa.Answer.ResponseNum ?? -1
+                            };
+
+                            unitOfWork.Surveys.AddAnswerInstanceToSurveyInstance(model.SurveyInstanceId, qa.Question.Id, newAnswerInstanceModel);
                         }
 
-                        var newAnswerInstanceModel = new CreateAnswerInstanceModel
-                        {
-                            RatingResponse = qa.Answer.ResponseNum ?? -1
-                        };
+                        unitOfWork.Complete();
 
-                        unitOfWork.Surveys.AddAnswerInstanceToSurveyInstance(model.SurveyInstanceId, qa.Question.Id, newAnswerInstanceModel);
                     }
+                    catch (Exception e)
+                    {
+                        ModelState.AddModelError("", "There was an error saving the answer's to your survey. Please correct any mistakes and try again!");
+                        return View(model);
+                    }
+                }
 
-                    unitOfWork.Complete();
-                }
-                catch(Exception e)
-                {
-                    ModelState.AddModelError("", "There was an error saving the answer's to your survey. Please correct any mistakes and try again!");
-                    return View(model);
-                }
-               
+
+
+
 
                 Category nextCategory = null;
 
-                if(model?.Category?.Id == null)
+                if (model?.Category?.Id == null)
                 {
                     nextCategory = unitOfWork.Surveys.GetLastCategory(surveyInstance.SurveyID);
                 }
-                else if(model.BackOnePage)
+                else if (model.BackOnePage)
                 {
                     nextCategory = unitOfWork.Surveys.GetPreviousCategory(model.Category.Id);
                 }
@@ -250,11 +257,21 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
                 }
 
 
-               
 
-                if(nextCategory == null)
+
+                if (nextCategory == null)
                 {
                     return RedirectToAction("EndSurvey", new { SurveyInstanceId = model.SurveyInstanceId, penSurveyId = model.PendingSurveyId, statGuid = model.StatusGuid });
+                }
+
+
+                ModelState.Clear();
+
+
+                if (hasShownRequired)
+                {
+                    ModelState.AddModelError("", "All required questions must be answered.");
+
                 }
 
 
@@ -268,7 +285,7 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
                     PendingSurveyId = model.PendingSurveyId,
                     StatusGuid = theSurvey.StatusGuid ?? Guid.NewGuid(),
                     Category = CategoryViewModel.Convert(nextCategory),
-                    Questions = alreadyAnsweredQuestions.Select(x => new QuestionAnswerViewModel { Question = QuestionViewModel.Convert(x.Item1), Answer = new AnswerViewModel { ResponseNum = x?.Item2?.ResponseNum ?? null} }).ToList()
+                    Questions = alreadyAnsweredQuestions.Select(x => new QuestionAnswerViewModel { Question = QuestionViewModel.Convert(x.Item1), Answer = new AnswerViewModel { ResponseNum = x?.Item2?.ResponseNum ?? null } }).ToList()
                 };
                 ModelState.Remove("Category.Id");
                 ModelState.Remove("BackOnePage");
@@ -360,7 +377,7 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
 
         public ActionResult SaveSurvey(int? SurveyInstanceId, Guid penSurveyId, Guid statGuid)
         {
-            if(SurveyInstanceId == null)
+            if (SurveyInstanceId == null)
             {
                 throw new Exception();
             }

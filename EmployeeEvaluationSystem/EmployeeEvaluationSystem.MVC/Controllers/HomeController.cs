@@ -25,7 +25,7 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
                 ViewBag.NumUsers = numUsers;
             }
 
-            return View();
+            return RedirectToAction("RedirectToLocal", "Account");
         }
 
         public ActionResult About()
