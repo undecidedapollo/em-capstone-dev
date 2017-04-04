@@ -61,7 +61,6 @@ namespace EmployeeEvaluationSystem.Entity.SharedObjects.Repository.Core.Reposito
         AnswerInstance AddAnswerInstanceToSurveyInstance(Guid pendingSurveyId, int questionId, CreateAnswerInstanceModel model);
 
         AnswerInstance AddAnswerInstanceToSurveyInstance(int surveyInstanceId, int questionId, CreateAnswerInstanceModel model);
-
         
         Category GetCategory(int categoryId);
 
@@ -93,7 +92,8 @@ namespace EmployeeEvaluationSystem.Entity.SharedObjects.Repository.Core.Reposito
 
         bool FinishSurvey(int surveyInstanceId, Guid? statusGuid = null);
 
+        SurveyType GetNextAvailableSurveyTypeForSurveyInCohort(int surveyId, int cohortId);
 
-
+        bool HaveAllSurveysBeenCompleted(int cohortId, int surveyAvailableToId);
     }
 }

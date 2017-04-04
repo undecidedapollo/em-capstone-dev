@@ -526,5 +526,66 @@ namespace EmployeeEvaluationSystem.Entity.SharedObjects.Repository.EF6.Repositor
             pendingSurvey.DateFinished = DateTime.UtcNow;
             return true;
         }
+
+        public SurveyType GetNextAvailableSurveyTypeForSurveyInCohort(int surveyId, int cohortId)
+        {
+            var lastSurvey = this.dbcontext.SurveysAvailables.Where(x => x.SurveyID == surveyId && x.CohortID == cohortId && x.IsDeleted == false).OrderByDescending(x => x.ID);
+
+
+            var theType = this.dbcontext.SurveyTypes.Where(x => x.ID > lastSurvey.FirstOrDefault().SurveyTypeId).OrderBy(x => x.ID).FirstOrDefault();
+
+            if(theType == null)
+            {
+                theType = this.dbcontext.SurveyTypes.OrderBy(x => x.ID).FirstOrDefault();
+            }
+
+            return theType;
+        }
+
+        public bool HaveAllSurveysBeenCompleted(int cohortId, int surveyAvailableToId)
+        {
+            var surveyAvailable = this.dbcontext.SurveysAvailables.Include(x => x.SurveysAvailableToes).FirstOrDefault(x => x.ID == surveyAvailableToId && x.CohortID == cohortId && x.IsDeleted == false);
+
+            var requiredTypes = surveyAvailable.SurveysAvailableToes;
+
+            var usersToTakeSurveys = this.dbcontext.CohortUsers.Where(x => x.CohortID == cohortId);
+
+            var takenSurveys = this.dbcontext.PendingSurveys.Where(x => x.SurveyAvailToMeID == surveyAvailableToId && x.IsDeleted == false && x.SurveyInstance != null && x.SurveyInstance.DateFinished != null);
+
+            var surveysForUsers = takenSurveys.GroupBy(x => x.UserSurveyForId);
+            var surveysForTypes = surveysForUsers.Select(y => new { Key = y.Key, Counts = y.GroupBy(z => z.UserSurveyRoleID).Select(z => new { Key = z.Key, Count = z.Count() }) }).ToList();
+
+
+            foreach(var user in usersToTakeSurveys)
+            {
+                var userID = user.UserID;
+
+                var correspondingUser = surveysForTypes?.FirstOrDefault(x => x.Key == userID);
+
+                if(correspondingUser == null)
+                {
+                    return false;
+                }
+
+                foreach(var type in requiredTypes)
+                {
+                    var id = type.ID;
+
+                    var correspondingType = correspondingUser?.Counts?.FirstOrDefault(x => x.Key == id);
+
+                    if(correspondingType == null)
+                    {
+                        return false;
+                    }
+
+                    if(correspondingType.Count != type.Quantity)
+                    {
+                        return false;
+                    }
+                }
+            }
+
+            return true;
+        }
     }
 }

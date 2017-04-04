@@ -412,5 +412,15 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
         }
 
 
+        public ActionResult Test(int surveyId, int cohortId)
+        {
+            using(var unitOfWork = new UnitOfWork())
+            {
+                var nextSuveyType = unitOfWork.Surveys.GetNextAvailableSurveyTypeForSurveyInCohort(surveyId, cohortId);
+
+                return null;
+            }
+        }
+
     }
 }
