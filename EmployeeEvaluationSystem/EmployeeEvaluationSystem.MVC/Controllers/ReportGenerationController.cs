@@ -10,6 +10,9 @@ using iTextSharp.text.html.simpleparser;
 using System.Web.Mvc;
 using EmployeeEvaluationSystem.Entity;
 using Microsoft.AspNet.Identity;
+using EmployeeEvaluationSystem.Entity.SharedObjects.Repository.EF6;
+using EmployeeEvaluationSystem.Entity.SharedObjects.Model.Authentication;
+using EmployeeEvaluationSystem.MVC.Models;
 
 namespace EmployeeEvaluationSystem.MVC.Controllers
 {
@@ -42,8 +45,23 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
 
         public ActionResult Create()
         {
-            return View();
+
+            var userId = User?.Identity?.GetUserId();
+
+            using (var unitOfWork = new UnitOfWork())
+            {
+                
+
+                var viewModel = new ReportGenerationViewModel()
+                {
+                   
+                };
+
+                return View(viewModel);
+            }
         }
+
+
         public int GetRating(int id)
         {
             var userId = User?.Identity?.GetUserId();
