@@ -483,9 +483,19 @@ namespace EmployeeEvaluationSystem.Entity.SharedObjects.Repository.EF6.Repositor
                 .ToList().Select(x => Tuple.Create(x.Question, x.Answer)).ToList();
         }
 
+        public ICollection<Survey> GetAllSurveys(string currentUserID)
+        {
+            return this.dbcontext.Surveys.ToList();
+        }
+
         public ICollection<PendingSurvey> GetAllSurveysForUser(string userId)
         {
             return this.dbcontext.PendingSurveys.Where(x => x.UserTakenById == userId && x.IsDeleted == false).ToList();
+        }
+
+        public ICollection<SurveyType> GetAllSurveyTypes(string currentUserID)
+        {
+            return this.dbcontext.SurveyTypes.ToList();
         }
 
         public ICollection<PendingSurvey> GetPendingSurveysForUser(string userId)

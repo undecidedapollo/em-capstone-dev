@@ -1,7 +1,21 @@
-﻿
+﻿@model EmployeeEvaluationSystem.MVC.Models.StartEvaluationViewModel
 @{
     ViewBag.Title = "StartEvaluation";
 }
 
-<h2>StartEvaluation</h2>
+<h2>Start Evaluation</h2>
 
+@foreach (var surveyItem in Model.Surveys)
+{
+<table class="table">
+    <caption>@surveyItem.Name Evaluations</caption>
+    <tr>
+        @foreach (var surveyTypeItem in Model.SurveyTypes)
+        {
+        <th>
+                @Html.ActionLink(surveyTypeItem.Name, null, null, htmlAttributes: new { @class = "btn btn-success btn-sm" })
+        </th>
+        }
+    </tr>
+</table>
+}

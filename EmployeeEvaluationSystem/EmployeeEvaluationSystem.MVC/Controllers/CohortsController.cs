@@ -149,6 +149,32 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
             return RedirectToAction("SendEmailConfirmationTokenAsync", "Account", new { subject = "Confirm Email" });
         }
 
+        // GET: Cohort/StartEvaluation/5
+        public ActionResult StartEvaluation(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+
+            var userId = User?.Identity?.GetUserId();
+
+            using (var unitOfWork = new UnitOfWork())
+            {
+                var surveys = unitOfWork.Surveys.GetAllSurveys(userId);
+
+                var surveyTypes = unitOfWork.Surveys.GetAllSurveyTypes(userId);
+
+                var model = new StartEvaluationViewModel()
+                {
+                    Surveys = surveys,
+                    SurveyTypes = surveyTypes
+                };
+
+                return View(model);
+            }
+        }
+
         // GET: Cohort/Edit/5
         public ActionResult Edit(int? id)
         {
