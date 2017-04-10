@@ -2,9 +2,12 @@
 @using EmployeeEvaluationSystem.MVC.Helpers.Request
 @model EmployeeEvaluationSystem.MVC.Models.Survey.RatersPageViewModel
 
+<h3>Choose your Raters</h3>
 
+<p>Please enter the email address' of the raters that you would like below.</p>
 
-Please enter the email address' of the raters that you would like below. 
+<br />
+<hr />
 
 @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "ratersForm" }))
 {
@@ -32,6 +35,7 @@ Please enter the email address' of the raters that you would like below.
 
                 </div>
             </div>
+            <hr />
         }
 
         <div class="form-group">

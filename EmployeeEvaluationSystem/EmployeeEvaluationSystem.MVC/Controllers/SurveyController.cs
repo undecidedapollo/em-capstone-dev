@@ -57,7 +57,7 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
                 {
 
                 }
-                if (userId != null && email == null)
+                else if (userId != null && email == null)
                 {
                     using (var unitOfWork = new UnitOfWork())
                     {
@@ -401,7 +401,7 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
 
                         var pendingSurver = unitOfWork.Surveys.GetPendingSurveySYSTEM(penSurveyId);
 
-                        if(pendingSurver == null || pendingSurver.UserTakenById != userId)
+                        if(pendingSurver == null || pendingSurver.UserTakenById == null || pendingSurver.UserTakenById != userId)
                         {
                             return RedirectToAction("SurveyDone");
                         }

@@ -71,6 +71,12 @@
         <td>
             <strong>Due Date</strong>
         </td>
+        <td>
+
+        </td>
+        <td>
+
+        </td>
     </tr>
 
     foreach (var item in Model.FinishedSurveys)
@@ -87,6 +93,9 @@
             </td>
             <td>
                 @Html.ActionLink("Show Categories", "Index", new { pendingSurveyID = item.Id })
+            </td>
+            <td>
+                @Html.ActionLink("View Raters", "ChooseRaters", "Survey", new { penSurveyId = item.Id }, null)
             </td>
         </tr>
     }
