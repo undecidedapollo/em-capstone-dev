@@ -259,6 +259,8 @@
     <Compile Include="Models\Survey\QuestionAnswerViewModel.cs" />
     <Compile Include="Models\Survey\QuestionTypeViewModel.cs" />
     <Compile Include="Models\Survey\QuestionViewModel.cs" />
+    <Compile Include="Models\Survey\RatersPageViewModel.cs" />
+    <Compile Include="Models\Survey\RaterViewModel.cs" />
     <Compile Include="Models\Survey\SurveyPageViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="App_Start\Startup.cs" />
@@ -369,6 +371,7 @@
     <Content Include="Views\Survey\SurveyError.cshtml" />
     <Content Include="Views\Survey\SurveyMissingItems.cshtml" />
     <Content Include="Views\Survey\SurveyDone.cshtml" />
+    <Content Include="Views\Survey\ChooseRaters.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

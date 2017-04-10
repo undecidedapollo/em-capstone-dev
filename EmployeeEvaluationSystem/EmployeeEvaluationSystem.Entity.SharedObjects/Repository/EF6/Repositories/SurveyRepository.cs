@@ -597,5 +597,30 @@ namespace EmployeeEvaluationSystem.Entity.SharedObjects.Repository.EF6.Repositor
 
             return true;
         }
+
+        public ICollection<PendingSurvey> GetPendingSurveysOfRatersForUser(string userId, Guid pendingSurveyId)
+        {
+            var originalPendingSurvey = this.GetPendingSurvey(userId, pendingSurveyId);
+
+            var theId = originalPendingSurvey.SurveyAvailToMeID;
+
+            return this.dbcontext.PendingSurveys.Where(x => x.SurveyAvailToMeID == theId && x.UserSurveyForId == userId && x.UserTakenById != userId).Include(x => x.SurveyInstance).Include(x => x.SurveysAvailable).Include(x => x.UserSurveyRole).ToList();
+        }
+
+        public void TryRemovePendingSurveysSYSTEM(ICollection<PendingSurvey> surveys)
+        {
+            foreach(var survey in surveys)
+            {
+                this.dbcontext.PendingSurveys.Remove(survey);
+            }
+        }
+
+        public void TryToAddPendingSurveysSYSTEM(ICollection<PendingSurvey> surveys)
+        {
+            foreach (var survey in surveys)
+            {
+                this.dbcontext.PendingSurveys.Add(survey);
+            }
+        }
     }
 }

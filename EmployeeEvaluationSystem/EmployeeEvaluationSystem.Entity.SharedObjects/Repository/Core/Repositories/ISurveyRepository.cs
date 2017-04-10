@@ -24,6 +24,8 @@ namespace EmployeeEvaluationSystem.Entity.SharedObjects.Repository.Core.Reposito
 
         ICollection<SurveyType> GetAllSurveyTypes(string currentUserID);
 
+        ICollection<PendingSurvey> GetPendingSurveysOfRatersForUser(string userId, Guid pendingSurveyId);
+
         ICollection<PendingSurvey> GetPendingSurveysForUser(string userId);
 
         ICollection<PendingSurvey> GetFinishedSurveysForUser(string userId);
@@ -99,5 +101,9 @@ namespace EmployeeEvaluationSystem.Entity.SharedObjects.Repository.Core.Reposito
         SurveyType GetNextAvailableSurveyTypeForSurveyInCohort(int surveyId, int cohortId);
 
         bool HaveAllSurveysBeenCompleted(int cohortId, int surveyAvailableToId);
+
+        void TryRemovePendingSurveysSYSTEM(ICollection<PendingSurvey> surveys);
+
+        void TryToAddPendingSurveysSYSTEM(ICollection<PendingSurvey> surveys);
     }
 }

@@ -51,6 +51,7 @@
   <ItemGroup>
     <Compile Include="Dependency\DependencyType.cs" />
     <Compile Include="Enums\QuestionTypeEnum.cs" />
+    <Compile Include="Enums\SurveyRoleEnum.cs" />
     <Compile Include="Exceptions\Collections\ItemNotFoundException.cs" />
     <Compile Include="Exceptions\EESException.cs" />
     <Compile Include="Exceptions\Lock\DBLockException.cs" />
