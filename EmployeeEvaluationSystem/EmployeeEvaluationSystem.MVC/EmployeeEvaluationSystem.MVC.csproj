@@ -262,6 +262,7 @@
     <Compile Include="Models\CSVEmployeeViewModel.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
+    <Compile Include="Models\RaterQuantityViewModel.cs" />
     <Compile Include="Models\ReportGenerationViewModel.cs" />
     <Compile Include="Models\StartEvaluationViewModel.cs" />
     <Compile Include="Models\Survey\AnswerViewModel.cs" />

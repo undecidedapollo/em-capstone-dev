@@ -11,6 +11,7 @@ using Microsoft.AspNet.Identity.Owin;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 
@@ -533,7 +534,7 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
 
         [Authorize]
         [HttpPost]
-        public ActionResult ChooseRaters(RatersPageViewModel theModel)
+        public async Task<ActionResult> ChooseRaters(RatersPageViewModel theModel)
         {
             var userId = User?.Identity?.GetUserId() ?? throw new UnauthorizedAccessException();
 
@@ -651,6 +652,27 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
                 }
 
                 unitOfWork.Complete();
+
+
+                foreach(var rater in ratersToAdd)
+                {
+                    var scheme = Request?.Url?.Scheme ?? passedInRequest.Url.Scheme;
+                    var hostname = Request?.Url?.Host ?? passedInRequest.Url.Host;
+
+                    if ((Request?.Url?.Port ?? passedInRequest.Url.Port) != 80 || (Request?.Url?.Port ?? passedInRequest.Url.Port) != 43)
+                    {
+                        hostname += ":" + (Request?.Url?.Port ?? passedInRequest.Url.Port);
+                    }
+
+                    var theUrl = $"{scheme}://{hostname}/Survey/StartSurvey?pendingSurveyId={rater.Id}&email={rater.Email}";
+
+                    await SendgridEmailService.GetInstance().SendAsync(
+                        new IdentityMessage {
+                            Destination = rater.Email,
+                            Subject = $"Employee Survey, regarding {currentUser.FirstName + " " + currentUser.LastName}",
+                            Body = $"There is a pending survey waiting for you to take regarding {currentUser.FirstName + " " + currentUser.LastName}. Please click the link to take the survey: <a href=\"" + theUrl + "\">Survey</a>"
+                        });
+                }
 
                 return RedirectToAction("ChooseRaters", new { penSurveyId = theModel.PendingSurveyId });
             }

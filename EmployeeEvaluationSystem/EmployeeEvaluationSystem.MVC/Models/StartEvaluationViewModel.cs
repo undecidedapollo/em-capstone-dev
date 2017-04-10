@@ -10,6 +10,7 @@ namespace EmployeeEvaluationSystem.MVC.Models
     {
         public ICollection<EmployeeEvaluationSystem.Entity.Survey> Surveys { get; set; }
         public ICollection<SurveyType> SurveyTypes { get; set; }
+        public IList<RaterQuantityViewModel> RoleQuantities { get; set; }
         public DateTime DateOpen { get; set; }
         public DateTime DateClosed { get; set; }
     }

@@ -31,6 +31,7 @@
                     else
                     {
                         @(Model.Raters[i].Email)
+                        @Html.HiddenFor(x => x.Raters[i].Email)
                     }
 
                 </div>

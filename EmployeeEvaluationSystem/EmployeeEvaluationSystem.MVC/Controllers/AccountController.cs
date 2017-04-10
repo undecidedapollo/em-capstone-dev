@@ -650,6 +650,9 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
         public ActionResult RedirectToLocal(string userId, string returnUrl)
         {
 
+            userId = userId ?? User?.Identity?.GetUserId();
+
+
             using (var unitOfWork = new UnitOfWork())
             {
                 if (Url.IsLocalUrl(returnUrl))

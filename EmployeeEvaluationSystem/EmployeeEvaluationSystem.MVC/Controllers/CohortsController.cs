@@ -13,6 +13,7 @@ using EmployeeEvaluationSystem.Entity.SharedObjects.Repository.EF6;
 using EmployeeEvaluationSystem.MVC.Models;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
+using EmployeeEvaluationSystem.SharedObjects.Enums;
 
 namespace EmployeeEvaluationSystem.MVC.Controllers
 {
@@ -165,10 +166,21 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
 
                 var surveyTypes = unitOfWork.Surveys.GetAllSurveyTypes(userId);
 
+                var roleTypes = unitOfWork.Surveys.GetUserSurveyRoles();
+
+
+
+
                 var model = new StartEvaluationViewModel()
                 {
                     Surveys = surveys,
-                    SurveyTypes = surveyTypes
+                    SurveyTypes = surveyTypes,
+                    RoleQuantities = roleTypes.Select(x => new RaterQuantityViewModel {
+                        Id = x.ID,
+                        DisplayName = x.Name,
+                        Quantity = x.ID == Convert.ToInt32(SurveyRoleEnum.SELF) ? 1 : 0,
+                        CanChange = x.ID == Convert.ToInt32(SurveyRoleEnum.SELF) ? false : true }
+                    ).ToList()
                 };
 
                 return View(model);

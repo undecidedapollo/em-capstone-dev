@@ -32,6 +32,8 @@ namespace EmployeeEvaluationSystem.Entity.SharedObjects.Repository.Core.Reposito
 
         PendingSurvey GetPendingSurveySYSTEM(Guid pendingSurveyId);
 
+        ICollection<UserSurveyRole> GetUserSurveyRoles();
+
         UserSurveyRole GetUserSurveyRole(int roleID);
 
         Survey GetSurvey(string userId, int surveyId);

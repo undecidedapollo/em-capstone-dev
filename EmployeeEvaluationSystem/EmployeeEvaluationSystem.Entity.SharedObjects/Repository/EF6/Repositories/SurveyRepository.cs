@@ -330,6 +330,11 @@ namespace EmployeeEvaluationSystem.Entity.SharedObjects.Repository.EF6.Repositor
             return this.dbcontext.UserSurveyRoles.FirstOrDefault(x => x.ID == roleID && x.IsDeleted == false);
         }
 
+        public ICollection<UserSurveyRole> GetUserSurveyRoles()
+        {
+            return this.dbcontext.UserSurveyRoles.Where(x => x.IsDeleted == false).ToList();
+        }
+
         public AnswerInstance AddAnswerInstanceToSurveyInstance(Guid pendingSurveyId, int questionId, CreateAnswerInstanceModel model)
         {
             var theId = this.GetPendingSurveySYSTEM(pendingSurveyId);
