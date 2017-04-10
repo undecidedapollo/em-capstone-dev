@@ -247,7 +247,6 @@
     <Compile Include="Controllers\CohortsController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
-    <Compile Include="Controllers\PermissionsController.cs" />
     <Compile Include="Controllers\ReportGenerationController.cs" />
     <Compile Include="Controllers\SurveyController.cs" />
     <Compile Include="Controllers\UserHubController.cs" />
