@@ -54,6 +54,14 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\lib\EffectiveDependency v0.2.0-alpha1\EffectiveDependency.dll</HintPath>
     </Reference>
+    <Reference Include="itextsharp, Version=5.5.10.0, Culture=neutral, PublicKeyToken=8354ae6d2174ddca, processorArchitecture=MSIL">
+      <HintPath>..\packages\iTextSharp.5.5.10\lib\itextsharp.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="itextsharp.xmlworker, Version=5.5.10.0, Culture=neutral, PublicKeyToken=8354ae6d2174ddca, processorArchitecture=MSIL">
+      <HintPath>..\packages\itextsharp.xmlworker.5.5.10\lib\itextsharp.xmlworker.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="LumenWorks.Framework.IO, Version=3.9.1.0, Culture=neutral, PublicKeyToken=5ad3ea2f85776344, processorArchitecture=MSIL">
       <HintPath>..\packages\LumenWorksCsvReader.3.9.1\lib\net20\LumenWorks.Framework.IO.dll</HintPath>
       <Private>True</Private>
@@ -239,6 +247,8 @@
     <Compile Include="Controllers\CohortsController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
+    <Compile Include="Controllers\PermissionsController.cs" />
+    <Compile Include="Controllers\ReportGenerationController.cs" />
     <Compile Include="Controllers\SurveyController.cs" />
     <Compile Include="Controllers\UserHubController.cs" />
     <Compile Include="Global.asax.cs">
@@ -253,6 +263,7 @@
     <Compile Include="Models\CSVEmployeeViewModel.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
+    <Compile Include="Models\ReportGenerationViewModel.cs" />
     <Compile Include="Models\StartEvaluationViewModel.cs" />
     <Compile Include="Models\Survey\AnswerViewModel.cs" />
     <Compile Include="Models\Survey\CategoryViewModel.cs" />
@@ -361,6 +372,8 @@
     <Content Include="Views\Cohorts\Edit.cshtml" />
     <Content Include="Views\Cohorts\Index.cshtml" />
     <Content Include="Views\Survey\StartSurvey.cshtml" />
+    <Content Include="Views\ReportGeneration\Index.cshtml" />
+    <Content Include="Views\ReportGeneration\Create.cshtml" />
     <Content Include="Views\Account\EmailSent.cshtml" />
     <Content Include="Views\Survey\ContinueSurvey.cshtml" />
     <Content Include="Views\Survey\SurveyPage.cshtml" />
