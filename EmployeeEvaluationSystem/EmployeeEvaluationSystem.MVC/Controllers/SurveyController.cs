@@ -11,6 +11,7 @@ using Microsoft.AspNet.Identity.Owin;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
@@ -402,18 +403,18 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
 
                         var pendingSurver = unitOfWork.Surveys.GetPendingSurveySYSTEM(penSurveyId);
 
-                        if(pendingSurver == null || pendingSurver.UserTakenById == null || pendingSurver.UserTakenById != userId)
+                        if (pendingSurver == null || pendingSurver.UserTakenById == null || pendingSurver.UserTakenById != userId)
                         {
                             return RedirectToAction("SurveyDone");
                         }
                         else
                         {
-                            return RedirectToAction("ChooseRaters", new { penSurveyId=penSurveyId });
+                            return RedirectToAction("ChooseRaters", new { penSurveyId = penSurveyId });
                         }
 
 
 
-                        
+
                     }
                     else
                     {
@@ -441,7 +442,7 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
 
                 var pendingSurvey = unitOfWork.Surveys.GetPendingSurvey(userId, penSurveyId);
 
-                if(pendingSurvey.UserSurveyForId != userId && pendingSurvey.UserSurveyRoleID != Convert.ToInt32(SurveyRoleEnum.SELF))
+                if (pendingSurvey.UserSurveyForId != userId && pendingSurvey.UserSurveyRoleID != Convert.ToInt32(SurveyRoleEnum.SELF))
                 {
                     throw new UnauthorizedAccessException();
                 }
@@ -465,18 +466,20 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
                     PendingSurveyId = penSurveyId
                 };
 
-                foreach(var rater in theRaters)
+                foreach (var rater in theRaters)
                 {
 
                     var canChange = true;
+                    var resendEmail = true;
                     var status = "Not Started";
 
-                    if(rater.SurveyInstance != null)
+                    if (rater.SurveyInstance != null)
                     {
                         canChange = false;
                         if (rater.SurveyInstance.DateFinished != null)
                         {
                             status = "Survey Finished";
+                            resendEmail = false;
                         }
                         else
                         {
@@ -492,27 +495,28 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
                         RoleId = rater.UserSurveyRole.ID,
                         Status = status,
                         CanChange = canChange,
-                        Id = rater.Id
+                        Id = rater.Id,
+                        CanResendEmail = resendEmail
                     };
 
                     viewModel.Raters.Add(newRater);
                 }
 
-                foreach(var aRater in expectedRaters)
+                foreach (var aRater in expectedRaters)
                 {
 
-                    if(aRater.UserSurveyRoleId == Convert.ToInt32(SurveyRoleEnum.SELF))
+                    if (aRater.UserSurveyRoleId == Convert.ToInt32(SurveyRoleEnum.SELF))
                     {
                         continue;
                     }
 
                     var count = viewModel.Raters.Count(x => x.RoleId == aRater.UserSurveyRoleId);
 
-                    if(count < aRater.Quantity)
+                    if (count < aRater.Quantity)
                     {
                         var diff = aRater.Quantity - count;
 
-                        for(var i = 0; i < diff; i++)
+                        for (var i = 0; i < diff; i++)
                         {
                             var newRater = new RaterViewModel
                             {
@@ -520,7 +524,8 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
                                 Email = null,
                                 Role = aRater.UserSurveyRole.Name,
                                 RoleId = aRater.UserSurveyRole.ID,
-                                Status = "New Rater"
+                                Status = "New Rater",
+                                CanResendEmail = false
                             };
 
                             viewModel.Raters.Add(newRater);
@@ -531,6 +536,7 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
                 return View(viewModel);
             }
         }
+
 
         [Authorize]
         [HttpPost]
@@ -557,7 +563,7 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
 
                 var theRaters = unitOfWork.Surveys.GetPendingSurveysOfRatersForUser(userId, theModel.PendingSurveyId);
 
-                
+
 
 
                 var visitedRaters = new List<PendingSurvey>();
@@ -574,14 +580,14 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
 
                 if (hasDuplicates)
                 {
-                    return RedirectToAction("ChooseRaters", new { penSurveyId = theModel.PendingSurveyId, error= "All emails must be unique" });
+                    return RedirectToAction("ChooseRaters", new { penSurveyId = theModel.PendingSurveyId, error = "All emails must be unique" });
                 }
 
                 var isSameEmailAsUser = theModel.Raters.Any(x => x.Email == currentUser.Email);
 
                 if (isSameEmailAsUser)
                 {
-                    return RedirectToAction("ChooseRaters", new { penSurveyId = theModel.PendingSurveyId, error= "You cannot use the same email as your own. Please put in other user's emails." });
+                    return RedirectToAction("ChooseRaters", new { penSurveyId = theModel.PendingSurveyId, error = "You cannot use the same email as your own. Please put in other user's emails." });
                 }
                 foreach (var rater in theModel.Raters)
                 {
@@ -605,13 +611,13 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
                     }
                     else
                     {
-                        if(realRater.Email == rater.Email)
+                        if (realRater.Email == rater.Email)
                         {
                             visitedRaters.Add(realRater);
                             continue;
                         }
 
-                        if(realRater.SurveyInstance != null)
+                        if (realRater.SurveyInstance != null)
                         {
                             visitedRaters.Add(realRater);
                             continue;
@@ -641,11 +647,11 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
                 unitOfWork.Surveys.TryRemovePendingSurveysSYSTEM(toRemove.Distinct().ToList());
                 unitOfWork.Surveys.TryToAddPendingSurveysSYSTEM(ratersToAdd);
 
-                foreach(var rater in expectedRaters)
+                foreach (var rater in expectedRaters)
                 {
                     var count = visitedRaters.Count(x => x.UserSurveyRoleID == rater.UserSurveyRoleId) + ratersToAdd.Count(x => x.UserSurveyRoleID == rater.UserSurveyRoleId);
 
-                    if(count > rater.Quantity)
+                    if (count > rater.Quantity)
                     {
                         throw new Exception("There are too many raters of a particular type.");
                     }
@@ -654,7 +660,7 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
                 unitOfWork.Complete();
 
 
-                foreach(var rater in ratersToAdd)
+                foreach (var rater in ratersToAdd)
                 {
                     var scheme = Request?.Url?.Scheme ?? passedInRequest.Url.Scheme;
                     var hostname = Request?.Url?.Host ?? passedInRequest.Url.Host;
@@ -667,7 +673,8 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
                     var theUrl = $"{scheme}://{hostname}/Survey/StartSurvey?pendingSurveyId={rater.Id}&email={rater.Email}";
 
                     await SendgridEmailService.GetInstance().SendAsync(
-                        new IdentityMessage {
+                        new IdentityMessage
+                        {
                             Destination = rater.Email,
                             Subject = $"Employee Survey, regarding {currentUser.FirstName + " " + currentUser.LastName}",
                             Body = $"There is a pending survey waiting for you to take regarding {currentUser.FirstName + " " + currentUser.LastName}. Please click the link to take the survey: <a href=\"" + theUrl + "\">Survey</a>"
@@ -678,10 +685,47 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
             }
         }
 
+        public async Task<ActionResult> ResendEmail(Guid id)
+        {
+            var userId = User?.Identity?.GetUserId() ?? throw new UnauthorizedAccessException();
+
+            using (var unitOfWork = new UnitOfWork())
+            {
+
+                var pendingSurvey = unitOfWork.Surveys.GetPendingSurvey(userId, id);
+
+                if(pendingSurvey == null || pendingSurvey.Email == null || pendingSurvey?.SurveyInstance?.DateFinished != null)
+                {
+                    return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                }
+
+                var currentUser = unitOfWork.Users.GetUser(userId, userId);
+
+                var scheme = Request?.Url?.Scheme ?? passedInRequest.Url.Scheme;
+                var hostname = Request?.Url?.Host ?? passedInRequest.Url.Host;
+
+                if ((Request?.Url?.Port ?? passedInRequest.Url.Port) != 80 || (Request?.Url?.Port ?? passedInRequest.Url.Port) != 43)
+                {
+                    hostname += ":" + (Request?.Url?.Port ?? passedInRequest.Url.Port);
+                }
+
+                var theUrl = $"{scheme}://{hostname}/Survey/StartSurvey?pendingSurveyId={pendingSurvey.Id}&email={pendingSurvey.Email}";
+
+                await SendgridEmailService.GetInstance().SendAsync(
+                    new IdentityMessage
+                    {
+                        Destination = pendingSurvey.Email,
+                        Subject = $"Employee Survey, regarding {currentUser.FirstName + " " + currentUser.LastName}",
+                        Body = $"There is a pending survey waiting for you to take regarding {currentUser.FirstName + " " + currentUser.LastName}. Please click the link to take the survey: <a href=\"" + theUrl + "\">Survey</a>"
+                    });
+            }
+
+            return new HttpStatusCodeResult(HttpStatusCode.OK);
+        }
 
         public ActionResult Test(int surveyId, int cohortId)
         {
-            using(var unitOfWork = new UnitOfWork())
+            using (var unitOfWork = new UnitOfWork())
             {
                 var nextSuveyType = unitOfWork.Surveys.GetNextAvailableSurveyTypeForSurveyInCohort(surveyId, cohortId);
 

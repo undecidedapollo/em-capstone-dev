@@ -19,5 +19,7 @@ namespace EmployeeEvaluationSystem.MVC.Models.Survey
 
         public Guid Id { get; set; }
 
+        public bool CanResendEmail { get; set; }
+
     }
 }
