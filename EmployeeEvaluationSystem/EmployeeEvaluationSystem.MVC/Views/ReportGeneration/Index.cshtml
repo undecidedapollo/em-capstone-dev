@@ -1,7 +1,7 @@
 ﻿@model IEnumerable<EmployeeEvaluationSystem.MVC.Models.ReportGenerationViewModel>
 @{
     Layout = null;
-    //ViewBag.Title = "Employee";
+    ViewBag.Title = "Employee";
 }
 
 <!DOCTYPE html>
@@ -30,11 +30,13 @@
                 <th style="background-color: lightslategray; border: 2px solid #ccc">Average Supervisees</th>
                 <th style="background-color: lightslategray; border: 2px solid #ccc">Average</th>
             </tr>
-                
+
+
             @foreach (var item in Model)
             {
+
                 <tr>
-                    <td style="width:120px; border: 2px solid #ccc">@item.QuestionId.QuestionID</td>
+                    <td style="width:120px; border: 2px solid #ccc">@item.QuestionId</td>
                     <td style="width:120px; border: 2px solid #ccc">@item.SelfEvaluationResult</td>
                     <td style="width:120px; border: 2px solid #ccc">@item.SupervisorEvaluationResult</td>
                     <td style="width:120px; border: 2px solid #ccc">@item.CoworkerAverage</td>
@@ -42,6 +44,7 @@
                     <td style="width:120px; border: 2px solid #ccc">@item.OverallAverage</td>
                 </tr>
             }
+            
         </table> 
     </div>
     <br/>

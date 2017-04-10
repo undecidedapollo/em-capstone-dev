@@ -13,6 +13,7 @@ using Microsoft.AspNet.Identity;
 using EmployeeEvaluationSystem.Entity.SharedObjects.Repository.EF6;
 using EmployeeEvaluationSystem.Entity.SharedObjects.Model.Authentication;
 using EmployeeEvaluationSystem.MVC.Models;
+using System.Data;
 
 namespace EmployeeEvaluationSystem.MVC.Controllers
 {
@@ -64,8 +65,23 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
 
         public int GetRating(int id)
         {
-            var userId = User?.Identity?.GetUserId();
-            var rating = id;
+            AnswerInstance answer = new AnswerInstance();
+            var rating = 0;
+            if (answer.ID == id)
+            {
+                rating = answer.ResponseNum;
+            }
+            return rating;
+        }
+
+        public double CalculateAverage(int id)
+        {
+            //The id is equivalent to the role value
+            DataTable table = new DataTable();
+            //AnswerInstance answerValue = new AnswerInstance();
+                        
+            var rating = this.GetRating(id);
+           
             return rating;
         }
 
