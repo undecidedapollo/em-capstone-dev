@@ -257,6 +257,7 @@
     <Compile Include="Infrastructure\DependencyHelper.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\Authentication\MultiRegisterResult.cs" />
+    <Compile Include="Models\CohortDetailsViewmodel.cs" />
     <Compile Include="Models\ConfirmEmailViewModel.cs" />
     <Compile Include="Models\CreateCohortViewModel.cs" />
     <Compile Include="Models\CSVEmployeeViewModel.cs" />
@@ -272,7 +273,11 @@
     <Compile Include="Models\Survey\QuestionViewModel.cs" />
     <Compile Include="Models\Survey\RatersPageViewModel.cs" />
     <Compile Include="Models\Survey\RaterViewModel.cs" />
+    <Compile Include="Models\Survey\SurveyDetailsViewModel.cs" />
     <Compile Include="Models\Survey\SurveyPageViewModel.cs" />
+    <Compile Include="Models\Survey\SurveysViewModel.cs" />
+    <Compile Include="Models\Survey\UserGroupSurveyStatus.cs" />
+    <Compile Include="Models\Survey\UserSurveyStatus.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="App_Start\Startup.cs" />
   </ItemGroup>
@@ -385,6 +390,7 @@
     <Content Include="Views\Survey\SurveyMissingItems.cshtml" />
     <Content Include="Views\Survey\SurveyDone.cshtml" />
     <Content Include="Views\Survey\ChooseRaters.cshtml" />
+    <Content Include="Views\Survey\SurveyDetails.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

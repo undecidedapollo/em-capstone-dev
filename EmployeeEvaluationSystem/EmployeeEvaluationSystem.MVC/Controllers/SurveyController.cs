@@ -561,7 +561,7 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
                 var expectedRaters = surveyAvailable.SurveysAvailableToes;
 
 
-                var theRaters = unitOfWork.Surveys.GetPendingSurveysOfRatersForUser(userId, theModel.PendingSurveyId);
+                var theRaters = unitOfWork.Surveys.GetPendingSurveysOfRatersForUser(userId, theModel.PendingSurveyId)?.Where(x => x.UserTakenById != userId).ToList();
 
 
 
@@ -685,6 +685,7 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
             }
         }
 
+        [Authorize]
         public async Task<ActionResult> ResendEmail(Guid id)
         {
             var userId = User?.Identity?.GetUserId() ?? throw new UnauthorizedAccessException();
@@ -694,12 +695,12 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
 
                 var pendingSurvey = unitOfWork.Surveys.GetPendingSurvey(userId, id);
 
-                if(pendingSurvey == null || pendingSurvey.Email == null || pendingSurvey?.SurveyInstance?.DateFinished != null)
+                if(pendingSurvey == null || (pendingSurvey.Email == null && pendingSurvey.UserTakenBy == null) || pendingSurvey?.SurveyInstance?.DateFinished != null)
                 {
                     return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
                 }
 
-                var currentUser = unitOfWork.Users.GetUser(userId, userId);
+                var userSurveyFor = pendingSurvey.UserSurveyFor ?? throw new Exception();
 
                 var scheme = Request?.Url?.Scheme ?? passedInRequest.Url.Scheme;
                 var hostname = Request?.Url?.Host ?? passedInRequest.Url.Host;
@@ -714,9 +715,9 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
                 await SendgridEmailService.GetInstance().SendAsync(
                     new IdentityMessage
                     {
-                        Destination = pendingSurvey.Email,
-                        Subject = $"Employee Survey, regarding {currentUser.FirstName + " " + currentUser.LastName}",
-                        Body = $"There is a pending survey waiting for you to take regarding {currentUser.FirstName + " " + currentUser.LastName}. Please click the link to take the survey: <a href=\"" + theUrl + "\">Survey</a>"
+                        Destination = pendingSurvey?.UserTakenBy?.Email ?? pendingSurvey.Email,
+                        Subject = $"Employee Survey, regarding {userSurveyFor.FirstName + " " + userSurveyFor.LastName}",
+                        Body = $"There is a pending survey waiting for you to take regarding {userSurveyFor.FirstName + " " + userSurveyFor.LastName}. Please click the link to take the survey: <a href=\"" + theUrl + "\">Survey</a>"
                     });
             }
 
@@ -730,6 +731,113 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
                 var nextSuveyType = unitOfWork.Surveys.GetNextAvailableSurveyTypeForSurveyInCohort(surveyId, cohortId);
 
                 return null;
+            }
+        }
+
+        [Authorize(Roles = "Admin")]
+        public ActionResult SurveyDetails(int surveyId)
+        {
+            var userId = User?.Identity?.GetUserId() ?? throw new UnauthorizedAccessException();
+
+            using (var unitOfWork = new UnitOfWork())
+            {
+                var surveysAvailable = unitOfWork.Surveys.GetAnAvailableSurveyForCohort(userId, surveyId);
+
+
+                var cohortUsers = unitOfWork.Cohorts.GetCohort(userId, surveysAvailable.CohortID)?.CohortUsers;
+
+                if (surveysAvailable == null || cohortUsers == null)
+                {
+                    return new HttpNotFoundResult();
+                }
+
+                var viewModel = new SurveyDetailsViewModel
+                {
+                    TheSurvey = new SurveysViewModel
+                    {
+                        Id = surveysAvailable.ID,
+                        DateClosed = surveysAvailable.DateClosed,
+                        DateOpened = surveysAvailable.DateOpen,
+                        SurveyName = surveysAvailable.Survey.Name,
+                        SurveyType = surveysAvailable.SurveyType.Name
+                    },
+                    UserGroups = new List<UserGroupSurveyStatus>()
+                };
+
+
+                foreach(var user in cohortUsers)
+                {
+                    var newModel = new UserGroupSurveyStatus
+                    {
+                        Name = user.AspNetUser.FirstName + " " + user.AspNetUser.LastName,
+                        UserId = user.UserID,
+                        UsersForSurvey = new List<UserSurveyStatus>()
+                    };
+
+
+                    var userSurveys = unitOfWork.Surveys.GetPendingSurveysOfRatersForUser(user.UserID, surveysAvailable.ID);
+
+                    foreach(var surv in userSurveys)
+                    {
+                        var isStarted = surv.SurveyInstance?.DateStarted != null;
+                        var isFinished = surv.SurveyInstance?.DateFinished != null;
+
+                        var status = isFinished ? "Completed" : isStarted ? "Started" : "Not Started";
+
+                        var NameOrEmail = surv.Email;
+
+                        if(surv?.UserTakenBy?.FirstName != null)
+                        {
+                            NameOrEmail = surv?.UserTakenBy?.FirstName + " " + surv?.UserTakenBy?.LastName;
+                        }
+
+
+                        var newItem = new UserSurveyStatus
+                        {
+                            CanViewResults = isFinished,
+                            DateStarted = surv?.SurveyInstance?.DateStarted,
+                            DateFinished = surv?.SurveyInstance?.DateFinished,
+                            Id = surv.Id,
+                            Status = status,
+                            NameOrEmail = NameOrEmail,
+                            RoleName = surv.UserSurveyRole.Name,
+                            RoleId = surv.UserSurveyRole.ID,
+                            CanResendEmail = isFinished ? false : true
+                        };
+
+                        newModel.UsersForSurvey.Add(newItem);
+                    }
+
+                    foreach(var roles in surveysAvailable.SurveysAvailableToes)
+                    {
+                        var count = newModel.UsersForSurvey.Count(x => x.RoleId == roles.UserSurveyRole.ID);
+
+                        if(count < roles.Quantity)
+                        {
+                            var diff = roles.Quantity - count;
+
+                            for(var i = 0; i < diff; i++)
+                            {
+                                newModel.UsersForSurvey.Add(new UserSurveyStatus
+                                {
+                                    Id = null,
+                                    DateFinished = null,
+                                    DateStarted = null,
+                                    CanViewResults = false,
+                                    NameOrEmail = "Not Assigned To Rater",
+                                    RoleId = roles.UserSurveyRole.ID,
+                                    RoleName = roles.UserSurveyRole.Name,
+                                    Status = "Not Assigned To Rater",
+                                    CanResendEmail = false
+                                });
+                            }
+                        }
+                    }
+
+                    viewModel.UserGroups.Add(newModel);
+                }
+
+                return View(viewModel);
             }
         }
 

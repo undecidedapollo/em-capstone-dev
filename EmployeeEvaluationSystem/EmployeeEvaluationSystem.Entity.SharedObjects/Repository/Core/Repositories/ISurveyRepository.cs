@@ -26,6 +26,8 @@ namespace EmployeeEvaluationSystem.Entity.SharedObjects.Repository.Core.Reposito
 
         ICollection<PendingSurvey> GetPendingSurveysOfRatersForUser(string userId, Guid pendingSurveyId);
 
+        ICollection<PendingSurvey> GetPendingSurveysOfRatersForUser(string userId, int SurveysAvailableToId);
+
         ICollection<PendingSurvey> GetPendingSurveysForUser(string userId);
 
         ICollection<PendingSurvey> GetFinishedSurveysForUser(string userId);
@@ -59,6 +61,8 @@ namespace EmployeeEvaluationSystem.Entity.SharedObjects.Repository.Core.Reposito
         SurveysAvailable CreateAnAvailableSurveyForCohort(string currentUserID, CreateAvailableSurveyModel model);
 
         SurveysAvailable GetAnAvailableSurveyForCohort(string currentUserID, int surveyAvailableId);
+
+        ICollection<SurveysAvailable> GetAllOfferedSurveysForCohort(string currentUserID, int cohortId);
 
         SurveysAvailable GetAnAvailableSurveyForCohortSYSTEM(int surveyAvailableId);
 

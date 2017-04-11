@@ -1,4 +1,4 @@
-﻿@model EmployeeEvaluationSystem.Entity.Cohort
+﻿@model EmployeeEvaluationSystem.MVC.Models.CohortDetailsViewmodel
 
 @{
     ViewBag.Title = "Cohort Details";
@@ -10,19 +10,19 @@
     <hr />
     <dl class="dl-horizontal">
         <dt>
-            @Html.DisplayNameFor(model => model.Name)
+            @Html.DisplayNameFor(model => model.TheCohort.Name)
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.Name)
+            @Html.DisplayFor(model => model.TheCohort.Name)
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.Description)
+            @Html.DisplayNameFor(model => model.TheCohort.Description)
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.Description)
+            @Html.DisplayFor(model => model.TheCohort.Description)
         </dd>
 
         <dt>
@@ -30,12 +30,63 @@
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.DateCreated)
+            @Html.DisplayFor(model => model.TheCohort.DateCreated)
         </dd>
 
     </dl>
 </div>
 <p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.ID }) |
+    @Html.ActionLink("Edit", "Edit", new { id = Model.TheCohort.ID }) |
     @Html.ActionLink("Back to Cohorts", "Index")
 </p>
+
+<table class="table">
+    <tr>
+        <th>
+            <strong>Id</strong>
+        </th>
+        <th>
+            <strong>Survey Name</strong>
+        </th>
+        <th>
+            <strong>Survey Type</strong>
+        </th>
+        <th>
+            <strong>Date Opened</strong>
+        </th>
+        <th>
+            <strong>Date Closed</strong>
+        </th>
+        <th>
+
+        </th>
+    </tr>
+
+    @foreach (var item in Model.Surveys)
+    {
+
+        string selectedRow = "";
+
+        <tr class="@selectedRow">
+            <td>
+                @Html.DisplayFor(modelItem => item.Id)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.SurveyName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.SurveyType)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DateOpened)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DateClosed)
+            </td>
+            <td>
+                @Html.ActionLink("Details", "SurveyDetails", "Survey", new { surveyId = item.Id }, null )
+            </td>
+        </tr>
+    }
+
+</table>

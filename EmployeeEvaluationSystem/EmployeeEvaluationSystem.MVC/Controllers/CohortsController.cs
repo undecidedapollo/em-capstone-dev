@@ -14,6 +14,7 @@ using EmployeeEvaluationSystem.MVC.Models;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using EmployeeEvaluationSystem.SharedObjects.Enums;
+using EmployeeEvaluationSystem.MVC.Models.Survey;
 
 namespace EmployeeEvaluationSystem.MVC.Controllers
 {
@@ -71,13 +72,29 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
             {
                 Cohort cohort = unitOfWork.Cohorts.GetCohort(userId, id);
 
-
                 if (cohort == null)
                 {
                     return HttpNotFound();
                 }
 
-                return View(cohort);
+                var surveys = unitOfWork.Surveys.GetAllOfferedSurveysForCohort(userId, id.Value);
+
+                var outgoingSurveys = surveys.Where(x => x.IsDeleted == false).Select(x => new SurveysViewModel
+                {
+                    Id = x.ID,
+                    DateClosed = x.DateClosed,
+                    DateOpened = x.DateOpen,
+                    SurveyName = x.Survey.Name,
+                    SurveyType = x.SurveyType.Name
+                }).ToList();
+
+                var theModel = new CohortDetailsViewmodel
+                {
+                    Surveys = outgoingSurveys,
+                    TheCohort = cohort
+                };
+
+                return View(theModel);
             }
         }
 

@@ -609,7 +609,12 @@ namespace EmployeeEvaluationSystem.Entity.SharedObjects.Repository.EF6.Repositor
 
             var theId = originalPendingSurvey.SurveyAvailToMeID;
 
-            return this.dbcontext.PendingSurveys.Where(x => x.SurveyAvailToMeID == theId && x.UserSurveyForId == userId && x.UserTakenById != userId).Include(x => x.SurveyInstance).Include(x => x.SurveysAvailable).Include(x => x.UserSurveyRole).ToList();
+            return this.dbcontext.PendingSurveys.Where(x => x.SurveyAvailToMeID == theId && x.IsDeleted == false && x.UserSurveyForId == userId).Include(x => x.SurveyInstance).Include(x => x.SurveysAvailable).Include(x => x.UserSurveyRole).ToList();
+        }
+
+        public ICollection<PendingSurvey> GetPendingSurveysOfRatersForUser(string userId, int SurveysAvailableToId)
+        {
+            return this.dbcontext.PendingSurveys.Where(x => x.SurveyAvailToMeID == SurveysAvailableToId && x.UserSurveyForId == userId && x.IsDeleted == false).Include(x => x.SurveyInstance).Include(x => x.SurveysAvailable).Include(x => x.UserSurveyRole).ToList();
         }
 
         public void TryRemovePendingSurveysSYSTEM(ICollection<PendingSurvey> surveys)
@@ -627,5 +632,12 @@ namespace EmployeeEvaluationSystem.Entity.SharedObjects.Repository.EF6.Repositor
                 this.dbcontext.PendingSurveys.Add(survey);
             }
         }
+
+        public ICollection<SurveysAvailable> GetAllOfferedSurveysForCohort(string currentUserID, int cohortId)
+        {
+            return this.dbcontext.SurveysAvailables.Where(x => x.CohortID == cohortId && x.IsDeleted == false).ToList();
+        }
+
+        
     }
 }
