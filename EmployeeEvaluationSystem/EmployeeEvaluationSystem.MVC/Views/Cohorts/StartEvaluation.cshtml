@@ -58,7 +58,7 @@
 
 
 
-    @foreach (var surveyItem in Model.Surveys)
+    @*@foreach (var surveyItem in Model.Surveys)
     {
         <table class="table">
             <caption>@surveyItem.Name Evaluations</caption>
@@ -66,9 +66,33 @@
                 @foreach (var surveyTypeItem in Model.SurveyTypes)
                 {
                     <th>
-                        @Html.ActionLink(surveyTypeItem.Name, null, null, htmlAttributes: new { @class = "btn btn-success btn-sm" })
+                        @(Model.AssignedSurveys.FirstOrDefault(x => x.Value.Item1 == surveyItem && x.Value.Item2 == surveyTypeItem)
                     </th>
                 }
+            </tr>
+        </table>
+    }*@
+
+    @foreach (var surveyItem in Model.NewSurveys)
+    {
+        <table class="table">
+            <caption>@surveyItem.TheSurvey.Name Evaluations</caption>
+            <tr>
+                <th>
+                    @(surveyItem.TheSurveyType.Name) - 
+
+                    @if (surveyItem.TheState == EmployeeEvaluationSystem.MVC.Models.StartEvaluationViewModel.SurveyState.AVAILABLE)
+                    {
+                        @Html.ActionLink("Assign New Survey", "SendEmailConfirmationTokenAsync", "Account", null, new { @class = "btn btn-success btn-sm" })
+                    }
+                    else if (surveyItem.TheState == EmployeeEvaluationSystem.MVC.Models.StartEvaluationViewModel.SurveyState.IN_PROGRESS)
+                    {
+                       <button type="button" class="btn btn-primary btn-sm">In Progress - Cannot Assign New Survey</button>
+                    }
+                    else{ 
+                        <text>How did this happen?</text>
+}
+                </th>
             </tr>
         </table>
     }

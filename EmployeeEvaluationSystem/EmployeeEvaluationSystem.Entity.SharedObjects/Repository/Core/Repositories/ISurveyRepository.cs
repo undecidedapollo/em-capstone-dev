@@ -113,6 +113,8 @@ namespace EmployeeEvaluationSystem.Entity.SharedObjects.Repository.Core.Reposito
         void TryToAddPendingSurveysSYSTEM(ICollection<PendingSurvey> surveys);
 
         int CancelAllOldSurveyLocks();
+
+        SurveysAvailable GetPreviousSurveyForCohort(int cohortId, int currentAvailableId);
         
     }
 }
