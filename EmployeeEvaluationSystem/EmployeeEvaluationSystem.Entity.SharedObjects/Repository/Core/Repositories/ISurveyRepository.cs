@@ -111,5 +111,8 @@ namespace EmployeeEvaluationSystem.Entity.SharedObjects.Repository.Core.Reposito
         void TryRemovePendingSurveysSYSTEM(ICollection<PendingSurvey> surveys);
 
         void TryToAddPendingSurveysSYSTEM(ICollection<PendingSurvey> surveys);
+
+        int CancelAllOldSurveyLocks();
+        
     }
 }

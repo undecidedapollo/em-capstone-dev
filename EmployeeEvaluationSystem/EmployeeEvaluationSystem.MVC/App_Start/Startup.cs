@@ -1,4 +1,5 @@
-﻿using Hangfire;
+﻿using EmployeeEvaluationSystem.MVC.Infrastructure.Hangfire;
+using Hangfire;
 using Microsoft.Owin;
 using Owin;
 using System.Configuration;
@@ -17,6 +18,8 @@ namespace EmployeeEvaluationSystem.MVC
 
             app.UseHangfireDashboard();
             app.UseHangfireServer();
+
+            RecurringJob.AddOrUpdate(() => SurveyHelper.CancelOldSurveyLocks(), "*/2 * * * *");   
         }
     }
 }

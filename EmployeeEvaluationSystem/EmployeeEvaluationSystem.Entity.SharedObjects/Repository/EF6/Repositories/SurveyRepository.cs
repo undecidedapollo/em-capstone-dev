@@ -590,7 +590,7 @@ namespace EmployeeEvaluationSystem.Entity.SharedObjects.Repository.EF6.Repositor
 
                 foreach(var type in requiredTypes)
                 {
-                    var id = type.ID;
+                    var id = type.UserSurveyRoleId;
 
                     var correspondingType = correspondingUser?.Counts?.FirstOrDefault(x => x.Key == id);
 
@@ -647,6 +647,9 @@ namespace EmployeeEvaluationSystem.Entity.SharedObjects.Repository.EF6.Repositor
             return this.dbcontext.SurveysAvailables.Where(x => x.CohortID == cohortId && x.IsDeleted == false).ToList();
         }
 
-        
+        public int CancelAllOldSurveyLocks()
+        {
+            return this.dbcontext.CancelAllOldSurveyLocks();
+        }
     }
 }

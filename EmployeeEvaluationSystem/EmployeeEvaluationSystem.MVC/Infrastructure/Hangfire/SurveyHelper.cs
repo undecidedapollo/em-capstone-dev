@@ -21,5 +21,13 @@ namespace EmployeeEvaluationSystem.MVC.Infrastructure.Hangfire
                 }
             }
         }
+
+        public static void CancelOldSurveyLocks()
+        {
+            using (var unitOfWork = new UnitOfWork())
+            {
+                unitOfWork.Surveys.CancelAllOldSurveyLocks();
+            }
+        }
     }
 }
