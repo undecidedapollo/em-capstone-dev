@@ -544,10 +544,16 @@ namespace EmployeeEvaluationSystem.Entity.SharedObjects.Repository.EF6.Repositor
 
         public SurveyType GetNextAvailableSurveyTypeForSurveyInCohort(int surveyId, int cohortId)
         {
-            var lastSurvey = this.dbcontext.SurveysAvailables.Where(x => x.SurveyID == surveyId && x.CohortID == cohortId && x.IsDeleted == false).OrderByDescending(x => x.ID);
+            var lastSurvey = this.dbcontext.SurveysAvailables.Where(x => x.SurveyID == surveyId && x.CohortID == cohortId && x.IsDeleted == false).OrderByDescending(x => x.ID).FirstOrDefault();
 
 
-            var theType = this.dbcontext.SurveyTypes.Where(x => x.ID > lastSurvey.FirstOrDefault().SurveyTypeId).OrderBy(x => x.ID).FirstOrDefault();
+            if(lastSurvey.IsCompleted == false)
+            {
+                return null;
+            }
+
+
+            var theType = this.dbcontext.SurveyTypes.Where(x => x.ID > lastSurvey.SurveyTypeId).OrderBy(x => x.ID).FirstOrDefault();
 
             if(theType == null)
             {
