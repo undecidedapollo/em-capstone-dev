@@ -1,5 +1,7 @@
-﻿using Microsoft.Owin;
+﻿using Hangfire;
+using Microsoft.Owin;
 using Owin;
+using System.Configuration;
 
 [assembly: OwinStartupAttribute(typeof(EmployeeEvaluationSystem.MVC.Startup))]
 namespace EmployeeEvaluationSystem.MVC
@@ -10,6 +12,11 @@ namespace EmployeeEvaluationSystem.MVC
         {
             ConfigureAuth(app);
             DependencyStartup.Setup();
+
+            GlobalConfiguration.Configuration.UseSqlServerStorage(ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString);
+
+            app.UseHangfireDashboard();
+            app.UseHangfireServer();
         }
     }
 }

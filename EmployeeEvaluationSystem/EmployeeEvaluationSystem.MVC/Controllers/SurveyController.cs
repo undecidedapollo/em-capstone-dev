@@ -2,10 +2,12 @@
 using EmployeeEvaluationSystem.Entity.SharedObjects.Helpers.Locks;
 using EmployeeEvaluationSystem.Entity.SharedObjects.Model.Survey;
 using EmployeeEvaluationSystem.Entity.SharedObjects.Repository.EF6;
+using EmployeeEvaluationSystem.MVC.Infrastructure.Hangfire;
 using EmployeeEvaluationSystem.MVC.Models.Survey;
 using EmployeeEvaluationSystem.SharedObjects.Enums;
 using EmployeeEvaluationSystem.SharedObjects.Exceptions.Lock;
 using EmployeeEvaluationSystem.SharedObjects.Extensions;
+using Hangfire;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using System;
@@ -401,7 +403,16 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
                     {
                         unitOfWork.Complete();
 
+                        
+
                         var pendingSurver = unitOfWork.Surveys.GetPendingSurveySYSTEM(penSurveyId);
+
+                        if(pendingSurver?.SurveysAvailable != null)
+                        {
+                            BackgroundJob.Enqueue(() => SurveyHelper.CheckAndMarkSurveyFinished(pendingSurver.SurveysAvailable.CohortID, pendingSurver.SurveysAvailable.ID));
+                        }
+
+                        
 
                         if (pendingSurver == null || pendingSurver.UserTakenById == null || pendingSurver.UserTakenById != userId)
                         {
@@ -469,9 +480,16 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
                 foreach (var rater in theRaters)
                 {
 
+
                     var canChange = true;
                     var resendEmail = true;
                     var status = "Not Started";
+
+                    if(rater.UserSurveyRoleID == Convert.ToInt32(SurveyRoleEnum.SELF))
+                    {
+                        continue;
+                    }
+
 
                     if (rater.SurveyInstance != null)
                     {
@@ -572,7 +590,7 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
 
                 theModel.Raters.ForEach(x =>
                 {
-                    x.Email = x.Email.Trim().ToLower();
+                    x.Email = x?.Email?.Trim()?.ToLower();
                 });
 
 
@@ -591,10 +609,18 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
                 }
                 foreach (var rater in theModel.Raters)
                 {
+                    
+
+
                     var realRater = theRaters.FirstOrDefault(x => x.Id == rater.Id);
 
                     if (realRater == null)
                     {
+                        if (rater?.Email == null)
+                        {
+                            continue;
+                        }
+
                         var newRater = new PendingSurvey
                         {
                             Id = Guid.NewGuid(),
@@ -624,6 +650,11 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
                         }
 
                         ratersToRemove.Add(realRater);
+
+                        if(rater?.Email == null)
+                        {
+                            continue;
+                        }
 
                         var newRater = new PendingSurvey
                         {
