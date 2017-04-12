@@ -30,9 +30,9 @@ namespace EmployeeEvaluationSystem.Entity
     
         public virtual AspNetUser UserSurveyFor { get; set; }
         public virtual AspNetUser UserTakenBy { get; set; }
-        public virtual SurveysAvailable SurveysAvailable { get; set; }
         public virtual SurveyInstance SurveyInstance { get; set; }
         public virtual UserSurveyRole UserSurveyRole { get; set; }
         public virtual Status Status { get; set; }
+        public virtual SurveysAvailable SurveysAvailable { get; set; }
     }
 }

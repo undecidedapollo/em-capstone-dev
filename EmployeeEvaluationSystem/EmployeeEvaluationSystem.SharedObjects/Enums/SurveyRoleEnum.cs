@@ -9,6 +9,8 @@ namespace EmployeeEvaluationSystem.SharedObjects.Enums
     public enum SurveyRoleEnum
     {
         SELF = 1,
-        COWORKER = 2
+        COWORKER = 2,
+        SUPERVISOR = 3,
+        SUPERVISEE = 4
     }
 }

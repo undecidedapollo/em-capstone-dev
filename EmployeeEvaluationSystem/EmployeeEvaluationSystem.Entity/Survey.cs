@@ -18,8 +18,8 @@ namespace EmployeeEvaluationSystem.Entity
         public Survey()
         {
             this.Categories = new HashSet<Category>();
-            this.SurveysAvailables = new HashSet<SurveysAvailable>();
             this.SurveyInstances = new HashSet<SurveyInstance>();
+            this.SurveysAvailables = new HashSet<SurveysAvailable>();
         }
     
         public int ID { get; set; }
@@ -32,10 +32,10 @@ namespace EmployeeEvaluationSystem.Entity
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Category> Categories { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<SurveysAvailable> SurveysAvailables { get; set; }
         public virtual AspNetUser AspNetUser { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<SurveyInstance> SurveyInstances { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<SurveysAvailable> SurveysAvailables { get; set; }
     }
 }
