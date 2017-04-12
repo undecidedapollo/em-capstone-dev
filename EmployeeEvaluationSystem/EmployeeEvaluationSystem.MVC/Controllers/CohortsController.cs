@@ -185,8 +185,80 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
 
                 var roleTypes = unitOfWork.Surveys.GetUserSurveyRoles();
 
+                var cohort = unitOfWork.Cohorts.GetCohort(userId, id);
+
+                var assignedSurveys = new List<(Survey, SurveyType, StartEvaluationViewModel.SurveyState)?>();
+
+                var newSurvList = new List<CSSurveyViewModel>();
+
+                foreach(var surv in surveys)
+                {
+
+                    var newSurvModel = new CSSurveyViewModel
+                    {
+                        TheSurvey = surv
+                    };
+
+                    newSurvList.Add(newSurvModel);
+
+                    var item = cohort.SurveysAvailables.Where(x => x.SurveyID == surv.ID && x.IsDeleted == false).OrderByDescending(X => X.ID).FirstOrDefault();
 
 
+                    if(item == null)
+                    {
+                        newSurvModel.TheSurveyType = surveyTypes.FirstOrDefault(x => x.ID == 1);
+                        newSurvModel.TheState = StartEvaluationViewModel.SurveyState.AVAILABLE;
+                    }
+                    else
+                    {
+
+                        var nextResult = unitOfWork.Surveys.GetNextAvailableSurveyTypeForSurveyInCohort(surv.ID, cohort.ID);
+
+                        if (nextResult != null)
+                        {
+                            newSurvModel.TheState = StartEvaluationViewModel.SurveyState.AVAILABLE;
+                            newSurvModel.TheSurveyType = nextResult;
+
+                        }
+                        else
+                        {
+                            newSurvModel.TheState = StartEvaluationViewModel.SurveyState.IN_PROGRESS;
+                            newSurvModel.TheSurveyType = item.SurveyType;
+                        }
+                    }
+                }
+
+                //foreach(var item in cohort.SurveysAvailables)
+                //{
+                //    (Survey, SurveyType, StartEvaluationViewModel.SurveyState)? assignedSurvey = null;
+
+                //    if(unitOfWork.Surveys.GetNextAvailableSurveyTypeForSurveyInCohort(item.SurveyID, cohort.ID)?.ID == 1)
+                //    {
+                //        var x = (item.Survey, unitOfWork.Surveys.GetNextAvailableSurveyTypeForSurveyInCohort(item.SurveyID, cohort.ID), StartEvaluationViewModel.SurveyState.AVAILABLE);
+
+                //        if (assignedSurveys.Contains(x))
+                //        {
+                //            continue;
+                //        }
+                //        else
+                //        {
+                //            assignedSurveys.Add(x);
+                //            continue;
+                //        }
+                //    }
+
+                //    if(item.IsCompleted && unitOfWork.Surveys.GetNextAvailableSurveyTypeForSurveyInCohort(item.SurveyID, cohort.ID)?.ID == item.SurveyTypeId + 1)
+                //    {
+                //        assignedSurvey = (item.Survey, item.SurveyType, StartEvaluationViewModel.SurveyState.COMPLETE);
+                //        assignedSurveys.Add((item.Survey, unitOfWork.Surveys.GetSurveyType(userId, item.SurveyTypeId + 1), StartEvaluationViewModel.SurveyState.AVAILABLE));
+                //    }
+                //    else
+                //    {
+                //        assignedSurvey = (item.Survey, item.SurveyType, StartEvaluationViewModel.SurveyState.IN_PROGRESS);
+                //    }
+
+                //    assignedSurveys.Add(assignedSurvey);
+                //}
 
                 var model = new StartEvaluationViewModel()
                 {
@@ -197,7 +269,9 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
                         DisplayName = x.Name,
                         Quantity = x.ID == Convert.ToInt32(SurveyRoleEnum.SELF) ? 1 : 0,
                         CanChange = x.ID == Convert.ToInt32(SurveyRoleEnum.SELF) ? false : true }
-                    ).ToList()
+                    ).ToList(),
+                    AssignedSurveys = assignedSurveys ?? throw new Exception(),
+                    NewSurveys = newSurvList
                 };
 
                 return View(model);
