@@ -54,7 +54,7 @@
                 @Html.ActionLink("Delete", "Delete", new {id = item.ID})
             </td>
             <td>
-                @Html.ActionLink("Start", "StartEvaluation", new { @class = "btn btn-success btn-sm", id = item.ID})
+                @Html.ActionLink("Start", "StartEvaluation", new { id = item.ID }, new {@class = "btn btn-success btn-sm"})
             </td>
         </tr>
     }

@@ -65,8 +65,9 @@
             <tr>
                 @foreach (var surveyTypeItem in Model.SurveyTypes)
                 {
+                    var completedSurveyTuple
                     <th>
-                        @Html.ActionLink(surveyTypeItem.Name, null, null, htmlAttributes: new { @class = "btn btn-success btn-sm" })
+                        @if(Model.AssignedSurveys.Contains(Tuple<EmployeeEvaluationSystem.Entity.Survey, EmployeeEvaluationSystem>()))
                     </th>
                 }
             </tr>
