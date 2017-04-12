@@ -470,6 +470,8 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
 
                 var theRaters = unitOfWork.Surveys.GetPendingSurveysOfRatersForUser(userId, penSurveyId);
 
+            
+
 
 
                 var viewModel = new RatersPageViewModel
