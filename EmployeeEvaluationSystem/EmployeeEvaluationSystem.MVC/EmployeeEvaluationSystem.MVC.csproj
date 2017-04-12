@@ -267,6 +267,7 @@
     <Compile Include="Models\CohortDetailsViewmodel.cs" />
     <Compile Include="Models\ConfirmEmailViewModel.cs" />
     <Compile Include="Models\CreateCohortViewModel.cs" />
+    <Compile Include="Models\CSSurveyViewModel.cs" />
     <Compile Include="Models\CSVEmployeeViewModel.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
