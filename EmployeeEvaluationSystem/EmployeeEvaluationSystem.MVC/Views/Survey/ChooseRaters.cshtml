@@ -1,0 +1,79 @@
+﻿
+@using EmployeeEvaluationSystem.MVC.Helpers.Request
+@model EmployeeEvaluationSystem.MVC.Models.Survey.RatersPageViewModel
+
+<h3>Choose your Raters</h3>
+
+<p>Please enter the email address' of the raters that you would like below.</p>
+
+<br />
+<hr />
+
+<script>
+    (function () {
+        ChooseRatersPage = {};
+
+        ChooseRatersPage.SendEmail = function (id) {
+            var xhttp = new XMLHttpRequest();
+            xhttp.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
+
+                    alert("Email sent successfully!");
+                } else if (this.readyState == 4) {
+                    alert("Unable to send email.");
+                }
+            };
+            xhttp.open("GET", "/Survey/ResendEmail?id=" + id, true);
+            xhttp.send();
+        };
+
+
+    })();
+
+
+
+</script>
+
+@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "ratersForm" }))
+{
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+    @Html.HiddenFor(x => x.PendingSurveyId);
+
+    <div class="form-horizontal">
+
+        @for (var i = 0; i < Model.Raters.Count; i++)
+        {
+            <div class="form-group">
+                @Html.HiddenFor(m => m.Raters[i].Id)
+                @Html.HiddenFor(m => m.Raters[i].RoleId)
+                <label class="col-md-9">@(Model.Raters[i].Role) (@(Model.Raters[i].Status))</label>
+                <div class="col-md-3">
+                    @if (Model.Raters[i].CanChange)
+                    {
+                        @Html.TextBoxFor(m => m.Raters[i].Email)
+                    }
+                    else
+                    {
+                        @(Model.Raters[i].Email)
+                        @Html.HiddenFor(x => x.Raters[i].Email)
+                    }
+                    @if (Model.Raters[i].CanResendEmail)
+                    {
+                        <button class="btn btn-success" type="button" onclick="ChooseRatersPage.SendEmail('@(Model.Raters[i].Id)')">Resend Email</button>
+                    }
+
+                    
+                </div>
+            </div>
+            <hr />
+        }
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Save Raters" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+
+}

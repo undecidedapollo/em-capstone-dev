@@ -557,7 +557,7 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
         public ActionResult LogOff()
         {
             AuthenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Login");
         }
 
         //
@@ -638,8 +638,20 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
                 ModelState.AddModelError("", error);
         }
 
-        private ActionResult RedirectToLocal(string userId, string returnUrl)
+        [Authorize]
+        public ActionResult RedirectToAppropriatePage(string userId, string returnUrl)
         {
+            var user = userId ?? User.Identity.GetUserId();
+
+            return RedirectToLocal(userId, returnUrl);
+        }
+
+
+        public ActionResult RedirectToLocal(string userId, string returnUrl)
+        {
+
+            userId = userId ?? User?.Identity?.GetUserId();
+
 
             using (var unitOfWork = new UnitOfWork())
             {

@@ -10,5 +10,7 @@ namespace EmployeeEvaluationSystem.Entity.SharedObjects.Model.Authentication
     {
         public IEnumerable<PendingSurvey> PendingSurveys { get; set; }
         public IEnumerable<PendingSurvey> FinishedSurveys { get; set; }
+        public IEnumerable<Category> Categories { get; set; }
+        public IEnumerable<Tuple<Question, AnswerInstance>> Questions { get; set; }
     }
 }

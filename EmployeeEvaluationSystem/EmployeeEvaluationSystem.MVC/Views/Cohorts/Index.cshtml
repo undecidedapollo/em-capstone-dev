@@ -54,10 +54,7 @@
                 @Html.ActionLink("Delete", "Delete", new {id = item.ID})
             </td>
             <td>
-                
-                    @Html.ActionLink("Start", null, null, new { @class = "btn btn-success btn-sm" })
-                
-                
+                @Html.ActionLink("Start", "StartEvaluation", new { @class = "btn btn-success btn-sm", id = item.ID})
             </td>
         </tr>
     }
@@ -120,11 +117,11 @@
                 <td>
                     @if (item.EmailConfirmed == false)
                     {
-                        @Html.ActionLink("Resend Confirmation Email", "SendEmailConfirmationTokenAsync", "Account", new { userIDs = item.Id, subject = "Confirm Email" }, new { @class = "btn btn-success btn-sm" })
+                        @Html.ActionLink("Resend Confirmation Email", "SendEmailConfirmationTokenAsync", "Account", new { userIDs = item.Id, subject = "Confirm Email" }, new { @class = "btn btn-danger btn-sm" })
                     }
                     else
                     {
-                        @Html.ActionLink("Email has been Confirmed", null, null, htmlAttributes: new { @class = "btn btn-danger btn-sm" })
+                        @Html.ActionLink("Email has been Confirmed", null, null, htmlAttributes: new { @class = "btn btn-success btn-sm" })
                     }
                 </td>
             </tr>

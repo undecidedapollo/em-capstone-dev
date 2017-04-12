@@ -1,50 +1,166 @@
 ﻿@model EmployeeEvaluationSystem.Entity.SharedObjects.Model.Authentication.UserHubIndexViewModel
 
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "User Hub";
 }
 
-<h2>Index</h2>
+<h2>User Hub</h2>
 
-<p>
-    @Html.ActionLink("Create New", "Create")
-</p>
 <table class="table">
     <caption>Pending Surveys</caption>
-    <tr>
-        <td>Name</td>
-        <td></td>
-    </tr>
-    
-        
-  
 
-@foreach (var item in Model.PendingSurveys) {
+    @if (Model.PendingSurveys.Any() == true)
+    {
+
+        <tr>
+            <td>
+                <strong>Survey</strong>
+            </td>
+            <td>
+                <strong>Date Available</strong>
+            </td>
+            <td>
+                <strong>Due Date</strong>
+            </td>
+            <td></td>
+        </tr>
+
+        foreach (var item in Model.PendingSurveys)
+        {
     <tr>
         <td>
             @Html.DisplayFor(modelItem => item.SurveysAvailable.Survey.Name)
         </td>
         <td>
-            <input type="button" value="Start Survey" onclick="window.location.href='@Url.Action("StartSurvey", "Survey", new { pendingSurveyId = item.Id} )';" />
+            @Html.DisplayFor(modelItem => item.SurveysAvailable.DateOpen)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.SurveysAvailable.DateClosed)
+        </td>
+        <td>
+            <input type="button" value="Start Survey" onclick="window.location.href='@Url.Action("SurveyPage", "Survey", new { pendingSurveyId = item.Id })';" />
         </td>
     </tr>
 }
-
-</table>
-
-<table class="table">
-    <caption>Completed Surveys</caption>
-    <tr>
-        <td>Name</td>
-    </tr>
-
-    @foreach (var item in Model.FinishedSurveys)
+    }
+    else
     {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.SurveysAvailable.Survey.Name)
+                <strong>
+                    You currently have no pending surveys.
+                </strong>
             </td>
         </tr>
     }
 
 </table>
+
+<table class="table">
+    <caption>Completed Surveys</caption>
+
+@if (Model.FinishedSurveys.Any() == true)
+{
+    <tr>
+        <td>
+            <strong>Survey</strong>
+        </td>
+        <td>
+            <strong>Date Available</strong>
+        </td>
+        <td>
+            <strong>Due Date</strong>
+        </td>
+        <td>
+
+        </td>
+        <td>
+
+        </td>
+    </tr>
+
+    foreach (var item in Model.FinishedSurveys)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.SurveysAvailable.Survey.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.SurveysAvailable.DateOpen)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.SurveysAvailable.DateClosed)
+            </td>
+            <td>
+                @Html.ActionLink("Show Categories", "Index", new { pendingSurveyID = item.Id })
+            </td>
+            <td>
+                @Html.ActionLink("View Raters", "ChooseRaters", "Survey", new { penSurveyId = item.Id }, null)
+            </td>
+        </tr>
+    }
+}
+else
+{
+    <tr>
+        <td>
+            <strong>
+                You currently have no finished surveys.
+            </strong>
+        </td>
+    </tr>
+}
+</table>
+
+@if (Model.Categories != null)
+{
+    <table class="table">
+        <caption>Survey Categories</caption>
+        <tr>
+            <th>
+                <strong>Category</strong>
+            </th>
+        </tr>
+
+        @foreach (var item in Model.Categories)
+        {
+            <tr>
+                <td>
+                    @item.Name
+                </td>
+                <td>
+                    @Html.ActionLink("Show Questions", "Index", new { pendingSurveyID = ViewBag.PendingSurveyID, categoryID = item.ID })
+                </td>
+            </tr>
+        }
+
+    </table>
+}
+
+@if (Model.Questions != null)
+{
+    <table class="table">
+        <caption>Category Questions</caption>
+        <tr>
+            <th>
+                <strong>Question</strong>
+            </th>
+            <th>
+                <strong>Answer</strong>
+            </th>
+        </tr>
+
+        @foreach (var item in Model.Questions)
+        {
+            <tr>
+                <td>
+                    @item.Item1.DisplayText
+                </td>
+                <td>
+                    @item.Item2.ResponseNum
+                </td>
+            </tr>
+        }
+
+    </table>
+}

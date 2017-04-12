@@ -17,25 +17,14 @@ namespace EmployeeEvaluationSystem.Tests.Controllers
         [TestMethod]
         public void Index()
         {
-            var theObj = DependencyBuilder.BuildDependency();
 
-            var theMock = theObj.Item1.FindMy<IUnitOfWorkBuilder<EmployeeDatabaseEntities>>();
 
-            theMock.InitializeOne(y => y.AspNetUsers, new List<AspNetUser>
-                {
-                    new AspNetUser { FirstName = "BBB", LastName = "LLL", UserName = "123" },
-                    new AspNetUser { FirstName = "CCC", LastName = "LLL", UserName = "456" },
-                    new AspNetUser { FirstName = "DDD", LastName = "LLL", UserName = "789" }
-                });
+            var controller = new HomeController();
+                     // Act
+            var result = controller.Index() as RedirectToRouteResult;
 
-            // Arrange
-            HomeController controller = new HomeController() { DependencyObject = theObj.Item2};
-
-            // Act
-            ViewResult result = controller.Index() as ViewResult;
-
-            Assert.AreEqual(result.ViewBag.NumUsers, 3);
-            
+            Assert.AreEqual(result.RouteValues["controller"], "Account");
+            Assert.AreEqual(result.RouteValues["action"], "RedirectToLocal");
             // Assert
             Assert.IsTrue(true);
         }

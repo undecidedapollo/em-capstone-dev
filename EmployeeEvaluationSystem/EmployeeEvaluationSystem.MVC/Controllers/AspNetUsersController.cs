@@ -18,6 +18,7 @@ using Microsoft.AspNet.Identity.Owin;
 
 namespace EmployeeEvaluationSystem.MVC.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class AspNetUsersController : Controller
     {
 

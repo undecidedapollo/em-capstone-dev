@@ -3,6 +3,7 @@ using EmployeeEvaluationSystem.Entity.SharedObjects.Helpers.Locks;
 using EmployeeEvaluationSystem.Entity.SharedObjects.Model.Survey;
 using EmployeeEvaluationSystem.Entity.SharedObjects.Repository.EF6;
 using EmployeeEvaluationSystem.MVC.Models.Survey;
+using EmployeeEvaluationSystem.SharedObjects.Enums;
 using EmployeeEvaluationSystem.SharedObjects.Exceptions.Lock;
 using EmployeeEvaluationSystem.SharedObjects.Extensions;
 using Microsoft.AspNet.Identity;
@@ -10,6 +11,8 @@ using Microsoft.AspNet.Identity.Owin;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 
@@ -50,12 +53,13 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
         {
             var identityUserId = User?.Identity?.GetUserId();
 
-            if(identityUserId == null)
+            if (identityUserId == null)
             {
                 if (userId == null && email != null)
                 {
-                    
-                }if(userId != null && email == null)
+
+                }
+                else if (userId != null && email == null)
                 {
                     using (var unitOfWork = new UnitOfWork())
                     {
@@ -66,7 +70,8 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
 
                     var user = this.UserManager.FindById(userId) ?? throw new UnauthorizedAccessException();
                     this.SignInManager.SignIn(user, true, false);
-                }else
+                }
+                else
                 {
                     throw new UnauthorizedAccessException();
                 }
@@ -193,54 +198,59 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
 
                 var surveyInstance = unitOfWork.Surveys.GetSurveyInstanceByIdSYSTEM(model.SurveyInstanceId);
 
-                try
+                var hasShownRequired = false;
+
+                if (model.BackOnePage == false)
                 {
-                    var hasShownRequired = false;
-
-
-                    foreach (var qa in model.Questions)
+                    try
                     {
-                        if (qa?.Answer?.ResponseNum == null)
+                        foreach (var qa in model.Questions)
                         {
-                            var isRequired = unitOfWork.Surveys.IsQuestionRequired(qa?.Question?.Id ?? throw new Exception());
-
-                            if (isRequired)
+                            if (qa?.Answer?.ResponseNum == null)
                             {
-                                if (!hasShownRequired)
+                                var isRequired = unitOfWork.Surveys.IsQuestionRequired(qa?.Question?.Id ?? throw new Exception());
+
+                                if (isRequired)
                                 {
-                                    ModelState.AddModelError("", "All required questions must be answered.");
-                                    hasShownRequired = true;
+                                    if (!hasShownRequired)
+                                    {
+                                        hasShownRequired = true;
+                                    }
+
                                 }
-                                
+
+                                continue;
                             }
 
-                            continue;
+                            var newAnswerInstanceModel = new CreateAnswerInstanceModel
+                            {
+                                RatingResponse = qa.Answer.ResponseNum ?? -1
+                            };
+
+                            unitOfWork.Surveys.AddAnswerInstanceToSurveyInstance(model.SurveyInstanceId, qa.Question.Id, newAnswerInstanceModel);
                         }
 
-                        var newAnswerInstanceModel = new CreateAnswerInstanceModel
-                        {
-                            RatingResponse = qa.Answer.ResponseNum ?? -1
-                        };
+                        unitOfWork.Complete();
 
-                        unitOfWork.Surveys.AddAnswerInstanceToSurveyInstance(model.SurveyInstanceId, qa.Question.Id, newAnswerInstanceModel);
                     }
+                    catch (Exception e)
+                    {
+                        ModelState.AddModelError("", "There was an error saving the answer's to your survey. Please correct any mistakes and try again!");
+                        return View(model);
+                    }
+                }
 
-                    unitOfWork.Complete();
-                }
-                catch(Exception e)
-                {
-                    ModelState.AddModelError("", "There was an error saving the answer's to your survey. Please correct any mistakes and try again!");
-                    return View(model);
-                }
-               
+
+
+
 
                 Category nextCategory = null;
 
-                if(model?.Category?.Id == null)
+                if (model?.Category?.Id == null)
                 {
                     nextCategory = unitOfWork.Surveys.GetLastCategory(surveyInstance.SurveyID);
                 }
-                else if(model.BackOnePage)
+                else if (model.BackOnePage)
                 {
                     nextCategory = unitOfWork.Surveys.GetPreviousCategory(model.Category.Id);
                 }
@@ -250,11 +260,21 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
                 }
 
 
-               
 
-                if(nextCategory == null)
+
+                if (nextCategory == null)
                 {
                     return RedirectToAction("EndSurvey", new { SurveyInstanceId = model.SurveyInstanceId, penSurveyId = model.PendingSurveyId, statGuid = model.StatusGuid });
+                }
+
+
+                ModelState.Clear();
+
+
+                if (hasShownRequired)
+                {
+                    ModelState.AddModelError("", "All required questions must be answered.");
+
                 }
 
 
@@ -268,7 +288,7 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
                     PendingSurveyId = model.PendingSurveyId,
                     StatusGuid = theSurvey.StatusGuid ?? Guid.NewGuid(),
                     Category = CategoryViewModel.Convert(nextCategory),
-                    Questions = alreadyAnsweredQuestions.Select(x => new QuestionAnswerViewModel { Question = QuestionViewModel.Convert(x.Item1), Answer = new AnswerViewModel { ResponseNum = x?.Item2?.ResponseNum ?? null} }).ToList()
+                    Questions = alreadyAnsweredQuestions.Select(x => new QuestionAnswerViewModel { Question = QuestionViewModel.Convert(x.Item1), Answer = new AnswerViewModel { ResponseNum = x?.Item2?.ResponseNum ?? null } }).ToList()
                 };
                 ModelState.Remove("Category.Id");
                 ModelState.Remove("BackOnePage");
@@ -360,7 +380,10 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
 
         public ActionResult SaveSurvey(int? SurveyInstanceId, Guid penSurveyId, Guid statGuid)
         {
-            if(SurveyInstanceId == null)
+
+            var userId = User?.Identity?.GetUserId();
+
+            if (SurveyInstanceId == null)
             {
                 throw new Exception();
             }
@@ -377,7 +400,21 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
                     if (result)
                     {
                         unitOfWork.Complete();
-                        return RedirectToAction("SurveyDone");
+
+                        var pendingSurver = unitOfWork.Surveys.GetPendingSurveySYSTEM(penSurveyId);
+
+                        if (pendingSurver == null || pendingSurver.UserTakenById == null || pendingSurver.UserTakenById != userId)
+                        {
+                            return RedirectToAction("SurveyDone");
+                        }
+                        else
+                        {
+                            return RedirectToAction("ChooseRaters", new { penSurveyId = penSurveyId });
+                        }
+
+
+
+
                     }
                     else
                     {
@@ -394,6 +431,415 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
             }
         }
 
+        [Authorize]
+        [HttpGet]
+        public ActionResult ChooseRaters(Guid penSurveyId, string error = null)
+        {
+            var userId = User?.Identity?.GetUserId() ?? throw new UnauthorizedAccessException();
+
+            using (var unitOfWork = new UnitOfWork())
+            {
+
+                var pendingSurvey = unitOfWork.Surveys.GetPendingSurvey(userId, penSurveyId);
+
+                if (pendingSurvey.UserSurveyForId != userId && pendingSurvey.UserSurveyRoleID != Convert.ToInt32(SurveyRoleEnum.SELF))
+                {
+                    throw new UnauthorizedAccessException();
+                }
+
+                if (!string.IsNullOrWhiteSpace(error))
+                {
+                    ModelState.AddModelError("", error);
+                }
+
+                SurveysAvailable surveyAvailable = unitOfWork.Surveys.GetAnAvailableSurveyForCohort(userId, pendingSurvey.SurveyAvailToMeID);
+
+                var expectedRaters = surveyAvailable.SurveysAvailableToes;
+
+
+                var theRaters = unitOfWork.Surveys.GetPendingSurveysOfRatersForUser(userId, penSurveyId);
+
+
+
+                var viewModel = new RatersPageViewModel
+                {
+                    PendingSurveyId = penSurveyId
+                };
+
+                foreach (var rater in theRaters)
+                {
+
+                    var canChange = true;
+                    var resendEmail = true;
+                    var status = "Not Started";
+
+                    if (rater.SurveyInstance != null)
+                    {
+                        canChange = false;
+                        if (rater.SurveyInstance.DateFinished != null)
+                        {
+                            status = "Survey Finished";
+                            resendEmail = false;
+                        }
+                        else
+                        {
+                            status = "Survey Started";
+                        }
+
+                    }
+
+                    var newRater = new RaterViewModel()
+                    {
+                        Email = rater.Email,
+                        Role = rater.UserSurveyRole.Name,
+                        RoleId = rater.UserSurveyRole.ID,
+                        Status = status,
+                        CanChange = canChange,
+                        Id = rater.Id,
+                        CanResendEmail = resendEmail
+                    };
+
+                    viewModel.Raters.Add(newRater);
+                }
+
+                foreach (var aRater in expectedRaters)
+                {
+
+                    if (aRater.UserSurveyRoleId == Convert.ToInt32(SurveyRoleEnum.SELF))
+                    {
+                        continue;
+                    }
+
+                    var count = viewModel.Raters.Count(x => x.RoleId == aRater.UserSurveyRoleId);
+
+                    if (count < aRater.Quantity)
+                    {
+                        var diff = aRater.Quantity - count;
+
+                        for (var i = 0; i < diff; i++)
+                        {
+                            var newRater = new RaterViewModel
+                            {
+                                CanChange = true,
+                                Email = null,
+                                Role = aRater.UserSurveyRole.Name,
+                                RoleId = aRater.UserSurveyRole.ID,
+                                Status = "New Rater",
+                                CanResendEmail = false
+                            };
+
+                            viewModel.Raters.Add(newRater);
+                        }
+                    }
+                }
+
+                return View(viewModel);
+            }
+        }
+
+
+        [Authorize]
+        [HttpPost]
+        public async Task<ActionResult> ChooseRaters(RatersPageViewModel theModel)
+        {
+            var userId = User?.Identity?.GetUserId() ?? throw new UnauthorizedAccessException();
+
+            using (var unitOfWork = new UnitOfWork())
+            {
+
+                var pendingSurvey = unitOfWork.Surveys.GetPendingSurvey(userId, theModel.PendingSurveyId);
+
+                var currentUser = unitOfWork.Users.GetUser(userId, userId);
+
+                if (pendingSurvey.UserSurveyForId != userId && pendingSurvey.UserSurveyRoleID != Convert.ToInt32(SurveyRoleEnum.SELF))
+                {
+                    throw new UnauthorizedAccessException();
+                }
+
+                SurveysAvailable surveyAvailable = unitOfWork.Surveys.GetAnAvailableSurveyForCohort(userId, pendingSurvey.SurveyAvailToMeID);
+
+                var expectedRaters = surveyAvailable.SurveysAvailableToes;
+
+
+                var theRaters = unitOfWork.Surveys.GetPendingSurveysOfRatersForUser(userId, theModel.PendingSurveyId)?.Where(x => x.UserTakenById != userId).ToList();
+
+
+
+
+                var visitedRaters = new List<PendingSurvey>();
+                var ratersToAdd = new List<PendingSurvey>();
+                var ratersToRemove = new List<PendingSurvey>();
+
+                theModel.Raters.ForEach(x =>
+                {
+                    x.Email = x.Email.Trim().ToLower();
+                });
+
+
+                var hasDuplicates = theModel.Raters.GroupBy(x => x.Email).Select(x => x.Count()).Any(x => x > 1);
+
+                if (hasDuplicates)
+                {
+                    return RedirectToAction("ChooseRaters", new { penSurveyId = theModel.PendingSurveyId, error = "All emails must be unique" });
+                }
+
+                var isSameEmailAsUser = theModel.Raters.Any(x => x.Email == currentUser.Email);
+
+                if (isSameEmailAsUser)
+                {
+                    return RedirectToAction("ChooseRaters", new { penSurveyId = theModel.PendingSurveyId, error = "You cannot use the same email as your own. Please put in other user's emails." });
+                }
+                foreach (var rater in theModel.Raters)
+                {
+                    var realRater = theRaters.FirstOrDefault(x => x.Id == rater.Id);
+
+                    if (realRater == null)
+                    {
+                        var newRater = new PendingSurvey
+                        {
+                            Id = Guid.NewGuid(),
+                            StatusId = 1,
+                            DateSent = DateTime.UtcNow,
+                            Email = rater.Email,
+                            IsDeleted = false,
+                            SurveyAvailToMeID = pendingSurvey.SurveyAvailToMeID,
+                            UserSurveyForId = pendingSurvey.UserSurveyForId,
+                            UserSurveyRoleID = rater.RoleId
+                        };
+
+                        ratersToAdd.Add(newRater);
+                    }
+                    else
+                    {
+                        if (realRater.Email == rater.Email)
+                        {
+                            visitedRaters.Add(realRater);
+                            continue;
+                        }
+
+                        if (realRater.SurveyInstance != null)
+                        {
+                            visitedRaters.Add(realRater);
+                            continue;
+                        }
+
+                        ratersToRemove.Add(realRater);
+
+                        var newRater = new PendingSurvey
+                        {
+                            Id = Guid.NewGuid(),
+                            StatusId = 1,
+                            DateSent = DateTime.UtcNow,
+                            Email = rater.Email,
+                            IsDeleted = false,
+                            SurveyAvailToMeID = pendingSurvey.SurveyAvailToMeID,
+                            UserSurveyForId = pendingSurvey.UserSurveyForId,
+                            UserSurveyRoleID = rater.RoleId
+                        };
+
+                        ratersToAdd.Add(newRater);
+                    }
+                }
+
+                var toRemove = theRaters.Except(visitedRaters).ToList();
+
+                toRemove.AddRange(ratersToRemove);
+                unitOfWork.Surveys.TryRemovePendingSurveysSYSTEM(toRemove.Distinct().ToList());
+                unitOfWork.Surveys.TryToAddPendingSurveysSYSTEM(ratersToAdd);
+
+                foreach (var rater in expectedRaters)
+                {
+                    var count = visitedRaters.Count(x => x.UserSurveyRoleID == rater.UserSurveyRoleId) + ratersToAdd.Count(x => x.UserSurveyRoleID == rater.UserSurveyRoleId);
+
+                    if (count > rater.Quantity)
+                    {
+                        throw new Exception("There are too many raters of a particular type.");
+                    }
+                }
+
+                unitOfWork.Complete();
+
+
+                foreach (var rater in ratersToAdd)
+                {
+                    var scheme = Request?.Url?.Scheme ?? passedInRequest.Url.Scheme;
+                    var hostname = Request?.Url?.Host ?? passedInRequest.Url.Host;
+
+                    if ((Request?.Url?.Port ?? passedInRequest.Url.Port) != 80 || (Request?.Url?.Port ?? passedInRequest.Url.Port) != 43)
+                    {
+                        hostname += ":" + (Request?.Url?.Port ?? passedInRequest.Url.Port);
+                    }
+
+                    var theUrl = $"{scheme}://{hostname}/Survey/StartSurvey?pendingSurveyId={rater.Id}&email={rater.Email}";
+
+                    await SendgridEmailService.GetInstance().SendAsync(
+                        new IdentityMessage
+                        {
+                            Destination = rater.Email,
+                            Subject = $"Employee Survey, regarding {currentUser.FirstName + " " + currentUser.LastName}",
+                            Body = $"There is a pending survey waiting for you to take regarding {currentUser.FirstName + " " + currentUser.LastName}. Please click the link to take the survey: <a href=\"" + theUrl + "\">Survey</a>"
+                        });
+                }
+
+                return RedirectToAction("ChooseRaters", new { penSurveyId = theModel.PendingSurveyId });
+            }
+        }
+
+        [Authorize]
+        public async Task<ActionResult> ResendEmail(Guid id)
+        {
+            var userId = User?.Identity?.GetUserId() ?? throw new UnauthorizedAccessException();
+
+            using (var unitOfWork = new UnitOfWork())
+            {
+
+                var pendingSurvey = unitOfWork.Surveys.GetPendingSurvey(userId, id);
+
+                if(pendingSurvey == null || (pendingSurvey.Email == null && pendingSurvey.UserTakenBy == null) || pendingSurvey?.SurveyInstance?.DateFinished != null)
+                {
+                    return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                }
+
+                var userSurveyFor = pendingSurvey.UserSurveyFor ?? throw new Exception();
+
+                var scheme = Request?.Url?.Scheme ?? passedInRequest.Url.Scheme;
+                var hostname = Request?.Url?.Host ?? passedInRequest.Url.Host;
+
+                if ((Request?.Url?.Port ?? passedInRequest.Url.Port) != 80 || (Request?.Url?.Port ?? passedInRequest.Url.Port) != 43)
+                {
+                    hostname += ":" + (Request?.Url?.Port ?? passedInRequest.Url.Port);
+                }
+
+                var theUrl = $"{scheme}://{hostname}/Survey/StartSurvey?pendingSurveyId={pendingSurvey.Id}&email={pendingSurvey.Email}";
+
+                await SendgridEmailService.GetInstance().SendAsync(
+                    new IdentityMessage
+                    {
+                        Destination = pendingSurvey?.UserTakenBy?.Email ?? pendingSurvey.Email,
+                        Subject = $"Employee Survey, regarding {userSurveyFor.FirstName + " " + userSurveyFor.LastName}",
+                        Body = $"There is a pending survey waiting for you to take regarding {userSurveyFor.FirstName + " " + userSurveyFor.LastName}. Please click the link to take the survey: <a href=\"" + theUrl + "\">Survey</a>"
+                    });
+            }
+
+            return new HttpStatusCodeResult(HttpStatusCode.OK);
+        }
+
+        public ActionResult Test(int surveyId, int cohortId)
+        {
+            using (var unitOfWork = new UnitOfWork())
+            {
+                var nextSuveyType = unitOfWork.Surveys.GetNextAvailableSurveyTypeForSurveyInCohort(surveyId, cohortId);
+
+                return null;
+            }
+        }
+
+        [Authorize(Roles = "Admin")]
+        public ActionResult SurveyDetails(int surveyId)
+        {
+            var userId = User?.Identity?.GetUserId() ?? throw new UnauthorizedAccessException();
+
+            using (var unitOfWork = new UnitOfWork())
+            {
+                var surveysAvailable = unitOfWork.Surveys.GetAnAvailableSurveyForCohort(userId, surveyId);
+
+
+                var cohortUsers = unitOfWork.Cohorts.GetCohort(userId, surveysAvailable.CohortID)?.CohortUsers;
+
+                if (surveysAvailable == null || cohortUsers == null)
+                {
+                    return new HttpNotFoundResult();
+                }
+
+                var viewModel = new SurveyDetailsViewModel
+                {
+                    TheSurvey = new SurveysViewModel
+                    {
+                        Id = surveysAvailable.ID,
+                        DateClosed = surveysAvailable.DateClosed,
+                        DateOpened = surveysAvailable.DateOpen,
+                        SurveyName = surveysAvailable.Survey.Name,
+                        SurveyType = surveysAvailable.SurveyType.Name
+                    },
+                    UserGroups = new List<UserGroupSurveyStatus>()
+                };
+
+
+                foreach(var user in cohortUsers)
+                {
+                    var newModel = new UserGroupSurveyStatus
+                    {
+                        Name = user.AspNetUser.FirstName + " " + user.AspNetUser.LastName,
+                        UserId = user.UserID,
+                        UsersForSurvey = new List<UserSurveyStatus>()
+                    };
+
+
+                    var userSurveys = unitOfWork.Surveys.GetPendingSurveysOfRatersForUser(user.UserID, surveysAvailable.ID);
+
+                    foreach(var surv in userSurveys)
+                    {
+                        var isStarted = surv.SurveyInstance?.DateStarted != null;
+                        var isFinished = surv.SurveyInstance?.DateFinished != null;
+
+                        var status = isFinished ? "Completed" : isStarted ? "Started" : "Not Started";
+
+                        var NameOrEmail = surv.Email;
+
+                        if(surv?.UserTakenBy?.FirstName != null)
+                        {
+                            NameOrEmail = surv?.UserTakenBy?.FirstName + " " + surv?.UserTakenBy?.LastName;
+                        }
+
+
+                        var newItem = new UserSurveyStatus
+                        {
+                            CanViewResults = isFinished,
+                            DateStarted = surv?.SurveyInstance?.DateStarted,
+                            DateFinished = surv?.SurveyInstance?.DateFinished,
+                            Id = surv.Id,
+                            Status = status,
+                            NameOrEmail = NameOrEmail,
+                            RoleName = surv.UserSurveyRole.Name,
+                            RoleId = surv.UserSurveyRole.ID,
+                            CanResendEmail = isFinished ? false : true
+                        };
+
+                        newModel.UsersForSurvey.Add(newItem);
+                    }
+
+                    foreach(var roles in surveysAvailable.SurveysAvailableToes)
+                    {
+                        var count = newModel.UsersForSurvey.Count(x => x.RoleId == roles.UserSurveyRole.ID);
+
+                        if(count < roles.Quantity)
+                        {
+                            var diff = roles.Quantity - count;
+
+                            for(var i = 0; i < diff; i++)
+                            {
+                                newModel.UsersForSurvey.Add(new UserSurveyStatus
+                                {
+                                    Id = null,
+                                    DateFinished = null,
+                                    DateStarted = null,
+                                    CanViewResults = false,
+                                    NameOrEmail = "Not Assigned To Rater",
+                                    RoleId = roles.UserSurveyRole.ID,
+                                    RoleName = roles.UserSurveyRole.Name,
+                                    Status = "Not Assigned To Rater",
+                                    CanResendEmail = false
+                                });
+                            }
+                        }
+                    }
+
+                    viewModel.UserGroups.Add(newModel);
+                }
+
+                return View(viewModel);
+            }
+        }
 
     }
 }

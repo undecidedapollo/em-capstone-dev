@@ -18,14 +18,7 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
 
         public ActionResult Index()
         {
-            //Example of unit of work framework
-            using (var unitOfWork = GetDI().FindMy<IUnitOfWork>())
-            {
-                var numUsers = unitOfWork.Users.GetNumberOfUsers();
-                ViewBag.NumUsers = numUsers;
-            }
-
-            return View();
+            return RedirectToAction("RedirectToLocal", "Account");
         }
 
         public ActionResult About()

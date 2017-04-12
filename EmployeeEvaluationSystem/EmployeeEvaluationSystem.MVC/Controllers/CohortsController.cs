@@ -13,9 +13,12 @@ using EmployeeEvaluationSystem.Entity.SharedObjects.Repository.EF6;
 using EmployeeEvaluationSystem.MVC.Models;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
+using EmployeeEvaluationSystem.SharedObjects.Enums;
+using EmployeeEvaluationSystem.MVC.Models.Survey;
 
 namespace EmployeeEvaluationSystem.MVC.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class CohortsController : Controller
     {
         // GET: Cohort
@@ -69,13 +72,29 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
             {
                 Cohort cohort = unitOfWork.Cohorts.GetCohort(userId, id);
 
-
                 if (cohort == null)
                 {
                     return HttpNotFound();
                 }
 
-                return View(cohort);
+                var surveys = unitOfWork.Surveys.GetAllOfferedSurveysForCohort(userId, id.Value);
+
+                var outgoingSurveys = surveys.Where(x => x.IsDeleted == false).Select(x => new SurveysViewModel
+                {
+                    Id = x.ID,
+                    DateClosed = x.DateClosed,
+                    DateOpened = x.DateOpen,
+                    SurveyName = x.Survey.Name,
+                    SurveyType = x.SurveyType.Name
+                }).ToList();
+
+                var theModel = new CohortDetailsViewmodel
+                {
+                    Surveys = outgoingSurveys,
+                    TheCohort = cohort
+                };
+
+                return View(theModel);
             }
         }
 
@@ -146,6 +165,43 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
             TempData["usersToRegister"] = usersToRegister.ToList();
 
             return RedirectToAction("SendEmailConfirmationTokenAsync", "Account", new { subject = "Confirm Email" });
+        }
+
+        // GET: Cohort/StartEvaluation/5
+        public ActionResult StartEvaluation(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+
+            var userId = User?.Identity?.GetUserId();
+
+            using (var unitOfWork = new UnitOfWork())
+            {
+                var surveys = unitOfWork.Surveys.GetAllSurveys(userId);
+
+                var surveyTypes = unitOfWork.Surveys.GetAllSurveyTypes(userId);
+
+                var roleTypes = unitOfWork.Surveys.GetUserSurveyRoles();
+
+
+
+
+                var model = new StartEvaluationViewModel()
+                {
+                    Surveys = surveys,
+                    SurveyTypes = surveyTypes,
+                    RoleQuantities = roleTypes.Select(x => new RaterQuantityViewModel {
+                        Id = x.ID,
+                        DisplayName = x.Name,
+                        Quantity = x.ID == Convert.ToInt32(SurveyRoleEnum.SELF) ? 1 : 0,
+                        CanChange = x.ID == Convert.ToInt32(SurveyRoleEnum.SELF) ? false : true }
+                    ).ToList()
+                };
+
+                return View(model);
+            }
         }
 
         // GET: Cohort/Edit/5

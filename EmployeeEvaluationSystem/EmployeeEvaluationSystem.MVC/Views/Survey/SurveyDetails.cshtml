@@ -1,0 +1,141 @@
+﻿
+@using EmployeeEvaluationSystem.MVC.Helpers.Request
+
+@model EmployeeEvaluationSystem.MVC.Models.Survey.SurveyDetailsViewModel
+
+
+<script>
+    (function () {
+        SurveyDetailsPage = {};
+
+        SurveyDetailsPage.SendEmail = function (id) {
+            var xhttp = new XMLHttpRequest();
+            xhttp.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
+
+                    alert("Email sent successfully!");
+                } else if (this.readyState == 4) {
+                    alert("Unable to send email.");
+                }
+            };
+            xhttp.open("GET", "/Survey/ResendEmail?id=" + id, true);
+            xhttp.send();
+        };
+
+
+    })();
+
+
+
+</script>
+
+<h2>Survey Details</h2>
+
+<div>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            <strong>Survey Id</strong>
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.TheSurvey.Id)
+        </dd>
+
+        <dt>
+            <strong>Survey Name</strong>
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.TheSurvey.SurveyName)
+        </dd>
+
+        <dt>
+            <strong>Date Opened</strong>
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.TheSurvey.DateOpened)
+        </dd>
+
+        <dt>
+            <strong>Date Closed</strong>
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.TheSurvey.DateClosed)
+        </dd>
+
+    </dl>
+</div>
+
+
+@foreach (var user in Model.UserGroups)
+{
+    <br />
+    <br />
+    <h2>@(user.Name)'s Survey Results</h2>
+    <hr />
+    <table class="table">
+        <tr>
+            <th>
+                <strong>Id</strong>
+            </th>
+            <th>
+                <strong>Name/Email</strong>
+            </th>
+            <th>
+                <strong>Role</strong>
+            </th>
+            <th>
+                <strong>Status</strong>
+            </th>
+            <th>
+                <strong>Date Started</strong>
+            </th>
+            <th>
+                <strong>Date Finished</strong>
+            </th>
+            <th>
+
+            </th>
+        </tr>
+
+        @foreach (var item in user.UsersForSurvey)
+        {
+
+            string selectedRow = "";
+
+            <tr class="@selectedRow">
+                <td>
+                    @Html.DisplayFor(modelItem => item.Id)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.NameOrEmail)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.RoleName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Status)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DateStarted)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DateFinished)
+                </td>
+                <td>
+                   @if (item.CanResendEmail)
+                    {
+                    <button class="btn btn-xs btn-success" type="button" onclick="SurveyDetailsPage.SendEmail('@(item.Id)')">Resend Email</button>
+                    }
+                </td>
+            </tr>
+        }
+
+    </table>
+}
+
+
+
