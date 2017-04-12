@@ -19,7 +19,7 @@ namespace EmployeeEvaluationSystem.Entity
         public int UserSurveyRoleId { get; set; }
         public int Quantity { get; set; }
     
-        public virtual SurveysAvailable SurveysAvailable { get; set; }
         public virtual UserSurveyRole UserSurveyRole { get; set; }
+        public virtual SurveysAvailable SurveysAvailable { get; set; }
     }
 }
