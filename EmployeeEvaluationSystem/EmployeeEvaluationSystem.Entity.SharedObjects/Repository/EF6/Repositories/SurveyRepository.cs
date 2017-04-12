@@ -557,9 +557,15 @@ namespace EmployeeEvaluationSystem.Entity.SharedObjects.Repository.EF6.Repositor
             return theType;
         }
 
-        public bool HaveAllSurveysBeenCompleted(int cohortId, int surveyAvailableToId)
+        public bool CheckHaveAllSurveysBeenCompleted(int cohortId, int surveyAvailableToId)
         {
             var surveyAvailable = this.dbcontext.SurveysAvailables.Include(x => x.SurveysAvailableToes).FirstOrDefault(x => x.ID == surveyAvailableToId && x.CohortID == cohortId && x.IsDeleted == false);
+
+            if (surveyAvailable.IsCompleted)
+            {
+                return true;
+            }
+
 
             var requiredTypes = surveyAvailable.SurveysAvailableToes;
 
@@ -599,6 +605,9 @@ namespace EmployeeEvaluationSystem.Entity.SharedObjects.Repository.EF6.Repositor
                     }
                 }
             }
+
+            surveyAvailable.IsCompleted = true;
+            surveyAvailable.DateCompleted = DateTime.UtcNow;
 
             return true;
         }

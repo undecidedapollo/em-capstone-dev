@@ -10,7 +10,7 @@
     [DateCreated] DATETIME NOT NULL, 
     [DateDeleted] DATETIME NULL, 
     [IsCompleted] BIT NOT NULL DEFAULT 0, 
-    [DateCompleted] NCHAR(10) NULL, 
+    [DateCompleted] DATETIME NULL, 
     CONSTRAINT [FK_SurveysAvailable_To_Cohort] FOREIGN KEY ([CohortID]) REFERENCES [Cohort]([ID]),
 	CONSTRAINT [FK_SurveysAvailable_To_Survey] FOREIGN KEY ([SurveyID]) REFERENCES [Survey]([ID]),
 	CONSTRAINT [FK_SurveysAvailable_To_SurveyType] FOREIGN KEY ([SurveyTypeId]) REFERENCES [SurveyType]([ID])

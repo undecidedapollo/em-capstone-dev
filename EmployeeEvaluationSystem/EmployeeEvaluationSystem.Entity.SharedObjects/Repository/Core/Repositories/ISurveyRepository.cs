@@ -106,7 +106,7 @@ namespace EmployeeEvaluationSystem.Entity.SharedObjects.Repository.Core.Reposito
 
         SurveyType GetNextAvailableSurveyTypeForSurveyInCohort(int surveyId, int cohortId);
 
-        bool HaveAllSurveysBeenCompleted(int cohortId, int surveyAvailableToId);
+        bool CheckHaveAllSurveysBeenCompleted(int cohortId, int surveyAvailableToId);
 
         void TryRemovePendingSurveysSYSTEM(ICollection<PendingSurvey> surveys);
 
