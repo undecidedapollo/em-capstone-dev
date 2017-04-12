@@ -212,6 +212,8 @@
           <Property Name="IsDeleted" Type="bit" Nullable="false" />
           <Property Name="DateCreated" Type="datetime" Nullable="false" />
           <Property Name="DateDeleted" Type="datetime" />
+          <Property Name="IsCompleted" Type="bit" Nullable="false" />
+          <Property Name="DateCompleted" Type="nchar" MaxLength="10" />
         </EntityType>
         <EntityType Name="SurveysAvailableTo">
           <Key>
@@ -809,14 +811,14 @@
           </AssociationSet>
           <FunctionImport Name="CancelAllOldSurveyLocks" />
           <FunctionImport Name="CancelSurveyLock">
-            <Parameter Name="pendingSurveyId" Mode="In" Type="Guid" />
+          <Parameter Name="pendingSurveyId" Mode="In" Type="Guid" />
           </FunctionImport>
           <FunctionImport Name="LockAndGetSurvey" ReturnType="Collection(EmployeeEvaluationSystem.Entity.EntityModel.LockAndGetSurvey_Result)">
             <Parameter Name="pendingSurveyId" Mode="In" Type="Guid" />
             <Parameter Name="statusGuid" Mode="In" Type="Guid" />
           </FunctionImport>
           <FunctionImport Name="UpdateLockedSurveyTime">
-            <Parameter Name="pendingSurveyId" Mode="In" Type="Guid" />
+          <Parameter Name="pendingSurveyId" Mode="In" Type="Guid" />
           </FunctionImport>
           </EntityContainer>
         <EntityType Name="C__MigrationHistory">
@@ -946,6 +948,8 @@
           <NavigationProperty Name="SurveyType" Relationship="EmployeeEvaluationSystem.Entity.EntityModel.FK_SurveysAvailable_To_SurveyType" FromRole="SurveysAvailable" ToRole="SurveyType" />
           <NavigationProperty Name="SurveysAvailableToes" Relationship="EmployeeEvaluationSystem.Entity.EntityModel.FK_SurveysAvailableTo_SurveysAvailable" FromRole="SurveysAvailable" ToRole="SurveysAvailableTo" />
           <NavigationProperty Name="PendingSurveys" Relationship="EmployeeEvaluationSystem.Entity.EntityModel.FK_PendingSurvey_To_Survey" FromRole="SurveysAvailable" ToRole="PendingSurvey" />
+          <Property Name="IsCompleted" Type="Boolean" Nullable="false" />
+          <Property Name="DateCompleted" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
         </EntityType>
         <EntityType Name="SurveyType">
           <Key>
@@ -1506,6 +1510,8 @@
           <EntitySetMapping Name="SurveysAvailables">
             <EntityTypeMapping TypeName="EmployeeEvaluationSystem.Entity.EntityModel.SurveysAvailable">
               <MappingFragment StoreEntitySet="SurveysAvailable">
+                <ScalarProperty Name="DateCompleted" ColumnName="DateCompleted" />
+                <ScalarProperty Name="IsCompleted" ColumnName="IsCompleted" />
                 <ScalarProperty Name="DateDeleted" ColumnName="DateDeleted" />
                 <ScalarProperty Name="DateCreated" ColumnName="DateCreated" />
                 <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />

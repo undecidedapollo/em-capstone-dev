@@ -217,4 +217,11 @@
     <Property Name="ParentElementType" Value="SqlTable" />
     <Property Name="NewName" Value="UserSurveyForId" />
   </Operation>
+  <Operation Name="Rename Refactor" Key="55d00c89-085f-4b1e-b907-71e770baa441" ChangeDateTime="04/12/2017 17:35:17">
+    <Property Name="ElementName" Value="[dbo].[SurveysAvailable].[IsFinished]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[SurveysAvailable]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="IsCompleted" />
+  </Operation>
 </Operations>

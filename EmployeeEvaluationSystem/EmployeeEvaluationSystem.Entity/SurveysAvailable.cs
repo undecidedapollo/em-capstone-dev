@@ -30,6 +30,8 @@ namespace EmployeeEvaluationSystem.Entity
         public bool IsDeleted { get; set; }
         public System.DateTime DateCreated { get; set; }
         public Nullable<System.DateTime> DateDeleted { get; set; }
+        public bool IsCompleted { get; set; }
+        public string DateCompleted { get; set; }
     
         public virtual Cohort Cohort { get; set; }
         public virtual Survey Survey { get; set; }
