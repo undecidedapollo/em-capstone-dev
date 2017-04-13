@@ -23,7 +23,7 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
 
         // GET: ReportGeneration
         public ActionResult Index()
-        {
+        {                    
             return View();
         }
 
@@ -44,6 +44,7 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
             }
         }
 
+        // GET: ReportGeneration/Create
         public ActionResult Create()
         {
 
@@ -60,6 +61,44 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
 
                 return View(viewModel);
             }
+        }
+
+        // POST: ReportGeneration/Create
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Create(ReportGenerationViewModel model, List<string> ids)
+        {
+            var userId = User?.Identity?.GetUserId();
+            var usersToRegister = new List<string>();
+
+            using (var unitOfWork = new UnitOfWork())
+            {
+                
+
+                foreach (var id in ids)
+                {
+                    var user = PersonalAspNetUserViewModel.Convert(unitOfWork.Users.GetUser(userId, id));
+
+                    
+
+                    var cohortUser = new CohortUser()
+                    {
+                        UserID = id
+                    };
+
+                    
+                }
+
+                
+
+                unitOfWork.Complete();
+            }
+
+            TempData["usersToRegister"] = usersToRegister.ToList();
+
+            return RedirectToAction("SendEmailConfirmationTokenAsync", "Account", new { subject = "Confirm Email" });
         }
 
 
