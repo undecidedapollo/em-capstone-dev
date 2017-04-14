@@ -218,6 +218,28 @@ namespace EmployeeEvaluationSystem.Entity.SharedObjects.Repository.EF6.Repositor
                 throw new ItemNotFoundException("Unable to find the survey type to create this survey.");
             }
 
+            var item = theCohort.SurveysAvailables.Where(x => x.SurveyID == model.SurveyId && x.IsDeleted == false).OrderByDescending(X => X.ID).FirstOrDefault();
+
+
+            if (item == null)
+            {
+                if(model.SurveyTypeId != 1)
+                {
+                    throw new Exception("Unable to create survey");
+                }
+            }
+            else
+            {
+
+                var nextResult = unitOfWork.Surveys.GetNextAvailableSurveyTypeForSurveyInCohort(model.SurveyId, model.CohortId);
+
+                if (nextResult == null || nextResult.ID != model.SurveyTypeId )
+                {
+                    throw new Exception("Unable to create survey");
+
+                }
+            }
+
             var validRoles = model.RolesSurveyFor
                 .GroupBy(x => x.RoleId)
                 .Select(x =>
@@ -259,6 +281,28 @@ namespace EmployeeEvaluationSystem.Entity.SharedObjects.Repository.EF6.Repositor
                 DateClosed = model.DateEnd.ToUniversalTime(),
                 SurveysAvailableToes = validRoles
             };
+
+            var cohortUsers = theCohort.CohortUsers;
+
+            foreach(var theUser in cohortUsers)
+            {
+                if(theUser == null)
+                {
+                    continue;
+                }
+
+                var newPendingSurvey = new PendingSurvey
+                {
+                    DateSent = DateTime.UtcNow,
+                    StatusId = 1,
+                    IsDeleted = false,
+                    SurveyAvailToMeID = Convert.ToInt32(SurveyRoleEnum.SELF),
+                    UserSurveyForId = theUser.UserID,
+                    UserTakenById = theUser.UserID
+                };
+
+                theSurveyAvailable.PendingSurveys.Add(newPendingSurvey);
+            }
 
             this.dbcontext.SurveysAvailables.Add(theSurveyAvailable);
 
