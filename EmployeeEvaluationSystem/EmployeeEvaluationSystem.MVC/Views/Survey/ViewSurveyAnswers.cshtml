@@ -1,0 +1,107 @@
+﻿@model EmployeeEvaluationSystem.MVC.Models.Survey.ShowSurveyDetailsViewModel
+
+
+<h2>Survey Details</h2>
+
+<div>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            <strong>Survey Name</strong>
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.SurveyName)
+        </dd>
+        <dt>
+            <strong>Survey Type</strong>
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.SurveyType)
+        </dd>
+        <dt>
+            <strong>Taken By</strong>
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(x => x.UserName) - (@Html.DisplayFor(model => model.UserEmail)) - @Html.DisplayFor(x => x.UserRole)
+        </dd>
+        <dt>
+            <strong>Survey Regarding</strong>
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(x => x.UserForName) - (@Html.DisplayFor(model => model.UserForEmail))
+        </dd>
+
+        <dt>
+            <strong>Date Started</strong>
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.DateStarted)
+        </dd>
+
+        <dt>
+            <strong>Date Finished</strong>
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.DateCompleted)
+        </dd>
+
+    </dl>
+</div>
+
+
+<table class="table">
+    <caption>Survey Categories</caption>
+    <tr>
+        <th>
+            <strong>Category</strong>
+        </th>
+    </tr>
+
+    @foreach (var item in Model.Categories)
+    {
+        <tr>
+            <td>
+                @item.Name
+            </td>
+            <td>
+                @Html.ActionLink("Show Questions", "ViewSurveyAnswers", new { pendingSurveyID = ViewBag.PendingSurveyID, categoryID = item.ID })
+            </td>
+        </tr>
+    }
+
+</table>
+
+
+@if (Model.Questions != null)
+{
+    <table class="table">
+        <caption>Category Questions</caption>
+        <tr>
+            <th>
+                <strong>Question</strong>
+            </th>
+            <th>
+                <strong>Answer</strong>
+            </th>
+        </tr>
+
+        @foreach (var item in Model.Questions)
+        {
+            <tr>
+                <td>
+                    @item.Item1.DisplayText
+                </td>
+                <td>
+                    @item.Item2.ResponseNum
+                </td>
+            </tr>
+        }
+
+    </table>
+}

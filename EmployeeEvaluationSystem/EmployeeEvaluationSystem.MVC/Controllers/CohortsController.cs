@@ -15,12 +15,30 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using EmployeeEvaluationSystem.SharedObjects.Enums;
 using EmployeeEvaluationSystem.MVC.Models.Survey;
+using EmployeeEvaluationSystem.Entity.SharedObjects.Model.Survey;
 
 namespace EmployeeEvaluationSystem.MVC.Controllers
 {
+
+
     [Authorize(Roles = "Admin")]
     public class CohortsController : Controller
     {
+
+        private HttpRequestBase passedInRequest;
+
+        public CohortsController()
+        {
+        }
+
+        public CohortsController( HttpRequestBase request = null)
+        {
+            this.passedInRequest = request;
+        }
+
+
+
+
         // GET: Cohort
         public ActionResult Index(int? id)
         {
@@ -142,7 +160,7 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
                 {
                     var user = PersonalAspNetUserViewModel.Convert(unitOfWork.Users.GetUser(userId, id));
 
-                    if (user.EmailConfirmed == false)
+                    if(user.EmailConfirmed == false)
                     {
                         usersToRegister.Add(id);
                     }
@@ -191,7 +209,7 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
 
                 var newSurvList = new List<CSSurveyViewModel>();
 
-                foreach (var surv in surveys)
+                foreach(var surv in surveys)
                 {
 
                     var newSurvModel = new CSSurveyViewModel
@@ -204,7 +222,7 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
                     var item = cohort.SurveysAvailables.Where(x => x.SurveyID == surv.ID && x.IsDeleted == false).OrderByDescending(X => X.ID).FirstOrDefault();
 
 
-                    if (item == null)
+                    if(item == null)
                     {
                         newSurvModel.TheSurveyType = surveyTypes.FirstOrDefault(x => x.ID == 1);
                         newSurvModel.TheState = StartEvaluationViewModel.SurveyState.AVAILABLE;
@@ -264,143 +282,181 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
                 {
                     Surveys = surveys,
                     SurveyTypes = surveyTypes,
-                    RoleQuantities = roleTypes.Select(x => new RaterQuantityViewModel
-                    {
+                    RoleQuantities = roleTypes.Select(x => new RaterQuantityViewModel {
                         Id = x.ID,
                         DisplayName = x.Name,
                         Quantity = x.ID == Convert.ToInt32(SurveyRoleEnum.SELF) ? 1 : 0,
-                        CanChange = x.ID == Convert.ToInt32(SurveyRoleEnum.SELF) ? false : true
-                    }
+                        CanChange = x.ID == Convert.ToInt32(SurveyRoleEnum.SELF) ? false : true }
                     ).ToList(),
                     AssignedSurveys = assignedSurveys ?? throw new Exception(),
-                    NewSurveys = newSurvList
+                    NewSurveys = newSurvList,
+                    CohortID = cohort.ID
                 };
 
-            return View(model);
-        }
-    }
-
-    // GET: Cohort/Edit/5
-    public ActionResult Edit(int? id)
-    {
-        if (id == null)
-        {
-            return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                return View(model);
+            }
         }
 
-        var userId = User?.Identity?.GetUserId();
-
-        using (var unitOfWork = new UnitOfWork())
+        [HttpPost]
+        // POST: Cohort/StartEvaluation/5
+        public async Task<ActionResult> StartEvaluation(StartEvaluationViewModel model)
         {
-            Cohort cohort = unitOfWork.Cohorts.GetCohort(userId, id);
+            var roleModels = new List<CreateAvailableSurveyRolesModel>();
 
-            if (cohort == null)
+            foreach(var item in model.RoleQuantities)
             {
-                return HttpNotFound();
+                var roleModel = new CreateAvailableSurveyRolesModel()
+                {
+                    RoleId = item.Id,
+                    Quantity = item.Quantity
+                };
+
+                roleModels.Add(roleModel);
             }
 
-            return View(cohort);
+            var surveyModel = new CreateAvailableSurveyModel()
+            {
+                CohortId = model.CohortID,
+                SurveyId = model.SurveyID,
+                DateStart = model.DateOpen,
+                DateEnd = model.DateClosed,
+                SurveyTypeId = model.SurveyTypeID,
+                RolesSurveyFor = roleModels
+            };
+
+            var userId = User?.Identity?.GetUserId();
+
+            using (var unitOfWork = new UnitOfWork())
+            {
+                var availableSurvey = unitOfWork.Surveys.CreateAnAvailableSurveyForCohort(userId, surveyModel);
+
+                unitOfWork.Complete();
+
+                availableSurvey = unitOfWork.Surveys.GetAnAvailableSurveyForCohort(userId, availableSurvey.ID, false);
+
+                foreach (var item in availableSurvey.PendingSurveys)
+                {
+                    var scheme = Request?.Url?.Scheme ?? passedInRequest.Url.Scheme;
+                    var hostname = Request?.Url?.Host ?? passedInRequest.Url.Host;
+
+                    if ((Request?.Url?.Port ?? passedInRequest.Url.Port) != 80 || (Request?.Url?.Port ?? passedInRequest.Url.Port) != 43)
+                    {
+                        hostname += ":" + (Request?.Url?.Port ?? passedInRequest.Url.Port);
+                    }
+
+                    var theUrl = $"{scheme}://{hostname}/Survey/StartSurvey?pendingSurveyId={item.Id}&userId={item.UserTakenById}";
+
+                    await SendgridEmailService.GetInstance().SendAsync(
+                        new IdentityMessage
+                        {
+                            Destination = item.UserTakenBy.Email,
+                            Subject = $"You have a new survey available.",
+                            Body = $"There is a pending survey waiting for you. Please click the link to take the survey: <a href=\"" + theUrl + "\">Survey</a>"
+                        });
+                }
+
+                return RedirectToAction("AssignedSurveyEmailSent");
+            } 
         }
-    }
 
-    // POST: Cohort/Edit/5
-    // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-    // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
-    [HttpPost]
-    [ValidateAntiForgeryToken]
-    public ActionResult Edit([Bind(Include = "ID,Name,Description,IsDeleted,DateDeleted,DateCreated")] Cohort cohort)
-    {
-        if (cohort == null)
+        // POST: Cohort/Edit/5
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Edit([Bind(Include = "ID,Name,Description,IsDeleted,DateDeleted,DateCreated")] Cohort cohort)
         {
-            return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-        }
-
-        var userId = User?.Identity?.GetUserId();
-
-        using (var unitOfWork = new UnitOfWork())
-        {
-            var newCohort = unitOfWork.Cohorts.EditCohort(userId, cohort);
-
-            unitOfWork.Complete();
-
-            return RedirectToAction("Index");
-        }
-    }
-
-    // GET: Cohort/Delete/5
-    public ActionResult Delete(int? id)
-    {
-        if (id == null)
-        {
-            return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-        }
-
-        var userId = User?.Identity?.GetUserId();
-
-        using (var unitOfWork = new UnitOfWork())
-        {
-            Cohort cohort = unitOfWork.Cohorts.GetCohort(userId, id);
-
             if (cohort == null)
             {
-                return HttpNotFound();
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
 
-            return View(cohort);
+            var userId = User?.Identity?.GetUserId();
+
+            using (var unitOfWork = new UnitOfWork())
+            {
+                var newCohort = unitOfWork.Cohorts.EditCohort(userId, cohort);
+
+                unitOfWork.Complete();
+
+                return RedirectToAction("Index");
+            }
         }
-    }
 
-    /*
-    // POST: Cohort/Delete/5
-    [HttpPost, ActionName("Delete")]
-    [ValidateAntiForgeryToken]
-    public ActionResult DeleteConfirmed(int id)
-    {
-        var userId = User?.Identity?.GetUserId();
-
-        using (var unitOfWork = new UnitOfWork())
+        // GET: Cohort/Delete/5
+        public ActionResult Delete(int? id)
         {
-            unitOfWork.Cohorts.DeleteCohort(userId, id);
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
 
-            unitOfWork.Complete();
+            var userId = User?.Identity?.GetUserId();
 
-            return RedirectToAction("Index");
+            using (var unitOfWork = new UnitOfWork())
+            {
+                Cohort cohort = unitOfWork.Cohorts.GetCohort(userId, id);
+
+                if (cohort == null)
+                {
+                    return HttpNotFound();
+                }
+
+                return View(cohort);
+            }
         }
-    }
 
-    // GET: Cohort/StartEvaluation
-    public ActionResult StartEvaluation()
-    {
-        return View();   
-    }
-
-    // POST: Cohort/StartEvaluation
-    [HttpPost, ActionName("StartEvaluation")]
-    [ValidateAntiForgeryToken]
-    public ActionResult StartEvaluation()
-    {
-        var userId = User?.Identity?.GetUserId();
-
-        using (var unitOfWork = new UnitOfWork())
+        /*
+        // POST: Cohort/Delete/5
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public ActionResult DeleteConfirmed(int id)
         {
-            unitOfWork.Cohorts.DeleteCohort(userId, id);
+            var userId = User?.Identity?.GetUserId();
 
-            unitOfWork.Complete();
+            using (var unitOfWork = new UnitOfWork())
+            {
+                unitOfWork.Cohorts.DeleteCohort(userId, id);
 
-            return RedirectToAction("Index");
+                unitOfWork.Complete();
+
+                return RedirectToAction("Index");
+            }
         }
-    }
-    */
 
-    /*
-    protected override void Dispose(bool disposing)
-    {
-        if (disposing)
+        // GET: Cohort/StartEvaluation
+        public ActionResult StartEvaluation()
         {
-            db.Dispose();
+            return View();   
         }
-        base.Dispose(disposing);
+
+        // POST: Cohort/StartEvaluation
+        [HttpPost, ActionName("StartEvaluation")]
+        [ValidateAntiForgeryToken]
+        public ActionResult StartEvaluation()
+        {
+            var userId = User?.Identity?.GetUserId();
+
+            using (var unitOfWork = new UnitOfWork())
+            {
+                unitOfWork.Cohorts.DeleteCohort(userId, id);
+
+                unitOfWork.Complete();
+
+                return RedirectToAction("Index");
+            }
+        }
+        */
+
+        /*
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                db.Dispose();
+            }
+            base.Dispose(disposing);
+        }
+        */
     }
-    */
-}
 }

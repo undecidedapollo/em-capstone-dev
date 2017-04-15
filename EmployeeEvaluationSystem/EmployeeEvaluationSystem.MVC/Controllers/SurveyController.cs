@@ -769,6 +769,67 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
             }
         }
 
+        public ActionResult ViewSurveyAnswers(Guid pendingSurveyId, int? categoryId)
+        {
+            var userId = User?.Identity?.GetUserId() ?? throw new UnauthorizedAccessException();
+
+            var isAdmin = User.IsInRole("Admin");
+
+            using (var unitOfWork = new UnitOfWork())
+            {
+                ViewBag.PendingSurveyID = pendingSurveyId;
+                var survey = unitOfWork.Surveys.GetPendingSurvey(userId, pendingSurveyId);
+
+                if(survey == null)
+                {
+                    throw new Exception();
+                }
+
+                if(isAdmin || survey.UserTakenById == userId)
+                {
+                    var data = survey.SurveyInstance ?? throw new Exception();
+
+                }
+                else
+                {
+                    throw new UnauthorizedAccessException();
+                }
+
+                if(survey.SurveyInstance == null)
+                {
+                    throw new Exception();
+                }
+
+                var viewModel = new ShowSurveyDetailsViewModel()
+                {
+                    UserEmail = survey?.UserTakenBy?.Email ?? survey.Email,
+                    UserName = survey.UserTakenBy != null ? $"{survey?.UserTakenBy?.FirstName} {survey?.UserTakenBy?.LastName}" : "Rater, Unknown Name" ,
+                    UserForEmail = survey.UserSurveyFor.Email,
+                    UserForName = $"{survey?.UserSurveyFor?.FirstName} {survey?.UserSurveyFor?.LastName}",
+                    DateCompleted = survey.SurveyInstance.DateFinished ?? throw new Exception(),
+                    DateStarted = survey.SurveyInstance.DateStarted,
+                    SurveyName = survey.SurveyInstance.Survey.Name,
+                    SurveyType = survey.SurveysAvailable.SurveyType.Name,
+                    UserRole = survey.UserSurveyRole.Name
+                };
+
+                var surveyInstanceID = survey.SurveyInstanceID;
+
+                var categories = survey.SurveysAvailable.Survey.Categories;
+
+                viewModel.Categories = categories;
+
+                if (categoryId != null)
+                {
+                    ViewBag.CategoryID = categoryId.Value;
+
+                    viewModel.Questions = unitOfWork.Surveys.GetQuestionsAndPreviousResponsesForCategoryInSurveyInstance(categoryId.Value, surveyInstanceID.Value);
+                }
+
+                return View(viewModel);
+            }
+        }
+
         [Authorize(Roles = "Admin")]
         public ActionResult SurveyDetails(int surveyId)
         {
