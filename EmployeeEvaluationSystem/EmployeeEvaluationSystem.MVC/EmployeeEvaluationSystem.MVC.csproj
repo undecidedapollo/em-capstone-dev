@@ -399,6 +399,7 @@
     <Content Include="Views\Survey\SurveyDone.cshtml" />
     <Content Include="Views\Survey\ChooseRaters.cshtml" />
     <Content Include="Views\Survey\SurveyDetails.cshtml" />
+    <Content Include="Views\Cohorts\AssignedSurveyEmailSent.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
