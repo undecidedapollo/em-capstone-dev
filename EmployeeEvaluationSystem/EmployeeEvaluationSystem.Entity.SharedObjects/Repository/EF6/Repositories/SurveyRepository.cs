@@ -222,9 +222,19 @@ namespace EmployeeEvaluationSystem.Entity.SharedObjects.Repository.EF6.Repositor
                 .GroupBy(x => x.RoleId)
                 .Select(x =>
                 {
+
                     if (x.Count() != 1)
                     {
                         throw new InvalidModelException("There must only be one instance for each role Id.");
+                    }
+
+                    if(x.First().RoleId == Convert.ToInt32(SurveyRoleEnum.SELF))
+                    {
+                        return new SurveysAvailableTo
+                        {
+                            UserSurveyRoleId = Convert.ToInt32(SurveyRoleEnum.SELF),
+                            Quantity = 1
+                        };
                     }
 
                     if (x.First().Quantity <= 0)

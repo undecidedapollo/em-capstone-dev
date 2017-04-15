@@ -5,12 +5,42 @@
 
 <h2>Start Evaluation</h2>
 
-<script>
+@*<script>
     $(document).ready(function () {
-        $("#survey_date").datepicker({ dateFormat: 'dd/mm/yy' });
+        $("#survey_date_1").datepicker({ dateFormat: 'dd/mm/yy' });
+        $("#survey_date_2").datepicker({ dateFormat: 'dd/mm/yy' });
     });
-</script>
+</script>*@
 
+<script type="text/javascript">
+    (function () {
+        StartEvaluationHelper = {};
+
+        StartEvaluationHelper.SaveAndSubmit = function (survPageId, survTypePageId, surveyId, surveyTypeId) {
+            debugger;
+            if (survPageId != null) {
+                survPageId.value = surveyId;
+            }
+
+            if (survTypePageId != null) {
+                survTypePageId.value = surveyTypeId;
+            }
+
+            document.getElementById("surveyform").submit();
+        };
+
+        StartEvaluationHelper.SetAsDate = function (dobj) {
+            debugger;
+            var realId = dobj.id;
+            $("#" + realId).datepicker({ dateFormat: 'dd/mm/yy' });
+        };
+
+
+
+    })();
+</script>
+@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "surveyform" }))
+{
 <div class="form-horizontal">
     <hr />
     @Html.ValidationSummary(true, "", new { @class = "text-danger" })
@@ -18,15 +48,23 @@
     <div class="form-group">
         @Html.LabelFor(m => m.DateOpen, "Open Date", new { @class = "col-md-2 control-label" })
         <div class="col-md-10">
-            @Html.EditorFor(m => m.DateOpen.Date, new { id = "survey_date", @class = "form-control" })
+            @Html.EditorFor(m => m.DateOpen, new { id = "survey_date_1", @class = "form-control a_survey_date", type = "date" })
+            <script>
+                StartEvaluationHelper.SetAsDate(@("DateOpen"));
+            </script>
         </div>
     </div>
     <div class="form-group">
         @Html.LabelFor(m => m.DateClosed, "Close Date", new { @class = "col-md-2 control-label" })
         <div class="col-md-10">
-            @Html.EditorFor(m => m.DateClosed.Date, new { id = "survey_date", @class = "form-control" })
+            @Html.EditorFor(m => m.DateClosed, new { id = "survey_date_2", @class = "form-control", type = "date" })
+            <script>
+                StartEvaluationHelper.SetAsDate(@("DateClosed"));
+            </script>
         </div>
     </div>
+
+    @Html.HiddenFor(m => m.CohortID)
 
     <h4>Required Rater Quantities:</h4>
 
@@ -38,7 +76,8 @@
 
 
         <div class="form-group">
-            <label class="col-md-3">@Html.HiddenFor(x => x.RoleQuantities[i].Id)
+            @Html.HiddenFor(x => x.RoleQuantities[i].Id)
+            <label class="col-md-3">
             Quantity for @(Model.RoleQuantities[i].DisplayName):</label>
             <div class="col-md-3">
                 @if (Model.RoleQuantities[i].CanChange)
@@ -73,6 +112,10 @@
         </table>
     }*@
 
+
+    @Html.HiddenFor(m => m.SurveyTypeID)
+    @Html.HiddenFor(m => m.SurveyID)
+
     @foreach (var surveyItem in Model.NewSurveys)
     {
         <table class="table">
@@ -83,18 +126,19 @@
 
                     @if (surveyItem.TheState == EmployeeEvaluationSystem.MVC.Models.StartEvaluationViewModel.SurveyState.AVAILABLE)
                     {
-                        Model.SurveyTypeID = surveyItem.TheSurveyType.ID;
-                        @Html.ActionLink("Assign Survey", "StartEvaluation", "Cohort", new { model = Model}, new { @class = "btn btn-success btn-sm" })
+                        //Model.SurveyTypeID = surveyItem.TheSurveyType.ID;
+                        @*@Html.ActionLink("Assign Survey", "StartEvaluation", "Cohort", new { model = Model }, new { @class = "btn btn-success btn-sm" })*@
+                        <button type="button" class="btn btn-success" onclick="StartEvaluationHelper.SaveAndSubmit(@("SurveyID"), @("SurveyTypeID"), @(surveyItem.TheSurvey.ID),@(surveyItem.TheSurveyType.ID))">Assign Survey</button>
                     }
                     else if (surveyItem.TheState == EmployeeEvaluationSystem.MVC.Models.StartEvaluationViewModel.SurveyState.IN_PROGRESS)
                     {
                        <button type="button" class="btn btn-primary btn-sm">In Progress - Cannot Assign New Survey</button>
                     }
-                    else{ 
+                    else {
                         <text>How did this happen?</text>
-}
+                    }
                 </th>
             </tr>
         </table>
     }
-    </div>
+    </div>}
