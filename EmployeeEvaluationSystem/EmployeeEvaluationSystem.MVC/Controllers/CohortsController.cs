@@ -332,6 +332,8 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
 
                 unitOfWork.Complete();
 
+                availableSurvey = unitOfWork.Surveys.GetAnAvailableSurveyForCohort(userId, availableSurvey.ID, false);
+
                 foreach (var item in availableSurvey.PendingSurveys)
                 {
                     var scheme = Request?.Url?.Scheme ?? passedInRequest.Url.Scheme;
@@ -347,7 +349,7 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
                     await SendgridEmailService.GetInstance().SendAsync(
                         new IdentityMessage
                         {
-                            Destination = item.Email,
+                            Destination = item.UserTakenBy.Email,
                             Subject = $"You have a new survey available.",
                             Body = $"There is a pending survey waiting for you. Please click the link to take the survey: <a href=\"" + theUrl + "\">Survey</a>"
                         });

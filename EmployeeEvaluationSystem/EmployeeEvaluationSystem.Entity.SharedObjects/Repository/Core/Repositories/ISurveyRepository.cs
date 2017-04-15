@@ -60,11 +60,11 @@ namespace EmployeeEvaluationSystem.Entity.SharedObjects.Repository.Core.Reposito
 
         SurveysAvailable CreateAnAvailableSurveyForCohort(string currentUserID, CreateAvailableSurveyModel model);
 
-        SurveysAvailable GetAnAvailableSurveyForCohort(string currentUserID, int surveyAvailableId);
+        SurveysAvailable GetAnAvailableSurveyForCohort(string currentUserID, int surveyAvailableId, bool track = true);
 
         ICollection<SurveysAvailable> GetAllOfferedSurveysForCohort(string currentUserID, int cohortId);
 
-        SurveysAvailable GetAnAvailableSurveyForCohortSYSTEM(int surveyAvailableId);
+        SurveysAvailable GetAnAvailableSurveyForCohortSYSTEM(int surveyAvailableId, bool track = true);
 
         SurveysAvailable DeleteSurveyAvailable(string userId, int surveyAvailableId);
 
