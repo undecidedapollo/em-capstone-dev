@@ -11,9 +11,11 @@ using System.Web.Mvc;
 using EmployeeEvaluationSystem.Entity;
 using Microsoft.AspNet.Identity;
 using EmployeeEvaluationSystem.Entity.SharedObjects.Repository.EF6;
+using EmployeeEvaluationSystem.Entity.SharedObjects.Repository.EF6.Repositories;
 using EmployeeEvaluationSystem.Entity.SharedObjects.Model.Authentication;
 using EmployeeEvaluationSystem.MVC.Models;
 using System.Data;
+using EmployeeEvaluationSystem.Entity.SharedObjects.Model.Reports;
 
 namespace EmployeeEvaluationSystem.MVC.Controllers
 {
@@ -122,6 +124,21 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
             var rating = this.GetRating(id);
            
             return rating;
+        }
+
+        // GET: Customer  
+        public ActionResult ReportDetail()
+        {
+            ReportRepository objDet = new ReportRepository();
+            ReportDetails reportData = new ReportDetails();
+
+            List<ReportDetails> masterData = objDet.GetReportDetails().ToList();
+
+            reportData.EmpAvgRatings = masterData[0].EmpAvgRatings;
+            
+
+
+            return View(reportData);
         }
 
 

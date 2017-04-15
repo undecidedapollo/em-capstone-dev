@@ -1,10 +1,10 @@
-﻿@model IEnumerable<EmployeeEvaluationSystem.MVC.Models.ReportGenerationViewModel>
+﻿@model IEnumerable<EmployeeEvaluationSystem.Entity.SharedObjects.Model.Reports.ReportDetails>
 @{
     Layout = null;
     ViewBag.Title = "Employee";
 }
 
-<!DOCTYPE html>
+@*<!DOCTYPE html>
 
 <html>
 <head>
@@ -17,22 +17,23 @@
         }
     </style>
 </head>
-<body>
-    <h3>Employee Evaluation Report @Html.DisplayNameFor(model => model.Username)</h3>
+<body>*@
+    <h3>Employee Evaluation Report @Html.DisplayNameFor(model => model.EmpAvgRatings)</h3>
+@*<h3>Employee Evaluation Report @Html.DisplayNameFor(model => model.QuestionId.SurveyInstance)</h3>
     <hr/>
     <div id="Report">
         <table cellpadding="15" cellspacing="0" style="border: 2px solid #ccc; font-size: 11pt;">
             <tr>
-                <th style="background-color: lightslategray; border: 2px solid #ccc"></th>
-                <th style="background-color: lightslategray; border: 2px solid #ccc">Self</th>
-                <th style="background-color: lightslategray; border: 2px solid #ccc">Supervisor</th>
-                <th style="background-color: lightslategray; border: 2px solid #ccc">Average Co-worker</th>
-                <th style="background-color: lightslategray; border: 2px solid #ccc">Average Supervisees</th>
-                <th style="background-color: lightslategray; border: 2px solid #ccc">Average</th>
+                <th style="background-color: forestgreen; border: 2px solid #ccc"></th>
+                <th style="background-color: forestgreen; border: 2px solid #ccc">Self</th>
+                <th style="background-color: forestgreen; border: 2px solid #ccc">Supervisor</th>
+                <th style="background-color: forestgreen; border: 2px solid #ccc">Average Co-worker</th>
+                <th style="background-color: forestgreen; border: 2px solid #ccc">Average Supervisees</th>
+                <th style="background-color: forestgreen; border: 2px solid #ccc">Average</th>
             </tr>
 
 
-            @*@foreach (var item in Model)
+            @foreach (var item in Model)
             {
 
                 <tr>
@@ -43,7 +44,7 @@
                     <td style="width:120px; border: 2px solid #ccc">@item.SuperviseeAverage</td>
                     <td style="width:120px; border: 2px solid #ccc">@item.OverallAverage</td>
                 </tr>
-            }*@
+            }
             
         </table> 
     </div>
@@ -61,6 +62,107 @@
                 $("ipnput [name='TableHtml']").val($("#Report").html());
             });
         });
-    </script>
-</body>
-</html>
+    </script>*@
+    
+    
+@using (Html.BeginForm())
+{
+    <div class="form-horizontal">
+        <hr/>
+        <div class="form-group">
+            <h5 class="btn btn-primary">Customer Type Master</h5>
+            <div class="col-md-12">
+                <table class="table table-hover col-md-3">
+
+                    <tr>
+                        <th>
+                            ID
+                        </th>
+                        <th>
+                            Self
+                        </th>
+                        <th>
+                            Supervisor
+                        </th>
+
+                    </tr>
+
+
+                    @{
+
+                        int i = 0;
+                        foreach (var item in Model.GetEnumerator().Current.EmpAvgRatings)
+                        {
+
+                            <tr>
+                                <td>
+
+
+                                    @Html.EditorFor(o => o.GetEnumerator().Current.EmpAvgRatings[i].SelfEvaluationResult, new {@id = "ID" + i})
+                                </td>
+                                <td>
+                                    @Html.EditorFor(o => o.GetEnumerator().Current.EmpAvgRatings[i].CoworkerAverage, new {@id = "Self" + i})
+
+
+                                </td>
+                                <td>
+                                    @Html.EditorFor(o => o.GetEnumerator().Current.EmpAvgRatings[i].SupervisorEvaluationResult, new {@id = "Supervisor" + i})
+                                </td>
+
+                            </tr>
+                            i++;
+                        }
+                    }
+                </table>
+            </div>
+        </div>
+
+        @*<div class="form-group">
+            <h5 class="btn btn-primary"></h5>
+            <div class="col-md-12">
+                <table class="table table-condensed table-hover col-md-3">
+                    <tr>
+                        <th>
+                            
+                        </th>
+                        <th>
+                            
+                        </th>
+                        <th>
+                           
+                        </th>
+
+                    </tr>
+                    @{
+                        //To make unique Id
+                        int j = 0;
+                        foreach (var item in Model.)
+                        {
+
+                            <tr>
+                                <td>
+
+
+                                    @Html.EditorFor(o => o.[j], new { @id = "" + j })
+                                </td>
+                                <td>
+                                    @Html.EditorFor(o => o.[j]., new { @id = "" + j })
+
+
+                                </td>
+                                <td>
+                                    @Html.EditorFor(o => o.[j]., new { @id = "" + j })
+                                </td>
+
+                            </tr>
+                            j++;
+                        }
+                    }
+                </table>
+            </div>
+        </div>*@
+
+    </div>
+@*</body>
+</html>*@
+}
