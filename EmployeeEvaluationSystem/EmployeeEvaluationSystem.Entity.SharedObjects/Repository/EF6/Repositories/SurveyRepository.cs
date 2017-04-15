@@ -657,5 +657,10 @@ namespace EmployeeEvaluationSystem.Entity.SharedObjects.Repository.EF6.Repositor
         {
             return this.dbcontext.CancelAllOldSurveyLocks();
         }
+
+        public SurveysAvailable GetPreviousSurveyForCohort(int cohortId, int currentAvailableId)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

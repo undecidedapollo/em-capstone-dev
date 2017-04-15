@@ -18,10 +18,10 @@
     </style>
 </head>
 <body>
-    <h3>Employee Evaluation Report</h3>
+    <h3>Employee Evaluation Report @Html.DisplayNameFor(model => model.Username)</h3>
     <hr/>
     <div id="Report">
-        <table cellpadding="5" cellspacing="0" style="border: 2px solid #ccc; font-size: 11pt;">
+        <table cellpadding="15" cellspacing="0" style="border: 2px solid #ccc; font-size: 11pt;">
             <tr>
                 <th style="background-color: lightslategray; border: 2px solid #ccc"></th>
                 <th style="background-color: lightslategray; border: 2px solid #ccc">Self</th>
@@ -32,18 +32,18 @@
             </tr>
 
 
-            @foreach (var item in Model)
+            @*@foreach (var item in Model)
             {
 
                 <tr>
-                    <td style="width:120px; border: 2px solid #ccc">@item.QuestionId</td>
+                    <td style="width:120px; border: 2px solid #ccc">@item.QuestionId.QuestionID</td>
                     <td style="width:120px; border: 2px solid #ccc">@item.SelfEvaluationResult</td>
                     <td style="width:120px; border: 2px solid #ccc">@item.SupervisorEvaluationResult</td>
                     <td style="width:120px; border: 2px solid #ccc">@item.CoworkerAverage</td>
                     <td style="width:120px; border: 2px solid #ccc">@item.SuperviseeAverage</td>
                     <td style="width:120px; border: 2px solid #ccc">@item.OverallAverage</td>
                 </tr>
-            }
+            }*@
             
         </table> 
     </div>
