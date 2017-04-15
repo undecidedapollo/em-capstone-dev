@@ -281,6 +281,7 @@
     <Compile Include="Models\Survey\QuestionViewModel.cs" />
     <Compile Include="Models\Survey\RatersPageViewModel.cs" />
     <Compile Include="Models\Survey\RaterViewModel.cs" />
+    <Compile Include="Models\Survey\ShowSurveyDetailsViewModel.cs" />
     <Compile Include="Models\Survey\SurveyDetailsViewModel.cs" />
     <Compile Include="Models\Survey\SurveyPageViewModel.cs" />
     <Compile Include="Models\Survey\SurveysViewModel.cs" />
@@ -442,6 +443,7 @@
     <Content Include="Views\Survey\SurveyDone.cshtml" />
     <Content Include="Views\Survey\ChooseRaters.cshtml" />
     <Content Include="Views\Survey\SurveyDetails.cshtml" />
+    <Content Include="Views\Survey\ViewSurveyAnswers.cshtml" />
     <Content Include="Views\Cohorts\AssignedSurveyEmailSent.cshtml" />
   </ItemGroup>
   <ItemGroup>
