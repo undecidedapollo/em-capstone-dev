@@ -14,6 +14,7 @@ namespace EmployeeEvaluationSystem.MVC.Models.Survey
         public string UserForName { get; set; }
         public DateTime DateStarted { get; set; }
         public DateTime DateCompleted { get; set; }
+        public int SurvAvailId { get; set; }
         public string SurveyName { get; set; }
         public string SurveyType { get; set; }
         public string UserRole { get; set; }

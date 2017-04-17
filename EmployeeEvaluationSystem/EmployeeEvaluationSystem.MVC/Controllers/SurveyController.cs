@@ -92,7 +92,7 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
 
                 if (!canTake)
                 {
-                    throw new Exception();
+                    return RedirectToAction("SurveyNoPermission");
                 }
             }
 
@@ -100,6 +100,11 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
         }
 
         public ActionResult ContinueSurvey()
+        {
+            return View();
+        }
+
+        public ActionResult SurveyMissingData()
         {
             return View();
         }
@@ -112,7 +117,7 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
 
             if (userId == null && email == null)
             {
-                throw new Exception();
+                return RedirectToAction("SurveyMissingData");
             }
 
             bool guestMode = userId == null;
@@ -123,7 +128,7 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
 
                 if (!canTake)
                 {
-                    throw new Exception();
+                    return RedirectToAction("SurveyNoPermission");
                 }
 
 
@@ -137,10 +142,31 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
 
                 if (lockPendingSurvey.StatusGuid == null)
                 {
-                    throw new Exception();
+                    return RedirectToAction("SurveyError", new { });
                 }
 
                 var dbPendingSurvey = unitOfWork.Surveys.GetPendingSurveySYSTEM(pendingSurveyId).ThrowIfNull();
+
+                if(dbPendingSurvey == null)
+                {
+                    return RedirectToAction("SurveyError", new {  });
+                }
+
+                if(dbPendingSurvey?.SurveysAvailable == null)
+                {
+                    return RedirectToAction("SurveyError", new { });
+                }
+
+                if(DateTime.UtcNow < dbPendingSurvey.SurveysAvailable.DateOpen)
+                {
+                    return RedirectToAction("SurveyTooSoon", new { DateOpens = dbPendingSurvey.SurveysAvailable.DateOpen });
+                }
+
+                if (DateTime.UtcNow > dbPendingSurvey.SurveysAvailable.DateClosed)
+                {
+                    return RedirectToAction("SurveyTooLate");
+                }
+
 
                 var instanceSurvey = dbPendingSurvey.SurveyInstance;
 
@@ -167,6 +193,7 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
                 }
                 else
                 {
+                    return RedirectToAction("SurveyDone");
                     throw new Exception(); //The survey is already finished.
                 }
 
@@ -187,6 +214,21 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
                 return View("SurveyPage", viewModel);
             }
 
+        }
+
+        public ActionResult SurveyTooSoon(DateTime DateOpens)
+        {
+            return View(new QuickModel { DateOpens = DateOpens });
+        }
+
+        public ActionResult SurveyTooLate()
+        {
+            return View();
+        }
+
+        public ActionResult SurveyNoPermission()
+        {
+            return View();
         }
 
         [HttpPost]
@@ -326,7 +368,7 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
 
                 if (nextCategory == null)
                 {
-                    throw new Exception();
+                    return RedirectToAction("SurveyError", new { SurveyInstanceId = SurveyInstanceId, penSurveyId = penSurveyId, statGuid = statGuid });
                 }
 
                 var alreadyAnsweredQuestions = unitOfWork.Surveys.GetQuestionsAndPreviousResponsesForCategoryInSurveyInstance(nextCategory.ID, surveyInstanceId);
@@ -369,7 +411,7 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
 
         public ActionResult SurveyError(int? SurveyInstanceId, Guid penSurveyId, Guid statGuid)
         {
-
+           
             return View();
         }
 
@@ -387,7 +429,7 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
 
             if (SurveyInstanceId == null)
             {
-                throw new Exception();
+                return RedirectToAction("SurveyMissingData");
             }
 
             try
@@ -705,14 +747,25 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
                         hostname += ":" + (Request?.Url?.Port ?? passedInRequest.Url.Port);
                     }
 
-                    var theUrl = $"{scheme}://{hostname}/Survey/StartSurvey?pendingSurveyId={rater.Id}&email={rater.Email}";
+                    string theUrl = "";
+
+                    if(rater.UserTakenBy != null)
+                    {
+                        theUrl = $"{scheme}://{hostname}/Survey/StartSurvey?pendingSurveyId={rater.Id}&userId={rater.UserTakenById}";
+                    }
+                    else
+                    {
+                        theUrl = $"{scheme}://{hostname}/Survey/StartSurvey?pendingSurveyId={rater.Id}&email={rater.Email}";
+                    }
+
+                    
 
                     await SendgridEmailService.GetInstance().SendAsync(
                         new IdentityMessage
                         {
                             Destination = rater.Email,
                             Subject = $"Employee Survey, regarding {currentUser.FirstName + " " + currentUser.LastName}",
-                            Body = $"There is a pending survey waiting for you to take regarding {currentUser.FirstName + " " + currentUser.LastName}. Please click the link to take the survey: <a href=\"" + theUrl + "\">Survey</a>"
+                            Body = $"There is a pending survey waiting for you to take regarding {currentUser.FirstName + " " + currentUser.LastName}. The survey is called \"{pendingSurvey.SurveysAvailable.Survey.Name}\" - {pendingSurvey.SurveysAvailable.SurveyType.Name}. The survey is available from {pendingSurvey.SurveysAvailable.DateOpen} to {pendingSurvey.SurveysAvailable.DateClosed}. Please click the link to take the survey: <a href=\"" + theUrl + "\">Survey</a>"
                         });
                 }
 
@@ -745,14 +798,23 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
                     hostname += ":" + (Request?.Url?.Port ?? passedInRequest.Url.Port);
                 }
 
-                var theUrl = $"{scheme}://{hostname}/Survey/StartSurvey?pendingSurveyId={pendingSurvey.Id}&email={pendingSurvey.Email}";
+                string theUrl = "";
+
+                if (pendingSurvey.UserTakenBy != null)
+                {
+                    theUrl = $"{scheme}://{hostname}/Survey/StartSurvey?pendingSurveyId={pendingSurvey.Id}&userId={pendingSurvey.UserTakenById}";
+                }
+                else
+                {
+                    theUrl = $"{scheme}://{hostname}/Survey/StartSurvey?pendingSurveyId={pendingSurvey.Id}&email={pendingSurvey.Email}";
+                }
 
                 await SendgridEmailService.GetInstance().SendAsync(
                     new IdentityMessage
                     {
                         Destination = pendingSurvey?.UserTakenBy?.Email ?? pendingSurvey.Email,
                         Subject = $"Employee Survey, regarding {userSurveyFor.FirstName + " " + userSurveyFor.LastName}",
-                        Body = $"There is a pending survey waiting for you to take regarding {userSurveyFor.FirstName + " " + userSurveyFor.LastName}. Please click the link to take the survey: <a href=\"" + theUrl + "\">Survey</a>"
+                        Body = $"There is a pending survey waiting for you to take regarding {userSurveyFor.FirstName + " " + userSurveyFor.LastName}. The survey is called \"{pendingSurvey.SurveysAvailable.Survey.Name}\" - {pendingSurvey.SurveysAvailable.SurveyType.Name}. The survey is available from {pendingSurvey.SurveysAvailable.DateOpen} to {pendingSurvey.SurveysAvailable.DateClosed}. Please click the link to take the survey: <a href=\"" + theUrl + "\">Survey</a>"
                     });
             }
 
@@ -810,7 +872,8 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
                     DateStarted = survey.SurveyInstance.DateStarted,
                     SurveyName = survey.SurveyInstance.Survey.Name,
                     SurveyType = survey.SurveysAvailable.SurveyType.Name,
-                    UserRole = survey.UserSurveyRole.Name
+                    UserRole = survey.UserSurveyRole.Name,
+                    SurvAvailId = survey.SurveysAvailable.ID
                 };
 
                 var surveyInstanceID = survey.SurveyInstanceID;

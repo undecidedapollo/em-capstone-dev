@@ -576,6 +576,8 @@ namespace EmployeeEvaluationSystem.Entity.SharedObjects.Repository.EF6.Repositor
             return this.dbcontext.PendingSurveys.Where(x => x.UserTakenById == userId && x.IsDeleted == false && (x.SurveyInstance == null || x.SurveyInstance.DateFinished == null))
                 .Include(x => x.SurveysAvailable)
                 .Include(x => x.SurveysAvailable.Survey)
+                .Include(x => x.UserSurveyRole)
+                .Include(x => x.SurveysAvailable.SurveyType)
                 .ToList();
         }
 
@@ -584,6 +586,8 @@ namespace EmployeeEvaluationSystem.Entity.SharedObjects.Repository.EF6.Repositor
             return this.dbcontext.PendingSurveys.Where(x => x.UserTakenById == userId && x.IsDeleted == false && x.SurveyInstance != null && x.SurveyInstance.DateFinished != null)
                                 .Include(x => x.SurveysAvailable)
                                 .Include(x => x.SurveysAvailable.Survey)
+                                .Include(x => x.SurveysAvailable.SurveyType)
+                                .Include(x => x.UserSurveyRole)
                                 .ToList();
         }
 

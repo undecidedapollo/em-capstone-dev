@@ -155,7 +155,7 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
                     Description = model.Cohort.Description,
                     DateCreated = DateTime.UtcNow
                 };
-
+                
                 foreach (var id in ids)
                 {
                     var user = PersonalAspNetUserViewModel.Convert(unitOfWork.Users.GetUser(userId, id));
@@ -351,13 +351,15 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
                         {
                             Destination = item.UserTakenBy.Email,
                             Subject = $"You have a new survey available.",
-                            Body = $"There is a pending survey waiting for you. Please click the link to take the survey: <a href=\"" + theUrl + "\">Survey</a>"
+                            Body = $"There is a pending survey waiting for you. The survey is called \"{availableSurvey.Survey.Name}\" - {availableSurvey.SurveyType.Name}. The survey is available from {availableSurvey.DateOpen} to {availableSurvey.DateClosed}. Please click the link to take the survey: <a href=\"" + theUrl + "\">Survey</a>"
                         });
                 }
 
                 return RedirectToAction("AssignedSurveyEmailSent");
             } 
         }
+
+        
 
         // POST: Cohort/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
