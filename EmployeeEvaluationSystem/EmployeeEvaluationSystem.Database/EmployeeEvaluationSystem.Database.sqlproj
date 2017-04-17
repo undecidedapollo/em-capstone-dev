@@ -76,6 +76,7 @@
     <Build Include="dbo\Stored Procedures\LockAndGetSurvey.sql" />
     <Build Include="dbo\Stored Procedures\CancelSurveyLock.sql" />
     <Build Include="dbo\Stored Procedures\CancelAllOldSurveyLocks.sql" />
+    <Build Include="dbo\Stored Procedures\GetReportDetails.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="employee-evaluation-system.refactorlog" />
