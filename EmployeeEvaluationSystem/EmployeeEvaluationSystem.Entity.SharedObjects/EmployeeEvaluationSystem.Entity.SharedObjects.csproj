@@ -77,6 +77,8 @@
     <Compile Include="Model\Authentication\UserHubIndexViewModel.cs" />
     <Compile Include="Model\Reports\ReportDetails.cs" />
     <Compile Include="Model\Reports\ReportGenerationViewModel.cs" />
+    <Compile Include="Model\Reports\ReportQuestionAverage.cs" />
+    <Compile Include="Model\Reports\ReportRole.cs" />
     <Compile Include="Model\Survey\CreateAnswerInstanceModel.cs" />
     <Compile Include="Model\Survey\CreateAvailableSurveyModel.cs" />
     <Compile Include="Model\Survey\CreateAvailableSurveyRolesModel.cs" />
