@@ -355,7 +355,7 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
                         });
                 }
 
-                return RedirectToAction("AssignedSurveyEmailSent");
+                return View("AssignedSurveyEmailSent");
             } 
         }
 
