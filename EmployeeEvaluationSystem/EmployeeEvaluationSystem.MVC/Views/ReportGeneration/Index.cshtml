@@ -1,8 +1,8 @@
-﻿@model IEnumerable<EmployeeEvaluationSystem.Entity.SharedObjects.Model.Reports.ReportDetails>
-@{
+﻿@model EmployeeEvaluationSystem.Entity.SharedObjects.Model.Reports.ReportDetails
+@*@{
     Layout = null;
     ViewBag.Title = "Employee";
-}
+}*@
 
 @*<!DOCTYPE html>
 
@@ -18,7 +18,7 @@
     </style>
 </head>
 <body>*@
-    <h3>Employee Evaluation Report @Html.DisplayNameFor(model => model.EmpAvgRatings)</h3>
+    <h3>Employee Evaluation Report @Html.DisplayTextFor(model => model.EmpAvgRatings[1].Name)</h3>
 @*<h3>Employee Evaluation Report @Html.DisplayNameFor(model => model.QuestionId.SurveyInstance)</h3>
     <hr/>
     <div id="Report">
@@ -70,7 +70,7 @@
     <div class="form-horizontal">
         <hr/>
         <div class="form-group">
-            <h5 class="btn btn-primary">Customer Type Master</h5>
+            <h5 class="btn btn-primary">Employee Report</h5>
             <div class="col-md-12">
                 <table class="table table-hover col-md-3">
 
@@ -79,10 +79,10 @@
                             ID
                         </th>
                         <th>
-                            Self
+                            Name
                         </th>
                         <th>
-                            Supervisor
+                            Description
                         </th>
 
                     </tr>
@@ -90,27 +90,23 @@
 
                     @{
 
-                        int i = 0;
-                        foreach (var item in Model.GetEnumerator().Current.EmpAvgRatings)
+                        //int i = 0;
+                        //foreach (var item in Model.EmpAvgRatings)
                         {
 
                             <tr>
                                 <td>
-
-
-                                    @Html.EditorFor(o => o.GetEnumerator().Current.EmpAvgRatings[i].SelfEvaluationResult, new {@id = "ID" + i})
+                                    @Html.DisplayTextFor(o => o.EmpAvgRatings[13].ID)
                                 </td>
                                 <td>
-                                    @Html.EditorFor(o => o.GetEnumerator().Current.EmpAvgRatings[i].CoworkerAverage, new {@id = "Self" + i})
-
-
+                                    @Html.DisplayTextFor(o => o.EmpAvgRatings[13].Name)
                                 </td>
                                 <td>
-                                    @Html.EditorFor(o => o.GetEnumerator().Current.EmpAvgRatings[i].SupervisorEvaluationResult, new {@id = "Supervisor" + i})
+                                    @Html.DisplayTextFor(o => o.EmpAvgRatings[13].Description)
                                 </td>
 
                             </tr>
-                            i++;
+                            //i++;
                         }
                     }
                 </table>

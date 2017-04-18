@@ -27,7 +27,7 @@
                     @if (User.IsInRole("Admin"))
                     {
                         <li>@Html.ActionLink("Employees", "Index", "AspNetUsers")</li>
-                        <li>@Html.ActionLink("Cohorts", "Index", "Cohorts")</li>                        
+                        <li>@Html.ActionLink("Cohorts", "Index", "Cohorts")</li>
                     }
                 </ul>
                 @Html.Partial("_LoginPartial")

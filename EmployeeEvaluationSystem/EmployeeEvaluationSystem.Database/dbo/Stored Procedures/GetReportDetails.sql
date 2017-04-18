@@ -4,8 +4,7 @@ BEGIN
       
     SET NOCOUNT ON;  
   
- Select UserName from AspNetUsers  
- Select UserId,RoleId from AspNetUserRoles
- Select ID, Name from Cohort
- Select CohortID, UserID from CohortUser
+ Select ID, Name, Description from Cohort
+ Select ID, Name from UserSurveyRole
+ Select ID, QuestionID, ResponseNum from AnswerInstance 
 END

@@ -4,15 +4,19 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 
-namespace EmployeeEvaluationSystem.MVC.Models
+namespace EmployeeEvaluationSystem.Entity.SharedObjects.Model.Reports
 {
     public class ReportGenerationViewModel
     {
-        public decimal OverallAverage { get; set; }
-        public decimal SuperviseeAverage { get; set; }
-        public decimal CoworkerAverage { get; set; }
-        public int SupervisorEvaluationResult { get; set; }
-        public int SelfEvaluationResult { get; set; }
+        //public decimal OverallAverage { get; set; }
+        //public decimal SuperviseeAverage { get; set; }
+        //public decimal CoworkerAverage { get; set; }
+        //public int SupervisorEvaluationResult { get; set; }
+        //public int SelfEvaluationResult { get; set; }
+
+        public int ID { get; set; }
+        public string Name { get; set; }
+        public string Description { get; set; }
         //public string Stage { get; set; }
 
 
@@ -24,6 +28,20 @@ namespace EmployeeEvaluationSystem.MVC.Models
         //public virtual Category CategoryName { get; set; }
         //public virtual AspNetUser Username { get; set; }
        
+    }
+
+    public class UserRoleModel
+    {
+        public int ID { get; set; }
+        public string Name { get; set; }
+    }
+
+    public class SurveyReportModel
+    {
+        public int ID { get; set; }
+        public int QuestionID { get; set; }
+        public int RatingValue { get; set; }
+
     }
     
 }

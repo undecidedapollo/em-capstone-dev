@@ -1,15 +1,11 @@
 ﻿using Dapper;
-using EmployeeEvaluationSystem.MVC.Models;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Data;
-using System.Collections.Generic;
 using System.Configuration;
-using System.Data;
-using System.Data.SqlClient;
 using System.Linq;
-using EmployeeEvaluationSystem.MVC.Models;
 using ReportDetails = EmployeeEvaluationSystem.Entity.SharedObjects.Model.Reports.ReportDetails;
+using EmployeeEvaluationSystem.Entity.SharedObjects.Model.Reports;
 
 namespace EmployeeEvaluationSystem.Entity.SharedObjects.Repository.EF6.Repositories
 {

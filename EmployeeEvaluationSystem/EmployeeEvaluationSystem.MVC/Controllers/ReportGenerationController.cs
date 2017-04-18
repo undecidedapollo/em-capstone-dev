@@ -126,7 +126,7 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
             return rating;
         }
 
-        // GET: Customer  
+        // GET: Report  
         public ActionResult ReportDetail()
         {
             ReportRepository objDet = new ReportRepository();
@@ -135,6 +135,7 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
             List<ReportDetails> masterData = objDet.GetReportDetails().ToList();
 
             reportData.EmpAvgRatings = masterData[0].EmpAvgRatings;
+            reportData.UserRole = masterData[0].UserRole;
             
 
 
