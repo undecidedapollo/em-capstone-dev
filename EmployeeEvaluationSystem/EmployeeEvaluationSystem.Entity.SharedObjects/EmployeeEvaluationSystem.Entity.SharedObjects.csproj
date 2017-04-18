@@ -86,6 +86,7 @@
     <Compile Include="Repository\Core\IUnitOfWork.cs" />
     <Compile Include="Repository\Core\Repositories\ICohortRepository.cs" />
     <Compile Include="Repository\Core\Repositories\ICohortUserRepository.cs" />
+    <Compile Include="Repository\Core\Repositories\IReportRepository.cs" />
     <Compile Include="Repository\Core\Repositories\IRepository.cs" />
     <Compile Include="Repository\Core\Repositories\ISurveyRepository.cs" />
     <Compile Include="Repository\Core\Repositories\IUserRepository.cs" />

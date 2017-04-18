@@ -116,8 +116,5 @@ namespace EmployeeEvaluationSystem.Entity.SharedObjects.Repository.Core.Reposito
         int CancelAllOldSurveyLocks();
 
         SurveysAvailable GetPreviousSurveyForCohort(int cohortId, int currentAvailableId);
-
-        List<ReportRole> GetDetailsForReport(string userId, int surveyAvailableId);
-        
     }
 }
