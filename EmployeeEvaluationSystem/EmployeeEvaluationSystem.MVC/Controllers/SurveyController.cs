@@ -967,6 +967,8 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
                         newModel.UsersForSurvey.Add(newItem);
                     }
 
+                    
+
                     foreach(var roles in surveysAvailable.SurveysAvailableToes)
                     {
                         var count = newModel.UsersForSurvey.Count(x => x.RoleId == roles.UserSurveyRole.ID);
@@ -991,6 +993,11 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
                                 });
                             }
                         }
+                    }
+
+                    if (newModel.UsersForSurvey.Count(x => x.DateFinished != null) == newModel.UsersForSurvey.Count())
+                    {
+                        newModel.CanShowReport = true;
                     }
 
                     viewModel.UserGroups.Add(newModel);

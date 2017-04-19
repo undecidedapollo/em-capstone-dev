@@ -273,6 +273,9 @@
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Models\RaterQuantityViewModel.cs" />
+    <Compile Include="Models\Report\ReportCategory.cs" />
+    <Compile Include="Models\Report\ReportDeetsViewModel.cs" />
+    <Compile Include="Models\Report\ReportQuestion.cs" />
     <Compile Include="Models\StartSurveyModels\StartEvaluationViewModel.cs" />
     <Compile Include="Models\Survey\AnswerViewModel.cs" />
     <Compile Include="Models\Survey\CategoryViewModel.cs" />
@@ -378,6 +381,7 @@
     <Content Include="Scripts\respond.matchmedia.addListener.min.js" />
     <Content Include="Scripts\respond.min.js" />
     <Content Include="Scripts\_references.js" />
+    <None Include="Views\ReportGeneration\ReportPage.cshtml" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
@@ -454,7 +458,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Models\Report\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />

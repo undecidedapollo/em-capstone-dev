@@ -16,6 +16,7 @@ using EmployeeEvaluationSystem.Entity.SharedObjects.Model.Authentication;
 using EmployeeEvaluationSystem.MVC.Models;
 using System.Data;
 using EmployeeEvaluationSystem.Entity.SharedObjects.Model.Reports;
+using EmployeeEvaluationSystem.MVC.Models.Report;
 
 namespace EmployeeEvaluationSystem.MVC.Controllers
 {
@@ -129,18 +130,34 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
         // GET: Report  
         public ActionResult ReportDetail()
         {
-            var unitOfWork = new UnitOfWork();
-            var dbcontext = new EmployeeDatabaseEntities();
-            ReportRepository objDet = new ReportRepository(unitOfWork, dbcontext);
+            ReportRepository objDet = new ReportRepository();
             ReportDetails reportData = new ReportDetails();
-            ReportRole reportRole = new ReportRole();
-            List<ReportRole> masterData = objDet.GetDetailsForReport("2", 2).ToList();
 
-            //reportData.EmpAvgRatings = masterData[0].EmpAvgRatings;
-            //reportData.UserRole = masterData[0].UserRole;
-            //reportData.MasterDetails = masterData[0].Questions;
+            List<ReportDetails> masterData = objDet.GetReportDetails().ToList();
 
-            return View("Index");
+            reportData.EmpAvgRatings = masterData[0].EmpAvgRatings;
+            reportData.UserRole = masterData[0].UserRole;
+        
+
+
+            return View(reportData);
+        }
+
+        public ActionResult ReportPage(string userId, int survAvailId)
+        {
+            using(var unitOfWork = new UnitOfWork())
+            {
+                var reportDetails = unitOfWork.Reports.GetDetailsForReport(userId, survAvailId);
+                var sa = unitOfWork.Surveys.GetAnAvailableSurveyForCohortSYSTEM(survAvailId);
+
+                var model = new ReportDetailsViewModel
+                {
+                    ResponseItems = reportDetails,
+                    Categories = reportDetails.SelectMany(x => x.Questions).GroupBy(x => x.CategoryId).Select(x =>  new ReportCategory { Id = x.Key, Name = x.FirstOrDefault()?.CategoryName, Questions = x.GroupBy(y => y.QuestionId).Select(y => new ReportQuestion { Id = y.Key, Text = y.FirstOrDefault()?.QuestionText }).ToList() }).ToList()
+                };
+
+                return View(model);
+            }
         }
 
 

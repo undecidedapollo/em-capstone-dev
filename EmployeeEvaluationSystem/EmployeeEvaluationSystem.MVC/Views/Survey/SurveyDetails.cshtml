@@ -50,7 +50,7 @@
             @Html.DisplayFor(model => model.TheSurvey.SurveyName)
         </dd>
         <dt>
-            <strong>Survey Name</strong>
+            <strong>Survey Stage</strong>
         </dt>
 
         <dd>
@@ -81,12 +81,12 @@
 {
     <br />
     <br />
-    <h2>@(user.Name)'s Survey Results</h2>
+    <h2>@(user.Name)'s Survey Results</h2> if (user.CanShowReport) {@Html.ActionLink("View Report", "ReportPage", "ReportGeneration", new { userId = user.UserId, survAvailId = Model.TheSurvey.Id }, new { @class = "btn btn-primary btn-sm" })}
     <hr />
     <table class="table">
         <tr>
             <th>
-                <strong>Id</strong>
+                <strong>Pending Survey Id</strong>
             </th>
             <th>
                 <strong>Name/Email</strong>

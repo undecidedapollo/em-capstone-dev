@@ -20,6 +20,8 @@ namespace EmployeeEvaluationSystem.Entity.SharedObjects.Repository.Core
 
         ISurveyRepository Surveys { get; }
 
+        IReportRepository Reports { get; }
+
         int Complete();
     }
 }

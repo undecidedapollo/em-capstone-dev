@@ -1,0 +1,62 @@
+﻿@model EmployeeEvaluationSystem.MVC.Models.Report.ReportDetailsViewModel
+
+
+
+
+
+<table>
+    <thead>
+        <tr>
+            <th>
+
+            </th>
+            @for (var i = 0; i < Model.ResponseItems.Count; i++)
+            {
+                <th>
+                    @Html.DisplayFor(m => m.ResponseItems[i].Name) Average
+                </th>
+            }
+
+        </tr>
+    </thead>
+    <tbody>
+        @for(var i = 0; i < Model.Categories.Count; i++)
+        {
+            <tr>
+                <th>
+                    Category: @Html.DisplayFor(m => m.Categories[i].Name)
+                </th>
+            </tr>
+
+
+            for (var j = 0; j < Model.Categories[i].Questions.Count; j++)
+            {
+                <tr>
+                    <th>
+                        Question @Html.DisplayFor(m => m.Categories[i].Questions[j].Id): @Html.DisplayFor(m => m.Categories[i].Questions[j].Text)
+                    </th>
+                    @for(var x = 0; x < Model.ResponseItems.Count; x++)
+                    {
+                        <th>
+                            @if (Model.ResponseItems[x].Questions.FirstOrDefault(b => b.CategoryId == Model.Categories[i].Id && b.QuestionId == Model.Categories[i].Questions[j].Id) != null)
+                            {
+                                @(Model.ResponseItems[x].Questions.FirstOrDefault(b => b.CategoryId == Model.Categories[i].Id && b.QuestionId == Model.Categories[i].Questions[j].Id).RatingValue.ToString("0.00"))
+                            }
+                            else
+                            {
+                                <text>
+                                    No Response
+                            
+                            </text>
+                            }
+
+
+                        </th>
+                    }
+                </tr>
+            }
+        }
+    </tbody>
+</table>
+
+
