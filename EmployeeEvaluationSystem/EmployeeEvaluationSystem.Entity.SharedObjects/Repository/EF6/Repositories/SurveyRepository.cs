@@ -9,6 +9,7 @@ using EmployeeEvaluationSystem.Entity.SharedObjects.Model.Survey;
 using EmployeeEvaluationSystem.SharedObjects.Exceptions.Validitity;
 using System.Data.Entity;
 using EmployeeEvaluationSystem.SharedObjects.Enums;
+using EmployeeEvaluationSystem.Entity.SharedObjects.Model.Reports;
 
 namespace EmployeeEvaluationSystem.Entity.SharedObjects.Repository.EF6.Repositories
 {
@@ -218,18 +219,55 @@ namespace EmployeeEvaluationSystem.Entity.SharedObjects.Repository.EF6.Repositor
                 throw new ItemNotFoundException("Unable to find the survey type to create this survey.");
             }
 
+            var item = theCohort.SurveysAvailables.Where(x => x.SurveyID == model.SurveyId && x.IsDeleted == false).OrderByDescending(X => X.ID).FirstOrDefault();
+
+
+            if (item == null)
+            {
+                if(model.SurveyTypeId != 1)
+                {
+                    throw new Exception("Unable to create survey");
+                }
+            }
+            else
+            {
+
+                var nextResult = unitOfWork.Surveys.GetNextAvailableSurveyTypeForSurveyInCohort(model.SurveyId, model.CohortId);
+
+                if (nextResult == null || nextResult.ID != model.SurveyTypeId )
+                {
+                    throw new Exception("Unable to create survey");
+
+                }
+            }
+
             var validRoles = model.RolesSurveyFor
                 .GroupBy(x => x.RoleId)
                 .Select(x =>
                 {
+
                     if (x.Count() != 1)
                     {
                         throw new InvalidModelException("There must only be one instance for each role Id.");
                     }
 
-                    if (x.First().Quantity <= 0)
+                    if(x.First().RoleId == Convert.ToInt32(SurveyRoleEnum.SELF))
                     {
-                        throw new InvalidModelException("The quantity for a role must be greater than 0.");
+                        return new SurveysAvailableTo
+                        {
+                            UserSurveyRoleId = Convert.ToInt32(SurveyRoleEnum.SELF),
+                            Quantity = 1
+                        };
+                    }
+
+                    if (x.First().Quantity < 0)
+                    {
+                        throw new InvalidModelException("The quantity for a role must be 0 or greater.");
+                    }
+
+                    if(x.First().Quantity == 0)
+                    {
+                        return null;
                     }
 
                     var theRoleID = x.First().RoleId;
@@ -247,7 +285,7 @@ namespace EmployeeEvaluationSystem.Entity.SharedObjects.Repository.EF6.Repositor
                         UserSurveyRoleId = theRoleID,
                         Quantity = x.First().Quantity
                     };
-                }).ToList();
+                }).Where(x => x != null).ToList();
 
             var theSurveyAvailable = new SurveysAvailable
             {
@@ -260,14 +298,37 @@ namespace EmployeeEvaluationSystem.Entity.SharedObjects.Repository.EF6.Repositor
                 SurveysAvailableToes = validRoles
             };
 
+            var cohortUsers = theCohort.CohortUsers;
+
+            foreach(var theUser in cohortUsers)
+            {
+                if(theUser == null)
+                {
+                    continue;
+                }
+
+                var newPendingSurvey = new PendingSurvey
+                {
+                    Id = Guid.NewGuid(),
+                    DateSent = DateTime.UtcNow,
+                    StatusId = 1,
+                    IsDeleted = false,
+                    UserSurveyForId = theUser.UserID,
+                    UserTakenById = theUser.UserID,
+                    UserSurveyRoleID = Convert.ToInt32(SurveyRoleEnum.SELF)
+                };
+
+                theSurveyAvailable.PendingSurveys.Add(newPendingSurvey);
+            }
+
             this.dbcontext.SurveysAvailables.Add(theSurveyAvailable);
 
             return theSurveyAvailable;
         }
 
-        public SurveysAvailable GetAnAvailableSurveyForCohort(string currentUserID, int surveyAvailableId)
+        public SurveysAvailable GetAnAvailableSurveyForCohort(string currentUserID, int surveyAvailableId, bool track = true)
         {
-            return this.GetAnAvailableSurveyForCohortSYSTEM(surveyAvailableId);
+            return this.GetAnAvailableSurveyForCohortSYSTEM(surveyAvailableId, track);
         }
 
         public Survey GetSurvey(string userId, int surveyId)
@@ -290,9 +351,17 @@ namespace EmployeeEvaluationSystem.Entity.SharedObjects.Repository.EF6.Repositor
             return this.dbcontext.SurveyTypes.FirstOrDefault(x => x.ID == surveyTypeId && x.IsDeleted == false);
         }
 
-        public SurveysAvailable GetAnAvailableSurveyForCohortSYSTEM(int surveyAvailableId)
+        public SurveysAvailable GetAnAvailableSurveyForCohortSYSTEM(int surveyAvailableId, bool track = true)
         {
-            return this.dbcontext.SurveysAvailables.FirstOrDefault(x => x.ID == surveyAvailableId && x.IsDeleted == false);
+            if (track)
+            {
+                return this.dbcontext.SurveysAvailables.FirstOrDefault(x => x.ID == surveyAvailableId && x.IsDeleted == false);
+            }
+            else
+            {
+                return this.dbcontext.SurveysAvailables.AsNoTracking().FirstOrDefault(x => x.ID == surveyAvailableId && x.IsDeleted == false);
+            }
+            
         }
 
         public bool IsSurveyAvailableStillOpen(int surveyAvailableId)
@@ -508,6 +577,8 @@ namespace EmployeeEvaluationSystem.Entity.SharedObjects.Repository.EF6.Repositor
             return this.dbcontext.PendingSurveys.Where(x => x.UserTakenById == userId && x.IsDeleted == false && (x.SurveyInstance == null || x.SurveyInstance.DateFinished == null))
                 .Include(x => x.SurveysAvailable)
                 .Include(x => x.SurveysAvailable.Survey)
+                .Include(x => x.UserSurveyRole)
+                .Include(x => x.SurveysAvailable.SurveyType)
                 .ToList();
         }
 
@@ -516,6 +587,8 @@ namespace EmployeeEvaluationSystem.Entity.SharedObjects.Repository.EF6.Repositor
             return this.dbcontext.PendingSurveys.Where(x => x.UserTakenById == userId && x.IsDeleted == false && x.SurveyInstance != null && x.SurveyInstance.DateFinished != null)
                                 .Include(x => x.SurveysAvailable)
                                 .Include(x => x.SurveysAvailable.Survey)
+                                .Include(x => x.SurveysAvailable.SurveyType)
+                                .Include(x => x.UserSurveyRole)
                                 .ToList();
         }
 
@@ -661,6 +734,11 @@ namespace EmployeeEvaluationSystem.Entity.SharedObjects.Repository.EF6.Repositor
         public SurveysAvailable GetPreviousSurveyForCohort(int cohortId, int currentAvailableId)
         {
             throw new NotImplementedException();
+        }
+
+        public List<(string firstname, string lastname, string email, int roleId)> GetMostRecentRatersForUser(string userId, int count)
+        {
+            return this.dbcontext.PendingSurveys.Where(x => x.UserSurveyForId == userId && x.IsDeleted == false && x.Email != null).GroupBy(x => x.Email).Select(x => x.FirstOrDefault()).Where(x => x != null).OrderByDescending(x => x.DateSent).Take(count).ToList().Select(x => (x.RaterFirstName, x.RaterLastName, x.Email, x.UserSurveyRoleID)).ToList();
         }
     }
 }

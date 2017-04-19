@@ -11,9 +11,12 @@ using System.Web.Mvc;
 using EmployeeEvaluationSystem.Entity;
 using Microsoft.AspNet.Identity;
 using EmployeeEvaluationSystem.Entity.SharedObjects.Repository.EF6;
+using EmployeeEvaluationSystem.Entity.SharedObjects.Repository.EF6.Repositories;
 using EmployeeEvaluationSystem.Entity.SharedObjects.Model.Authentication;
 using EmployeeEvaluationSystem.MVC.Models;
 using System.Data;
+using EmployeeEvaluationSystem.Entity.SharedObjects.Model.Reports;
+using EmployeeEvaluationSystem.MVC.Models.Report;
 
 namespace EmployeeEvaluationSystem.MVC.Controllers
 {
@@ -23,7 +26,7 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
 
         // GET: ReportGeneration
         public ActionResult Index()
-        {
+        {                    
             return View();
         }
 
@@ -44,6 +47,7 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
             }
         }
 
+        // GET: ReportGeneration/Create
         public ActionResult Create()
         {
 
@@ -60,6 +64,44 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
 
                 return View(viewModel);
             }
+        }
+
+        // POST: ReportGeneration/Create
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Create(ReportGenerationViewModel model, List<string> ids)
+        {
+            var userId = User?.Identity?.GetUserId();
+            var usersToRegister = new List<string>();
+
+            using (var unitOfWork = new UnitOfWork())
+            {
+                
+
+                foreach (var id in ids)
+                {
+                    var user = PersonalAspNetUserViewModel.Convert(unitOfWork.Users.GetUser(userId, id));
+
+                    
+
+                    var cohortUser = new CohortUser()
+                    {
+                        UserID = id
+                    };
+
+                    
+                }
+
+                
+
+                unitOfWork.Complete();
+            }
+
+            TempData["usersToRegister"] = usersToRegister.ToList();
+
+            return RedirectToAction("SendEmailConfirmationTokenAsync", "Account", new { subject = "Confirm Email" });
         }
 
 
@@ -83,6 +125,54 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
             var rating = this.GetRating(id);
            
             return rating;
+        }
+
+        // GET: Report  
+        //public ActionResult ReportDetail()
+        //{
+        //    var unitofwork = new UnitOfWork();
+        //    var dbcontext = new EmployeeDatabaseEntities();
+        //    ReportRepository objDet = new ReportRepository(unitofwork, dbcontext);
+        //    ReportDetails reportData = new ReportDetails();
+
+        //    List<ReportDetails> masterData = objDet.GetReportDetails().ToList();
+
+        //    reportData.EmpAvgRatings = masterData[0].EmpAvgRatings;
+        //    reportData.UserRole = masterData[0].UserRole;
+        
+
+
+        //    return View(reportData);
+        //}
+
+        public ActionResult ReportPage(string userId, int survAvailId)
+        {
+            using(var unitOfWork = new UnitOfWork())
+            {
+                var reportDetails = unitOfWork.Reports.GetDetailsForReport(userId, survAvailId);
+                var sa = unitOfWork.Surveys.GetAnAvailableSurveyForCohortSYSTEM(survAvailId);
+                var user = unitOfWork.Users.GetUser(userId, userId);
+
+                var type = sa.Survey.Name;
+                var stage = sa.SurveyType.Name;
+                var dateCreated = sa.SurveyType.DateCreated;
+
+                var firstName = user.FirstName;
+                var lastName = user.LastName;
+
+                var title = "Employee " + firstName + " " + lastName + " " + " Evaluation Report";
+                var title2 = "Evaluation " + stage + " " + type + " " + "- generated on " + dateCreated;
+                var model = new ReportDetailsViewModel
+                {
+                    ResponseItems = reportDetails,
+                    Categories = reportDetails.SelectMany(x => x.Questions).GroupBy(x => x.CategoryId).Select(x =>  new ReportCategory { Id = x.Key, Name = x.FirstOrDefault()?.CategoryName, Questions = x.GroupBy(y => y.QuestionId).Select(y => new ReportQuestion { Id = y.Key, Text = y.FirstOrDefault()?.QuestionText }).ToList() }).ToList(),
+                    Header = title,
+                    Header2 = title2
+                    
+                };
+
+                return View(model);
+            }
         }
 
 

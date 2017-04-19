@@ -15,12 +15,30 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using EmployeeEvaluationSystem.SharedObjects.Enums;
 using EmployeeEvaluationSystem.MVC.Models.Survey;
+using EmployeeEvaluationSystem.Entity.SharedObjects.Model.Survey;
 
 namespace EmployeeEvaluationSystem.MVC.Controllers
 {
+
+
     [Authorize(Roles = "Admin")]
     public class CohortsController : Controller
     {
+
+        private HttpRequestBase passedInRequest;
+
+        public CohortsController()
+        {
+        }
+
+        public CohortsController( HttpRequestBase request = null)
+        {
+            this.passedInRequest = request;
+        }
+
+
+
+
         // GET: Cohort
         public ActionResult Index(int? id)
         {
@@ -137,7 +155,7 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
                     Description = model.Cohort.Description,
                     DateCreated = DateTime.UtcNow
                 };
-
+                
                 foreach (var id in ids)
                 {
                     var user = PersonalAspNetUserViewModel.Convert(unitOfWork.Users.GetUser(userId, id));
@@ -271,35 +289,77 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
                         CanChange = x.ID == Convert.ToInt32(SurveyRoleEnum.SELF) ? false : true }
                     ).ToList(),
                     AssignedSurveys = assignedSurveys ?? throw new Exception(),
-                    NewSurveys = newSurvList
+                    NewSurveys = newSurvList,
+                    CohortID = cohort.ID
                 };
 
                 return View(model);
             }
         }
 
-        // GET: Cohort/Edit/5
-        public ActionResult Edit(int? id)
+        [HttpPost]
+        // POST: Cohort/StartEvaluation/5
+        public async Task<ActionResult> StartEvaluation(StartEvaluationViewModel model)
         {
-            if (id == null)
+            var roleModels = new List<CreateAvailableSurveyRolesModel>();
+
+            foreach(var item in model.RoleQuantities)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                var roleModel = new CreateAvailableSurveyRolesModel()
+                {
+                    RoleId = item.Id,
+                    Quantity = item.Quantity
+                };
+
+                roleModels.Add(roleModel);
             }
+
+            var surveyModel = new CreateAvailableSurveyModel()
+            {
+                CohortId = model.CohortID,
+                SurveyId = model.SurveyID,
+                DateStart = model.DateOpen,
+                DateEnd = model.DateClosed,
+                SurveyTypeId = model.SurveyTypeID,
+                RolesSurveyFor = roleModels
+            };
 
             var userId = User?.Identity?.GetUserId();
 
             using (var unitOfWork = new UnitOfWork())
             {
-                Cohort cohort = unitOfWork.Cohorts.GetCohort(userId, id);
+                var availableSurvey = unitOfWork.Surveys.CreateAnAvailableSurveyForCohort(userId, surveyModel);
 
-                if (cohort == null)
+                unitOfWork.Complete();
+
+                availableSurvey = unitOfWork.Surveys.GetAnAvailableSurveyForCohort(userId, availableSurvey.ID, false);
+
+                foreach (var item in availableSurvey.PendingSurveys)
                 {
-                    return HttpNotFound();
+                    var scheme = Request?.Url?.Scheme ?? passedInRequest.Url.Scheme;
+                    var hostname = Request?.Url?.Host ?? passedInRequest.Url.Host;
+
+                    if ((Request?.Url?.Port ?? passedInRequest.Url.Port) != 80 || (Request?.Url?.Port ?? passedInRequest.Url.Port) != 43)
+                    {
+                        hostname += ":" + (Request?.Url?.Port ?? passedInRequest.Url.Port);
+                    }
+
+                    var theUrl = $"{scheme}://{hostname}/Survey/StartSurvey?pendingSurveyId={item.Id}&userId={item.UserTakenById}";
+
+                    await SendgridEmailService.GetInstance().SendAsync(
+                        new IdentityMessage
+                        {
+                            Destination = item.UserTakenBy.Email,
+                            Subject = $"You have a new survey available.",
+                            Body = $"There is a pending survey waiting for you. The survey is called \"{availableSurvey.Survey.Name}\" - {availableSurvey.SurveyType.Name}. The survey is available from {availableSurvey.DateOpen} to {availableSurvey.DateClosed}. Please click the link to take the survey: <a href=\"" + theUrl + "\">Survey</a>"
+                        });
                 }
 
-                return View(cohort);
-            }
+                return View("AssignedSurveyEmailSent");
+            } 
         }
+
+        
 
         // POST: Cohort/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 

@@ -51,12 +51,17 @@
                 <div class="col-md-3">
                     @if (Model.Raters[i].CanChange)
                     {
-                        @Html.TextBoxFor(m => m.Raters[i].Email)
+                        @Html.TextBoxFor(m => m.Raters[i].RaterFirstName, new { placeholder = "Rater First Name" })
+                        @Html.TextBoxFor(m => m.Raters[i].RaterLastName, new { placeholder = "Rater Last Name" })
+                        @Html.TextBoxFor(m => m.Raters[i].Email, new { placeholder = "Rater Email" })
                     }
                     else
                     {
+                        @(Model.Raters[i].RaterFirstName) @(Model.Raters[i].RaterLastName) <br />
                         @(Model.Raters[i].Email)
                         @Html.HiddenFor(x => x.Raters[i].Email)
+                        @Html.HiddenFor(x => x.Raters[i].RaterFirstName)
+                        @Html.HiddenFor(x => x.Raters[i].RaterLastName)
                     }
                     @if (Model.Raters[i].CanResendEmail)
                     {

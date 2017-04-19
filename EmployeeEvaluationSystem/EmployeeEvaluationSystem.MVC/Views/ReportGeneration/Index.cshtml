@@ -1,10 +1,10 @@
-﻿@model IEnumerable<EmployeeEvaluationSystem.MVC.Models.ReportGenerationViewModel>
-@{
+﻿@model EmployeeEvaluationSystem.Entity.SharedObjects.Model.Reports.ReportDetails
+@*@{
     Layout = null;
-    ViewBag.Title = "Employee";
-}
+    ViewBag.Title = "ReportDetail";
+}*@
 
-<!DOCTYPE html>
+@*<!DOCTYPE html>
 
 <html>
 <head>
@@ -17,18 +17,19 @@
         }
     </style>
 </head>
-<body>
-    <h3>Employee Evaluation Report</h3>
+<body>*@
+    @*<h3>Employee Evaluation Report @Html.DisplayTextFor(model => model.EmpAvgRatings[1].Name)</h3>*@
+@*<h3>Employee Evaluation Report @Html.DisplayNameFor(model => model.QuestionId.SurveyInstance)</h3>
     <hr/>
     <div id="Report">
-        <table cellpadding="5" cellspacing="0" style="border: 2px solid #ccc; font-size: 11pt;">
+        <table cellpadding="15" cellspacing="0" style="border: 2px solid #ccc; font-size: 11pt;">
             <tr>
-                <th style="background-color: lightslategray; border: 2px solid #ccc"></th>
-                <th style="background-color: lightslategray; border: 2px solid #ccc">Self</th>
-                <th style="background-color: lightslategray; border: 2px solid #ccc">Supervisor</th>
-                <th style="background-color: lightslategray; border: 2px solid #ccc">Average Co-worker</th>
-                <th style="background-color: lightslategray; border: 2px solid #ccc">Average Supervisees</th>
-                <th style="background-color: lightslategray; border: 2px solid #ccc">Average</th>
+                <th style="background-color: forestgreen; border: 2px solid #ccc"></th>
+                <th style="background-color: forestgreen; border: 2px solid #ccc">Self</th>
+                <th style="background-color: forestgreen; border: 2px solid #ccc">Supervisor</th>
+                <th style="background-color: forestgreen; border: 2px solid #ccc">Average Co-worker</th>
+                <th style="background-color: forestgreen; border: 2px solid #ccc">Average Supervisees</th>
+                <th style="background-color: forestgreen; border: 2px solid #ccc">Average</th>
             </tr>
 
 
@@ -36,7 +37,7 @@
             {
 
                 <tr>
-                    <td style="width:120px; border: 2px solid #ccc">@item.QuestionId</td>
+                    <td style="width:120px; border: 2px solid #ccc">@item.QuestionId.QuestionID</td>
                     <td style="width:120px; border: 2px solid #ccc">@item.SelfEvaluationResult</td>
                     <td style="width:120px; border: 2px solid #ccc">@item.SupervisorEvaluationResult</td>
                     <td style="width:120px; border: 2px solid #ccc">@item.CoworkerAverage</td>
@@ -61,6 +62,103 @@
                 $("ipnput [name='TableHtml']").val($("#Report").html());
             });
         });
-    </script>
-</body>
-</html>
+    </script>*@
+    
+    
+@using (Html.BeginForm())
+{
+    <div class="form-horizontal">
+        <hr/>
+        <div class="form-group">
+            <h5 class="btn btn-primary">Employee Report</h5>
+            <div class="col-md-12">
+                <table class="table table-hover col-md-3">
+
+                    <tr>
+                        <th>
+                            ID
+                        </th>
+                        <th>
+                            Name
+                        </th>
+                        <th>
+                            Questions
+                        </th>
+
+                    </tr>
+
+
+                    @{
+
+                        //int i = 0;
+                        //foreach (var item in Model.MasterDetails)
+                        {
+
+                            <tr>
+                                <td>
+                                    @Html.DisplayTextFor(o => o.MasterDetails[16].RatingValue)
+                                </td>
+                                <td>
+                                    @Html.DisplayTextFor(o => o.MasterDetails[16].QuestionText)
+                                </td>
+                                <td>
+                                    @Html.DisplayTextFor(o => o.MasterDetails[16].QuestionId)
+                                </td>
+
+                            </tr>
+                            //i++;
+                        }
+                    }
+                </table>
+            </div>
+        </div>
+
+        @*<div class="form-group">
+            <h5 class="btn btn-primary"></h5>
+            <div class="col-md-12">
+                <table class="table table-condensed table-hover col-md-3">
+                    <tr>
+                        <th>
+                            
+                        </th>
+                        <th>
+                            
+                        </th>
+                        <th>
+                           
+                        </th>
+
+                    </tr>
+                    @{
+                        //To make unique Id
+                        int j = 0;
+                        foreach (var item in Model.)
+                        {
+
+                            <tr>
+                                <td>
+
+
+                                    @Html.EditorFor(o => o.[j], new { @id = "" + j })
+                                </td>
+                                <td>
+                                    @Html.EditorFor(o => o.[j]., new { @id = "" + j })
+
+
+                                </td>
+                                <td>
+                                    @Html.EditorFor(o => o.[j]., new { @id = "" + j })
+                                </td>
+
+                            </tr>
+                            j++;
+                        }
+                    }
+                </table>
+            </div>
+        </div>*@
+
+    </div>
+@*</body>
+</html>*@
+}

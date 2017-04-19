@@ -50,6 +50,19 @@
         <AssociationConnector Association="EmployeeEvaluationSystem.Entity.EntityModel.FK_SurveysAvailable_To_Survey" />
         <AssociationConnector Association="EmployeeEvaluationSystem.Entity.EntityModel.FK_SurveysAvailable_To_SurveyType" />
         <AssociationConnector Association="EmployeeEvaluationSystem.Entity.EntityModel.FK_SurveysAvailableTo_SurveysAvailable" />
+        <EntityTypeShape EntityType="EmployeeEvaluationSystem.Entity.EntityModel.AggregatedCounter" Width="1.5" PointX="0.75" PointY="0.75" />
+        <EntityTypeShape EntityType="EmployeeEvaluationSystem.Entity.EntityModel.Counter" Width="1.5" PointX="2.75" PointY="0.75" />
+        <EntityTypeShape EntityType="EmployeeEvaluationSystem.Entity.EntityModel.Hash" Width="1.5" PointX="0.75" PointY="3.75" />
+        <EntityTypeShape EntityType="EmployeeEvaluationSystem.Entity.EntityModel.Job" Width="1.5" PointX="15.75" PointY="17.25" />
+        <EntityTypeShape EntityType="EmployeeEvaluationSystem.Entity.EntityModel.JobParameter" Width="1.5" PointX="18" PointY="19.25" />
+        <EntityTypeShape EntityType="EmployeeEvaluationSystem.Entity.EntityModel.JobQueue" Width="1.5" PointX="2.75" PointY="3.75" />
+        <EntityTypeShape EntityType="EmployeeEvaluationSystem.Entity.EntityModel.List" Width="1.5" PointX="4.75" PointY="5.75" />
+        <EntityTypeShape EntityType="EmployeeEvaluationSystem.Entity.EntityModel.Schema" Width="1.5" PointX="0.75" PointY="6.75" />
+        <EntityTypeShape EntityType="EmployeeEvaluationSystem.Entity.EntityModel.Server" Width="1.5" PointX="16.75" PointY="0.75" />
+        <EntityTypeShape EntityType="EmployeeEvaluationSystem.Entity.EntityModel.Set" Width="1.5" PointX="17.75" PointY="10.75" />
+        <EntityTypeShape EntityType="EmployeeEvaluationSystem.Entity.EntityModel.State" Width="1.5" PointX="18" PointY="16.125" />
+        <AssociationConnector Association="EmployeeEvaluationSystem.Entity.EntityModel.FK_HangFire_JobParameter_Job" />
+        <AssociationConnector Association="EmployeeEvaluationSystem.Entity.EntityModel.FK_HangFire_State_Job" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>
