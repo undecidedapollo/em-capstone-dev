@@ -127,21 +127,21 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
             return rating;
         }
 
-        //// GET: Report  
-        //public ActionResult ReportDetail()
-        //{
-        //    ReportRepository objDet = new ReportRepository();
-        //    ReportDetails reportData = new ReportDetails();
+        // GET: Report  
+        public ActionResult ReportDetail()
+        {
+            ReportRepository objDet = new ReportRepository();
+            ReportDetails reportData = new ReportDetails();
 
-        //    List<ReportDetails> masterData = objDet.GetReportDetails().ToList();
+            List<ReportDetails> masterData = objDet.GetReportDetails().ToList();
 
-        //    reportData.EmpAvgRatings = masterData[0].EmpAvgRatings;
-        //    reportData.UserRole = masterData[0].UserRole;
-          
+            reportData.EmpAvgRatings = masterData[0].EmpAvgRatings;
+            reportData.UserRole = masterData[0].UserRole;
+        
 
 
-        //    return View(reportData);
-        //}
+            return View(reportData);
+        }
 
         public ActionResult ReportPage(string userId, int survAvailId)
         {
