@@ -128,22 +128,22 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
         }
 
         // GET: Report  
-        public ActionResult ReportDetail()
-        {
-            var unitofwork = new UnitOfWork();
-            var dbcontext = new EmployeeDatabaseEntities();
-            ReportRepository objDet = new ReportRepository(unitofwork, dbcontext);
-            ReportDetails reportData = new ReportDetails();
+        //public ActionResult ReportDetail()
+        //{
+        //    var unitofwork = new UnitOfWork();
+        //    var dbcontext = new EmployeeDatabaseEntities();
+        //    ReportRepository objDet = new ReportRepository(unitofwork, dbcontext);
+        //    ReportDetails reportData = new ReportDetails();
 
-            List<ReportDetails> masterData = objDet.GetReportDetails().ToList();
+        //    List<ReportDetails> masterData = objDet.GetReportDetails().ToList();
 
-            reportData.EmpAvgRatings = masterData[0].EmpAvgRatings;
-            reportData.UserRole = masterData[0].UserRole;
+        //    reportData.EmpAvgRatings = masterData[0].EmpAvgRatings;
+        //    reportData.UserRole = masterData[0].UserRole;
         
 
 
-            return View(reportData);
-        }
+        //    return View(reportData);
+        //}
 
         public ActionResult ReportPage(string userId, int survAvailId)
         {
@@ -153,13 +153,22 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
                 var sa = unitOfWork.Surveys.GetAnAvailableSurveyForCohortSYSTEM(survAvailId);
                 var user = unitOfWork.Users.GetUser(userId, userId);
 
-                var temp = sa.Survey.Name;
-                var type = sa.SurveyType.Name;
+                var type = sa.Survey.Name;
+                var stage = sa.SurveyType.Name;
+                var dateCreated = sa.SurveyType.DateCreated;
 
+                var firstName = user.FirstName;
+                var lastName = user.LastName;
+
+                var title = "Employee " + firstName + " " + lastName + " " + " Evaluation Report";
+                var title2 = "Evaluation " + stage + " " + type + " " + "- generated on " + dateCreated;
                 var model = new ReportDetailsViewModel
                 {
                     ResponseItems = reportDetails,
-                    Categories = reportDetails.SelectMany(x => x.Questions).GroupBy(x => x.CategoryId).Select(x =>  new ReportCategory { Id = x.Key, Name = x.FirstOrDefault()?.CategoryName, Questions = x.GroupBy(y => y.QuestionId).Select(y => new ReportQuestion { Id = y.Key, Text = y.FirstOrDefault()?.QuestionText }).ToList() }).ToList()
+                    Categories = reportDetails.SelectMany(x => x.Questions).GroupBy(x => x.CategoryId).Select(x =>  new ReportCategory { Id = x.Key, Name = x.FirstOrDefault()?.CategoryName, Questions = x.GroupBy(y => y.QuestionId).Select(y => new ReportQuestion { Id = y.Key, Text = y.FirstOrDefault()?.QuestionText }).ToList() }).ToList(),
+                    Header = title,
+                    Header2 = title2
+                    
                 };
 
                 return View(model);

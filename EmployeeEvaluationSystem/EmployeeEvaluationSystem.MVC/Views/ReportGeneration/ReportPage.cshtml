@@ -20,7 +20,8 @@
 <body>
     <form id="form1">
         <div id="reportContainer">
-
+            <h3>@(Model.Header)</h3>
+            <h3>@(Model.Header2)</h3>
             <table style="width: 100%; border: 2px solid #ccc; font-size: 11pt;">
                 <thead>
                     <tr>
@@ -28,10 +29,10 @@
 
                         </th>
                         @for (var i = 0; i < Model.ResponseItems.Count; i++)
-            {
+                       {               
                             <th style="text-align: center; background-color: lightblue; border: 3px solid #ccc; font-size: 12pt;">
                                 @Html.DisplayFor(m => m.ResponseItems[i].Name) Average
-                            </th>
+                            </th>                        
                         }
 
                     </tr>
