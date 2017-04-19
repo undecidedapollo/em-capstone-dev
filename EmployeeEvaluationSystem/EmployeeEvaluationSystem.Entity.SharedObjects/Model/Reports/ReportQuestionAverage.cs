@@ -10,11 +10,8 @@ namespace EmployeeEvaluationSystem.Entity.SharedObjects.Model.Reports
     {
         public int CategoryId { get; set; }
         public string CategoryName { get; set; }
-
         public int QuestionId { get; set; }
-
         public string QuestionText { get; set; }
-
         public double RatingValue { get; set; }
 
     }

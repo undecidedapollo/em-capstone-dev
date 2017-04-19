@@ -129,17 +129,18 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
         // GET: Report  
         public ActionResult ReportDetail()
         {
-            ReportRepository objDet = new ReportRepository();
+            var unitOfWork = new UnitOfWork();
+            var dbcontext = new EmployeeDatabaseEntities();
+            ReportRepository objDet = new ReportRepository(unitOfWork, dbcontext);
             ReportDetails reportData = new ReportDetails();
+            ReportRole reportRole = new ReportRole();
+            List<ReportRole> masterData = objDet.GetDetailsForReport("2", 2).ToList();
 
-            List<ReportDetails> masterData = objDet.GetReportDetails().ToList();
+            //reportData.EmpAvgRatings = masterData[0].EmpAvgRatings;
+            //reportData.UserRole = masterData[0].UserRole;
+            //reportData.MasterDetails = masterData[0].Questions;
 
-            reportData.EmpAvgRatings = masterData[0].EmpAvgRatings;
-            reportData.UserRole = masterData[0].UserRole;
-            
-
-
-            return View(reportData);
+            return View("Index");
         }
 
 

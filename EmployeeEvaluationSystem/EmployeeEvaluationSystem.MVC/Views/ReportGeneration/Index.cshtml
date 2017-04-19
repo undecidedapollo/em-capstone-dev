@@ -1,7 +1,7 @@
 ﻿@model EmployeeEvaluationSystem.Entity.SharedObjects.Model.Reports.ReportDetails
 @*@{
     Layout = null;
-    ViewBag.Title = "Employee";
+    ViewBag.Title = "ReportDetail";
 }*@
 
 @*<!DOCTYPE html>
@@ -18,7 +18,7 @@
     </style>
 </head>
 <body>*@
-    <h3>Employee Evaluation Report @Html.DisplayTextFor(model => model.EmpAvgRatings[1].Name)</h3>
+    @*<h3>Employee Evaluation Report @Html.DisplayTextFor(model => model.EmpAvgRatings[1].Name)</h3>*@
 @*<h3>Employee Evaluation Report @Html.DisplayNameFor(model => model.QuestionId.SurveyInstance)</h3>
     <hr/>
     <div id="Report">
@@ -82,7 +82,7 @@
                             Name
                         </th>
                         <th>
-                            Description
+                            Questions
                         </th>
 
                     </tr>
@@ -91,18 +91,18 @@
                     @{
 
                         //int i = 0;
-                        //foreach (var item in Model.EmpAvgRatings)
+                        //foreach (var item in Model.MasterDetails)
                         {
 
                             <tr>
                                 <td>
-                                    @Html.DisplayTextFor(o => o.EmpAvgRatings[13].ID)
+                                    @Html.DisplayTextFor(o => o.MasterDetails[16].RatingValue)
                                 </td>
                                 <td>
-                                    @Html.DisplayTextFor(o => o.EmpAvgRatings[13].Name)
+                                    @Html.DisplayTextFor(o => o.MasterDetails[16].QuestionText)
                                 </td>
                                 <td>
-                                    @Html.DisplayTextFor(o => o.EmpAvgRatings[13].Description)
+                                    @Html.DisplayTextFor(o => o.MasterDetails[16].QuestionId)
                                 </td>
 
                             </tr>
