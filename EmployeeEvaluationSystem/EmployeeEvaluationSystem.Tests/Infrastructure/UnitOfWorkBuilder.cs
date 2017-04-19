@@ -44,22 +44,6 @@ namespace EmployeeEvaluationSystem.Tests.Infrastructure
                     continue;
                 }
 
-                //Type genericListType = typeof(List<>).MakeGenericType(type);
-                //var obj = (IList)Activator.CreateInstance(genericListType);
-
-                //var queriableObj = obj.AsQueryable();
-
-                //Type dbSetGeneric = typeof(DbSet<>).MakeGenericType(type);
-
-                //Type theMockGeneric = typeof(Mock<>).MakeGenericType(dbSetGeneric);
-
-                //var mockSet = (Mock)Activator.CreateInstance(theMockGeneric);
-
-                //mockSet.As<IQueryable>().Setup(m => m.Provider).Returns(queriableObj.Provider);
-                //mockSet.As<IQueryable>().Setup(m => m.Expression).Returns(queriableObj.Expression);
-                //mockSet.As<IQueryable>().Setup(m => m.ElementType).Returns(queriableObj.ElementType);
-                //mockSet.As<IQueryable>().Setup(m => m.GetEnumerator()).Returns(queriableObj.GetEnumerator());
-
                 ParameterExpression param = Expression.Parameter(typeof(T), "context");
 
                 var memExp = Expression.PropertyOrField(param, dbProps.Name);

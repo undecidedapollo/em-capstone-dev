@@ -32,8 +32,7 @@ namespace EmployeeEvaluationSystem.Tests.Repositories
             using(var unitOfWork = new UnitOfWork(x.GetContext()))
             {
                 var users = unitOfWork.Users.GetAllUsers(null).ToList();
-
-                unitOfWork.Complete();
+                
 
                 Assert.AreEqual(3, users.Count());
                 Assert.AreEqual("BBB", users[0].FirstName);

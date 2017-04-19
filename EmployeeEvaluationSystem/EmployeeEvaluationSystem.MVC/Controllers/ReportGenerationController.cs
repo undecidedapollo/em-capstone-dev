@@ -16,6 +16,7 @@ using EmployeeEvaluationSystem.Entity.SharedObjects.Model.Authentication;
 using EmployeeEvaluationSystem.MVC.Models;
 using System.Data;
 using EmployeeEvaluationSystem.Entity.SharedObjects.Model.Reports;
+using EmployeeEvaluationSystem.MVC.Models.Report;
 
 namespace EmployeeEvaluationSystem.MVC.Controllers
 {
@@ -126,20 +127,37 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
             return rating;
         }
 
-        // GET: Report  
-        public ActionResult ReportDetail()
+        //// GET: Report  
+        //public ActionResult ReportDetail()
+        //{
+        //    ReportRepository objDet = new ReportRepository();
+        //    ReportDetails reportData = new ReportDetails();
+
+        //    List<ReportDetails> masterData = objDet.GetReportDetails().ToList();
+
+        //    reportData.EmpAvgRatings = masterData[0].EmpAvgRatings;
+        //    reportData.UserRole = masterData[0].UserRole;
+          
+
+
+        //    return View(reportData);
+        //}
+
+        public ActionResult ReportPage(string userId, int survAvailId)
         {
-            ReportRepository objDet = new ReportRepository();
-            ReportDetails reportData = new ReportDetails();
+            using(var unitOfWork = new UnitOfWork())
+            {
+                var reportDetails = unitOfWork.Reports.GetDetailsForReport(userId, survAvailId);
+                var sa = unitOfWork.Surveys.GetAnAvailableSurveyForCohortSYSTEM(survAvailId);
 
-            List<ReportDetails> masterData = objDet.GetReportDetails().ToList();
+                var model = new ReportDetailsViewModel
+                {
+                    ResponseItems = reportDetails,
+                    Categories = reportDetails.SelectMany(x => x.Questions).GroupBy(x => x.CategoryId).Select(x =>  new ReportCategory { Id = x.Key, Name = x.FirstOrDefault()?.CategoryName, Questions = x.GroupBy(y => y.QuestionId).Select(y => new ReportQuestion { Id = y.Key, Text = y.FirstOrDefault()?.QuestionText }).ToList() }).ToList()
+                };
 
-            reportData.EmpAvgRatings = masterData[0].EmpAvgRatings;
-            reportData.UserRole = masterData[0].UserRole;
-            
-
-
-            return View(reportData);
+                return View(model);
+            }
         }
 
 

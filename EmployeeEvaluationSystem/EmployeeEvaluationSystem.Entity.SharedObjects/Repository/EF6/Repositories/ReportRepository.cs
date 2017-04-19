@@ -87,6 +87,35 @@ namespace EmployeeEvaluationSystem.Entity.SharedObjects.Repository.EF6.Repositor
                         }).ToList()
                 }).ToList();
 
+
+            var overall = this.dbcontext.PendingSurveys
+                .Where(x => x.IsDeleted == false && x.SurveyAvailToMeID == surveyAvailableId && x.UserSurveyForId == userId).Select(y => y.SurveyInstance)
+                        .Where(z => z.DateFinished != null)
+                        .SelectMany(y => y.AnswerInstances)
+                        .GroupBy(y => y.QuestionID)
+                        .Select(y => new {
+                            QuestionId = y.Key,
+                            QuestionName = y.Select(z => z.Question.Name).FirstOrDefault(),
+                            CategoryId = y.Select(z => z.Question.Category.ID).FirstOrDefault(),
+                            CategoryName = y.Select(z => z.Question.Category.Name).FirstOrDefault(),
+                            Avg = y.Select(z => z.ResponseNum).Average(),
+                            Count = y.Count()
+                        }).ToList();
+
+            newResults.Add(new ReportRole
+            {
+                Name = "Overall",
+                Questions = overall.Select(
+                        y => new ReportQuestionAverage
+                        {
+                            CategoryId = y.CategoryId,
+                            CategoryName = y.CategoryName,
+                            QuestionId = y.QuestionId,
+                            QuestionText = y.QuestionName,
+                            RatingValue = y.Avg
+                        }).ToList()
+            });
+
             return newResults;
         }
     }
