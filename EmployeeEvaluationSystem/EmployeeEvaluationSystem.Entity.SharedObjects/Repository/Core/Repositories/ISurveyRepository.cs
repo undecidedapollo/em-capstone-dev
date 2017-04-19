@@ -115,7 +115,7 @@ namespace EmployeeEvaluationSystem.Entity.SharedObjects.Repository.Core.Reposito
 
         int CancelAllOldSurveyLocks();
 
-        List<(string firstname, string lastname, string email, int roleId)> GetMostRecentRatersForUser(string userId, int count);
+        List<RaterOBJ> GetMostRecentRatersForUser(string userId, int count);
 
         SurveysAvailable GetPreviousSurveyForCohort(int cohortId, int currentAvailableId);
     }
