@@ -514,8 +514,8 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
 
                 var theRaters = unitOfWork.Surveys.GetPendingSurveysOfRatersForUser(userId, penSurveyId);
 
-            
 
+               
 
 
                 var viewModel = new RatersPageViewModel
@@ -560,11 +560,15 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
                         Status = status,
                         CanChange = canChange,
                         Id = rater.Id,
-                        CanResendEmail = resendEmail
+                        CanResendEmail = resendEmail,
+                        RaterFirstName = rater.RaterFirstName,
+                        RaterLastName = rater.RaterLastName
                     };
 
                     viewModel.Raters.Add(newRater);
                 }
+
+                var previousRaters = unitOfWork.Surveys.GetMostRecentRatersForUser(userId, 10).ToList();
 
                 foreach (var aRater in expectedRaters)
                 {
@@ -580,19 +584,46 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
                     {
                         var diff = aRater.Quantity - count;
 
+                        
+
                         for (var i = 0; i < diff; i++)
                         {
-                            var newRater = new RaterViewModel
+                            if(previousRaters.Any(x => x.roleId == aRater.UserSurveyRoleId))
                             {
-                                CanChange = true,
-                                Email = null,
-                                Role = aRater.UserSurveyRole.Name,
-                                RoleId = aRater.UserSurveyRole.ID,
-                                Status = "New Rater",
-                                CanResendEmail = false
-                            };
+                                var possibleRater = previousRaters.FirstOrDefault(x => x.roleId == aRater.UserSurveyRoleId);
+                                var newRater = new RaterViewModel
+                                {
+                                    CanChange = true,
+                                    Email = possibleRater.email,
+                                    RaterFirstName = possibleRater.firstname,
+                                    RaterLastName = possibleRater.lastname,
+                                    Role = aRater.UserSurveyRole.Name,
+                                    RoleId = aRater.UserSurveyRole.ID,
+                                    Status = "New Rater",
+                                    CanResendEmail = false
+                                };
 
-                            viewModel.Raters.Add(newRater);
+                                previousRaters.Remove(possibleRater);
+                                viewModel.Raters.Add(newRater);
+                            }
+                            else
+                            {
+                                var newRater = new RaterViewModel
+                                {
+                                    CanChange = true,
+                                    Email = null,
+                                    Role = aRater.UserSurveyRole.Name,
+                                    RoleId = aRater.UserSurveyRole.ID,
+                                    Status = "New Rater",
+                                    CanResendEmail = false
+                                };
+
+                                viewModel.Raters.Add(newRater);
+                            }
+
+                            
+
+                          
                         }
                     }
                 }
@@ -676,7 +707,9 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
                             IsDeleted = false,
                             SurveyAvailToMeID = pendingSurvey.SurveyAvailToMeID,
                             UserSurveyForId = pendingSurvey.UserSurveyForId,
-                            UserSurveyRoleID = rater.RoleId
+                            UserSurveyRoleID = rater.RoleId,
+                            RaterFirstName = rater.RaterFirstName,
+                            RaterLastName = rater.RaterLastName
                         };
 
                         ratersToAdd.Add(newRater);
@@ -711,7 +744,9 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
                             IsDeleted = false,
                             SurveyAvailToMeID = pendingSurvey.SurveyAvailToMeID,
                             UserSurveyForId = pendingSurvey.UserSurveyForId,
-                            UserSurveyRoleID = rater.RoleId
+                            UserSurveyRoleID = rater.RoleId,
+                            RaterFirstName = rater.RaterFirstName,
+                            RaterLastName = rater.RaterLastName
                         };
 
                         ratersToAdd.Add(newRater);
@@ -765,7 +800,7 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
                         {
                             Destination = rater.Email,
                             Subject = $"Employee Survey, regarding {currentUser.FirstName + " " + currentUser.LastName}",
-                            Body = $"There is a pending survey waiting for you to take regarding {currentUser.FirstName + " " + currentUser.LastName}. The survey is called \"{pendingSurvey.SurveysAvailable.Survey.Name}\" - {pendingSurvey.SurveysAvailable.SurveyType.Name}. The survey is available from {pendingSurvey.SurveysAvailable.DateOpen} to {pendingSurvey.SurveysAvailable.DateClosed}. Please click the link to take the survey: <a href=\"" + theUrl + "\">Survey</a>"
+                            Body = $"Hello {rater?.UserTakenBy?.FirstName ?? rater.RaterFirstName} {rater?.UserTakenBy?.LastName ?? rater.RaterLastName}, There is a pending survey waiting for you to take regarding {currentUser.FirstName + " " + currentUser.LastName}. The survey is called \"{pendingSurvey.SurveysAvailable.Survey.Name}\" - {pendingSurvey.SurveysAvailable.SurveyType.Name}. The survey is available from {pendingSurvey.SurveysAvailable.DateOpen} to {pendingSurvey.SurveysAvailable.DateClosed}. Please click the link to take the survey: <a href=\"" + theUrl + "\">Survey</a>"
                         });
                 }
 
@@ -814,7 +849,7 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
                     {
                         Destination = pendingSurvey?.UserTakenBy?.Email ?? pendingSurvey.Email,
                         Subject = $"Employee Survey, regarding {userSurveyFor.FirstName + " " + userSurveyFor.LastName}",
-                        Body = $"There is a pending survey waiting for you to take regarding {userSurveyFor.FirstName + " " + userSurveyFor.LastName}. The survey is called \"{pendingSurvey.SurveysAvailable.Survey.Name}\" - {pendingSurvey.SurveysAvailable.SurveyType.Name}. The survey is available from {pendingSurvey.SurveysAvailable.DateOpen} to {pendingSurvey.SurveysAvailable.DateClosed}. Please click the link to take the survey: <a href=\"" + theUrl + "\">Survey</a>"
+                        Body = $"Hello {pendingSurvey?.UserTakenBy?.FirstName ?? pendingSurvey.RaterFirstName} {pendingSurvey?.UserTakenBy?.LastName ?? pendingSurvey.RaterLastName}, There is a pending survey waiting for you to take regarding {userSurveyFor.FirstName + " " + userSurveyFor.LastName}. The survey is called \"{pendingSurvey.SurveysAvailable.Survey.Name}\" - {pendingSurvey.SurveysAvailable.SurveyType.Name}. The survey is available from {pendingSurvey.SurveysAvailable.DateOpen} to {pendingSurvey.SurveysAvailable.DateClosed}. Please click the link to take the survey: <a href=\"" + theUrl + "\">Survey</a>"
                     });
             }
 

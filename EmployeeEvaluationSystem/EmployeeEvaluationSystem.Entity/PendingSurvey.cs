@@ -27,6 +27,8 @@ namespace EmployeeEvaluationSystem.Entity
         public int StatusId { get; set; }
         public Nullable<System.Guid> StatusGuid { get; set; }
         public Nullable<System.DateTime> StatusDate { get; set; }
+        public string RaterFirstName { get; set; }
+        public string RaterLastName { get; set; }
     
         public virtual AspNetUser UserSurveyFor { get; set; }
         public virtual AspNetUser UserTakenBy { get; set; }

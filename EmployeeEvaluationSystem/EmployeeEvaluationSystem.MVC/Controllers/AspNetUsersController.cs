@@ -352,7 +352,7 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit([Bind(Include = "Id,Email,PhoneNumber,FirstName,LastName,MailingAddress")] PersonalAspNetUserViewModel aspNetUser)
+        public async Task<ActionResult> Edit([Bind(Include = "Id,Email,EmployeeID,PhoneNumber,FirstName,LastName,MailingAddress")] PersonalAspNetUserViewModel aspNetUser)
         {
 
             if (aspNetUser == null)
@@ -364,10 +364,13 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
 
             using (var unitOfWork = new UnitOfWork())
             {
+                
+                    var newUser = unitOfWork.Users.EditUser(userId, aspNetUser);
 
-                var newUser = unitOfWork.Users.EditUser(userId, aspNetUser);
+                    unitOfWork.Complete();
 
-                unitOfWork.Complete();
+
+                
 
                 return RedirectToAction("Index");
             }
