@@ -130,7 +130,9 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
         // GET: Report  
         public ActionResult ReportDetail()
         {
-            ReportRepository objDet = new ReportRepository();
+            var unitofwork = new UnitOfWork();
+            var dbcontext = new EmployeeDatabaseEntities();
+            ReportRepository objDet = new ReportRepository(unitofwork, dbcontext);
             ReportDetails reportData = new ReportDetails();
 
             List<ReportDetails> masterData = objDet.GetReportDetails().ToList();
