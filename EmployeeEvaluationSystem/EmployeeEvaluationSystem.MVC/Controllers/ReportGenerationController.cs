@@ -151,7 +151,7 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
             {
                 var reportDetails = unitOfWork.Reports.GetDetailsForReport(userId, survAvailId);
                 var sa = unitOfWork.Surveys.GetAnAvailableSurveyForCohortSYSTEM(survAvailId);
-
+               
                 var model = new ReportDetailsViewModel
                 {
                     ResponseItems = reportDetails,
