@@ -21,5 +21,9 @@ namespace EmployeeEvaluationSystem.MVC.Models.Survey
 
         public bool CanResendEmail { get; set; }
 
+        public string RaterFirstName { get; set; }
+        public string RaterLastName { get; set; }
+
+
     }
 }

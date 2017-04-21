@@ -1,8 +1,9 @@
 ﻿@model EmployeeEvaluationSystem.MVC.Models.Survey.ShowSurveyDetailsViewModel
 
 
-<h2>Survey Details</h2>
 
+<h2>Individual Survey Details</h2>
+@Html.ActionLink("Back to Overall Survey Details", "SurveyDetails", new { surveyId = Model.SurvAvailId })
 <div>
     <hr />
     <dl class="dl-horizontal">

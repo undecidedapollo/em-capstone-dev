@@ -68,6 +68,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AggregatedCounter.cs">
+      <DependentUpon>EmployeeManagementEntity.tt</DependentUpon>
+    </Compile>
     <Compile Include="AnswerInstance.cs">
       <DependentUpon>EmployeeManagementEntity.tt</DependentUpon>
     </Compile>
@@ -92,6 +95,9 @@
     <Compile Include="CohortUser.cs">
       <DependentUpon>EmployeeManagementEntity.tt</DependentUpon>
     </Compile>
+    <Compile Include="Counter.cs">
+      <DependentUpon>EmployeeManagementEntity.tt</DependentUpon>
+    </Compile>
     <Compile Include="C__MigrationHistory.cs">
       <DependentUpon>EmployeeManagementEntity.tt</DependentUpon>
     </Compile>
@@ -113,6 +119,21 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>EmployeeManagementEntity.edmx</DependentUpon>
     </Compile>
+    <Compile Include="Hash.cs">
+      <DependentUpon>EmployeeManagementEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Job.cs">
+      <DependentUpon>EmployeeManagementEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Include="JobParameter.cs">
+      <DependentUpon>EmployeeManagementEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Include="JobQueue.cs">
+      <DependentUpon>EmployeeManagementEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Include="List.cs">
+      <DependentUpon>EmployeeManagementEntity.tt</DependentUpon>
+    </Compile>
     <Compile Include="LocationAddress.cs">
       <DependentUpon>EmployeeManagementEntity.tt</DependentUpon>
     </Compile>
@@ -127,6 +148,18 @@
       <DependentUpon>EmployeeManagementEntity.tt</DependentUpon>
     </Compile>
     <Compile Include="QuestionType.cs">
+      <DependentUpon>EmployeeManagementEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Schema.cs">
+      <DependentUpon>EmployeeManagementEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Server.cs">
+      <DependentUpon>EmployeeManagementEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Set.cs">
+      <DependentUpon>EmployeeManagementEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Include="State.cs">
       <DependentUpon>EmployeeManagementEntity.tt</DependentUpon>
     </Compile>
     <Compile Include="Status.cs">

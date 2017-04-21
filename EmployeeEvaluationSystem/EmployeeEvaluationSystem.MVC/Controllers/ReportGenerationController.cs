@@ -1,144 +1,49 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.IO;
-using iTextSharp.text;
-using iTextSharp.text.pdf;
-using iTextSharp.tool.xml;
-using iTextSharp.text.html.simpleparser;
+﻿using System.Linq;
 using System.Web.Mvc;
 using EmployeeEvaluationSystem.Entity;
-using Microsoft.AspNet.Identity;
 using EmployeeEvaluationSystem.Entity.SharedObjects.Repository.EF6;
-using EmployeeEvaluationSystem.Entity.SharedObjects.Repository.EF6.Repositories;
-using EmployeeEvaluationSystem.Entity.SharedObjects.Model.Authentication;
-using EmployeeEvaluationSystem.MVC.Models;
 using System.Data;
-using EmployeeEvaluationSystem.Entity.SharedObjects.Model.Reports;
+using EmployeeEvaluationSystem.MVC.Models.Report;
 
 namespace EmployeeEvaluationSystem.MVC.Controllers
 {
     public class ReportGenerationController : Controller
     {
-        private EmployeeDatabaseEntities entities;
 
         // GET: ReportGeneration
         public ActionResult Index()
-        {                    
+        { 
             return View();
         }
-
-
-        [HttpPost]
-        [ValidateInput(false)]
-        public FileResult Export(string ReportHtml)
+        
+        public ActionResult ReportPage(string userId, int survAvailId)
         {
-            using (MemoryStream stream = new System.IO.MemoryStream())
+            using(var unitOfWork = new UnitOfWork())
             {
-                StringReader stReader = new StringReader(ReportHtml);
-                Document pdfReport = new Document(PageSize.A4, 10f, 10f, 100f, 0f);
-                PdfWriter writer = PdfWriter.GetInstance(pdfReport, stream);
-                pdfReport.Open();
-                XMLWorkerHelper.GetInstance().ParseXHtml(writer, pdfReport, stReader);
-                pdfReport.Close();
-                return File(stream.ToArray(), "application/pdf", "EvaluationReport.pdf");
-            }
-        }
+                var reportDetails = unitOfWork.Reports.GetDetailsForReport(userId, survAvailId);
+                var sa = unitOfWork.Surveys.GetAnAvailableSurveyForCohortSYSTEM(survAvailId);
+                var user = unitOfWork.Users.GetUser(userId, userId);
 
-        // GET: ReportGeneration/Create
-        public ActionResult Create()
-        {
+                var type = sa.Survey.Name;
+                var stage = sa.SurveyType.Name;
+                var dateCreated = sa.SurveyType.DateCreated;
 
-            var userId = User?.Identity?.GetUserId();
+                var firstName = user.FirstName;
+                var lastName = user.LastName;
 
-            using (var unitOfWork = new UnitOfWork())
-            {
-                
-
-                var viewModel = new ReportGenerationViewModel()
+                var title = "Employee " + firstName + " " + lastName + " " + " Evaluation Report";
+                var title2 = "Evaluation " + stage + " " + type + " " + "- generated on " + dateCreated.Date;
+                var model = new ReportDetailsViewModel
                 {
-                   
+                    ResponseItems = reportDetails,
+                    Categories = reportDetails.SelectMany(x => x.Questions).GroupBy(x => x.CategoryId).Select(x =>  new ReportCategory { Id = x.Key, Name = x.FirstOrDefault()?.CategoryName, Questions = x.GroupBy(y => y.QuestionId).Select(y => new ReportQuestion { Id = y.Key, Text = y.FirstOrDefault()?.QuestionText }).ToList() }).ToList(),
+                    Header = title,
+                    Header2 = title2
+                    
                 };
 
-                return View(viewModel);
+                return View(model);
             }
-        }
-
-        // POST: ReportGeneration/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create(ReportGenerationViewModel model, List<string> ids)
-        {
-            var userId = User?.Identity?.GetUserId();
-            var usersToRegister = new List<string>();
-
-            using (var unitOfWork = new UnitOfWork())
-            {
-                
-
-                foreach (var id in ids)
-                {
-                    var user = PersonalAspNetUserViewModel.Convert(unitOfWork.Users.GetUser(userId, id));
-
-                    
-
-                    var cohortUser = new CohortUser()
-                    {
-                        UserID = id
-                    };
-
-                    
-                }
-
-                
-
-                unitOfWork.Complete();
-            }
-
-            TempData["usersToRegister"] = usersToRegister.ToList();
-
-            return RedirectToAction("SendEmailConfirmationTokenAsync", "Account", new { subject = "Confirm Email" });
-        }
-
-
-        public int GetRating(int id)
-        {
-            AnswerInstance answer = new AnswerInstance();
-            var rating = 0;
-            if (answer.ID == id)
-            {
-                rating = answer.ResponseNum;
-            }
-            return rating;
-        }
-
-        public double CalculateAverage(int id)
-        {
-            //The id is equivalent to the role value
-            DataTable table = new DataTable();
-            //AnswerInstance answerValue = new AnswerInstance();
-                        
-            var rating = this.GetRating(id);
-           
-            return rating;
-        }
-
-        // GET: Customer  
-        public ActionResult ReportDetail()
-        {
-            ReportRepository objDet = new ReportRepository();
-            ReportDetails reportData = new ReportDetails();
-
-            List<ReportDetails> masterData = objDet.GetReportDetails().ToList();
-
-            reportData.EmpAvgRatings = masterData[0].EmpAvgRatings;
-            
-
-
-            return View(reportData);
         }
 
 
