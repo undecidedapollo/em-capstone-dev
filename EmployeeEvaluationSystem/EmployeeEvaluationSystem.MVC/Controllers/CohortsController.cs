@@ -290,7 +290,9 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
                     ).ToList(),
                     AssignedSurveys = assignedSurveys ?? throw new Exception(),
                     NewSurveys = newSurvList,
-                    CohortID = cohort.ID
+                    CohortID = cohort.ID,
+                    DateClosed = (DateTime.UtcNow + TimeSpan.FromDays(30)).Date,
+                    DateOpen = DateTime.UtcNow.Date
                 };
 
                 return View(model);

@@ -5,12 +5,23 @@
 
 <h2>Start Evaluation</h2>
 
-@*<script>
-    $(document).ready(function () {
-        $("#survey_date_1").datepicker({ dateFormat: 'dd/mm/yy' });
-        $("#survey_date_2").datepicker({ dateFormat: 'dd/mm/yy' });
-    });
-</script>*@
+<!-- jQuery UI CSS Reference -->
+<link href="@Url.Content("~/Content/themes/base/jquery-ui.min.css")" rel="stylesheet" />
+<!-- Required jQuery and jQuery UI Javascript references -->
+<script src="@Url.Content("~/Scripts/jquery-1.7.1.min.js")"></script>
+<script src="@Url.Content("~/Scripts/jquery-ui-1.12.1.min.js")"></script>
+
+
+
+<script type="text/javascript">
+    $(function () {
+        // This will make every element with the class "date-picker" into a DatePicker element
+        $('.date-picker').datepicker({
+            format: 'mm/dd/yyyy',
+            startDate: '-3d'
+        });
+    })
+</script>
 
 <script type="text/javascript">
     (function () {
@@ -39,6 +50,8 @@
 
     })();
 </script>
+
+
 @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "surveyform" }))
 {
 <div class="form-horizontal">
@@ -46,21 +59,16 @@
     @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
     <div class="form-group">
-        @Html.LabelFor(m => m.DateOpen, "Open Date", new { @class = "col-md-2 control-label" })
-        <div class="col-md-10">
-            @Html.EditorFor(m => m.DateOpen, new { id = "survey_date_1", @class = "form-control a_survey_date", type = "date" })
-            <script>
-                StartEvaluationHelper.SetAsDate(@("DateOpen"));
-            </script>
-        </div>
+            @Html.LabelFor(m => m.DateOpen, "Open Date", new { @class = "col-md-2 control-label" })
+            <div class="col-md-10">
+                @Html.TextBoxFor(m => m.DateOpen, "{0:MM/dd/yyyy}", new {@class = "date-picker"})
+            </div>
     </div>
+
     <div class="form-group">
-        @Html.LabelFor(m => m.DateClosed, "Close Date", new { @class = "col-md-2 control-label" })
+        @Html.LabelFor(m => m.DateClosed, "Closed Date", new { @class = "col-md-2 control-label" })
         <div class="col-md-10">
-            @Html.EditorFor(m => m.DateClosed, new { id = "survey_date_2", @class = "form-control", type = "date" })
-            <script>
-                StartEvaluationHelper.SetAsDate(@("DateClosed"));
-            </script>
+            @Html.TextBoxFor(m => m.DateClosed, "{0:MM/dd/yyyy}", new { @class = "date-picker" })
         </div>
     </div>
 
