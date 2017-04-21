@@ -588,15 +588,15 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
 
                         for (var i = 0; i < diff; i++)
                         {
-                            if(previousRaters.Any(x => x.roleId == aRater.UserSurveyRoleId))
+                            if(previousRaters.Any(x => x.RoleId == aRater.UserSurveyRoleId))
                             {
-                                var possibleRater = previousRaters.FirstOrDefault(x => x.roleId == aRater.UserSurveyRoleId);
+                                var possibleRater = previousRaters.FirstOrDefault(x => x.RoleId == aRater.UserSurveyRoleId);
                                 var newRater = new RaterViewModel
                                 {
                                     CanChange = true,
                                     Email = possibleRater.email,
-                                    RaterFirstName = possibleRater.firstname,
-                                    RaterLastName = possibleRater.lastname,
+                                    RaterFirstName = possibleRater.firstName,
+                                    RaterLastName = possibleRater.lastName,
                                     Role = aRater.UserSurveyRole.Name,
                                     RoleId = aRater.UserSurveyRole.ID,
                                     Status = "New Rater",

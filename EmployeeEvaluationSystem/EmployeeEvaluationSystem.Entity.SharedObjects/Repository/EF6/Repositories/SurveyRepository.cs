@@ -736,9 +736,15 @@ namespace EmployeeEvaluationSystem.Entity.SharedObjects.Repository.EF6.Repositor
             throw new NotImplementedException();
         }
 
-        public List<(string firstname, string lastname, string email, int roleId)> GetMostRecentRatersForUser(string userId, int count)
+        public List<RaterOBJ> GetMostRecentRatersForUser(string userId, int count)
         {
-            return this.dbcontext.PendingSurveys.Where(x => x.UserSurveyForId == userId && x.IsDeleted == false && x.Email != null).GroupBy(x => x.Email).Select(x => x.FirstOrDefault()).Where(x => x != null).OrderByDescending(x => x.DateSent).Take(count).ToList().Select(x => (x.RaterFirstName, x.RaterLastName, x.Email, x.UserSurveyRoleID)).ToList();
+            return this.dbcontext.PendingSurveys.Where(x => x.UserSurveyForId == userId && x.IsDeleted == false && x.Email != null).GroupBy(x => x.Email).Select(x => x.FirstOrDefault()).Where(x => x != null).OrderByDescending(x => x.DateSent).Take(count).ToList().Select(x => new RaterOBJ
+            {
+                email = x.Email,
+                firstName = x.RaterFirstName,
+                lastName = x.RaterLastName,
+                RoleId = x.UserSurveyRoleID
+            }).ToList();
         }
     }
 }
