@@ -256,7 +256,11 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
                 if(result.Item1.Succeeded && result.Item2 != null)
                 {
                     successfulRegistrations.Add(result);
-                }else
+                    var daUser = result.Item2;
+
+                    await UserManager.AddToRoleAsync(daUser.Id, "Employee");
+                }
+                else
                 {
                     tryDeleteUsersFAILSAFE(successfulRegistrations);
                     return new MultiRegisterResult { Successful = false, FailedUser = user };

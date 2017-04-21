@@ -928,6 +928,54 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
             }
         }
 
+        [HttpGet]
+        [Authorize(Roles = "Admin")]
+        public ActionResult SurveyDelete(int id)
+        {
+            var userId = User?.Identity?.GetUserId() ?? throw new UnauthorizedAccessException();
+
+            using (var unitOfWork = new UnitOfWork())
+            {
+                var surv = unitOfWork.Surveys.GetAnAvailableSurveyForCohort(userId, id);
+
+                if(surv == null)
+                {
+                    return HttpNotFound();
+                }
+
+                return View(new SurveysViewModel { DateClosed = surv.DateClosed, DateOpened = surv.DateOpen, SurveyName = surv.Survey.Name, SurveyType = surv.SurveyType.Name });
+            }
+        }
+
+        [HttpPost]
+        [Authorize(Roles = "Admin")]
+        public ActionResult SurveyDelete(int? id)
+        {
+            var userId = User?.Identity?.GetUserId() ?? throw new UnauthorizedAccessException();
+
+            using (var unitOfWork = new UnitOfWork())
+            {
+                var surv = unitOfWork.Surveys.GetAnAvailableSurveyForCohort(userId, id.Value);
+                var result = unitOfWork.Surveys.DeleteSurveyAvailable(userId, id.Value);
+
+                if (!result)
+                {
+                    ModelState.AddModelError("", "You cannot delete a survey if a user has already started taking the survey.");
+
+                    if (surv == null)
+                    {
+                        return HttpNotFound();
+                    }
+
+                    return View(new SurveysViewModel { DateClosed = surv.DateClosed, DateOpened = surv.DateOpen, SurveyName = surv.Survey.Name, SurveyType = surv.SurveyType.Name});
+                }
+
+                unitOfWork.Complete();
+
+                return RedirectToAction("Details", "Cohorts", new { id = surv.CohortID });
+            }
+        }
+
         [Authorize(Roles = "Admin")]
         public ActionResult SurveyDetails(int surveyId)
         {

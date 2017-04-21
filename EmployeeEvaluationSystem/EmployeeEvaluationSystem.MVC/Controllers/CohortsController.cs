@@ -145,6 +145,44 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
         public ActionResult Create(CreateCohortViewModel model, List<string> ids)
         {
             var userId = User?.Identity?.GetUserId();
+
+            var shouldReturn = false;
+
+            if(model?.Cohort.Name == null)
+            {
+                ModelState.AddModelError("", "You must add a name to be able to create a cohort.");
+                shouldReturn = true;
+            }
+            else if (model?.Cohort?.Description == null)
+            {
+                ModelState.AddModelError("", "You must add a description to be able to create a cohort.");
+                shouldReturn = true;
+
+            }else if(ids == null || ids.Count < 1)
+            {
+                ModelState.AddModelError("", "You must add at least one user to be able to create a cohort.");
+                shouldReturn = true;
+            }
+
+            if (shouldReturn)
+            {
+                using (var unitOfWork = new UnitOfWork())
+                {
+                    var unconvertedUsers = unitOfWork.Cohorts.GetAllUsersThatAreNotPartOfACohort(userId).ToList();
+
+                    var convertedUsers = unconvertedUsers?.Select(x => PersonalAspNetUserViewModel.Convert(x))?.ToList();
+
+                    var viewModel = new CreateCohortViewModel()
+                    {
+                        Users = convertedUsers,
+                        Cohort = model?.Cohort ?? new PersonalCohortViewModel()
+                    };
+
+                    return View(viewModel);
+                }
+            }
+
+
             var usersToRegister = new List<string>();
 
             using (var unitOfWork = new UnitOfWork())
@@ -303,6 +341,14 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
         {
             var roleModels = new List<CreateAvailableSurveyRolesModel>();
 
+
+            if(model.DateClosed <= model.DateOpen)
+            {
+                ModelState.AddModelError("", "Your end date must be before the start date.");
+                return View(model);
+            }
+
+
             foreach(var item in model.RoleQuantities)
             {
                 var roleModel = new CreateAvailableSurveyRolesModel()
@@ -408,7 +454,7 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
             }
         }
 
-        /*
+        
         // POST: Cohort/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
@@ -418,7 +464,21 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
 
             using (var unitOfWork = new UnitOfWork())
             {
-                unitOfWork.Cohorts.DeleteCohort(userId, id);
+                var result = unitOfWork.Cohorts.DeleteCohort(userId, id);
+
+                if(result == false)
+                {
+                    ModelState.AddModelError("", "You cannot delete this cohort because it has already started evaluations.");
+                    Cohort cohort = unitOfWork.Cohorts.GetCohort(userId, id);
+
+                    if (cohort == null)
+                    {
+                        return HttpNotFound();
+                    }
+
+                    return View(cohort);
+                }
+
 
                 unitOfWork.Complete();
 
@@ -426,29 +486,29 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
             }
         }
 
-        // GET: Cohort/StartEvaluation
-        public ActionResult StartEvaluation()
-        {
-            return View();   
-        }
+        //// GET: Cohort/StartEvaluation
+        //public ActionResult StartEvaluation()
+        //{
+        //    return View();   
+        //}
 
-        // POST: Cohort/StartEvaluation
-        [HttpPost, ActionName("StartEvaluation")]
-        [ValidateAntiForgeryToken]
-        public ActionResult StartEvaluation()
-        {
-            var userId = User?.Identity?.GetUserId();
+        //// POST: Cohort/StartEvaluation
+        //[HttpPost, ActionName("StartEvaluation")]
+        //[ValidateAntiForgeryToken]
+        //public ActionResult StartEvaluation()
+        //{
+        //    var userId = User?.Identity?.GetUserId();
 
-            using (var unitOfWork = new UnitOfWork())
-            {
-                unitOfWork.Cohorts.DeleteCohort(userId, id);
+        //    using (var unitOfWork = new UnitOfWork())
+        //    {
+        //        unitOfWork.Cohorts.DeleteCohort(userId, id);
 
-                unitOfWork.Complete();
+        //        unitOfWork.Complete();
 
-                return RedirectToAction("Index");
-            }
-        }
-        */
+        //        return RedirectToAction("Index");
+        //    }
+        //}
+        
 
         /*
         protected override void Dispose(bool disposing)

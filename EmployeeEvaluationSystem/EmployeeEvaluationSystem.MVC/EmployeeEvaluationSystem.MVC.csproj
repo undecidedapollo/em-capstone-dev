@@ -340,6 +340,7 @@
     <Content Include="Scripts\_references.js" />
     <Content Include="Views\ReportGeneration\Index.cshtml" />
     <None Include="Views\ReportGeneration\ReportPage.cshtml" />
+    <None Include="Views\Survey\SurveyDelete.cshtml" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
