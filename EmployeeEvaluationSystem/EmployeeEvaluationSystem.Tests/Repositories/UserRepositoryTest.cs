@@ -81,7 +81,7 @@ namespace EmployeeEvaluationSystem.Tests.Repositories
         }
 
         [TestMethod]
-        public void GetNumberOfUsers0is0()
+        public void GetNumberOfUsers0Is0()
         {
             var x = EFUnitOfWorkBuilder<EmployeeDatabaseEntities>
                 .Create();

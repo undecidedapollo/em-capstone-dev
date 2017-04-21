@@ -381,6 +381,7 @@
     <Content Include="Scripts\respond.matchmedia.addListener.min.js" />
     <Content Include="Scripts\respond.min.js" />
     <Content Include="Scripts\_references.js" />
+    <Content Include="Views\ReportGeneration\Index.cshtml" />
     <None Include="Views\ReportGeneration\ReportPage.cshtml" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
@@ -434,8 +435,6 @@
     <Content Include="Views\Cohorts\Edit.cshtml" />
     <Content Include="Views\Cohorts\Index.cshtml" />
     <Content Include="Views\Survey\StartSurvey.cshtml" />
-    <Content Include="Views\ReportGeneration\Index.cshtml" />
-    <Content Include="Views\ReportGeneration\Create.cshtml" />
     <Content Include="Views\Account\EmailSent.cshtml" />
     <Content Include="Views\Survey\ContinueSurvey.cshtml" />
     <Content Include="Views\Survey\SurveyPage.cshtml" />
