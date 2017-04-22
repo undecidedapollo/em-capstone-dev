@@ -251,6 +251,4 @@ paket-files/
 .idea/
 *.sln.iml
 EmployeeEvaluationSystem/EmployeeEvaluationSystem.Database/EmployeeEvaluationSystem.Database.jfm
-EmployeeEvaluationSystem/EmployeeEvaluationSystem.MVC/Content/themes/
-EmployeeEvaluationSystem/EmployeeEvaluationSystem.MVC/Scripts/jquery-ui-1.12.1.min.js
-EmployeeEvaluationSystem/EmployeeEvaluationSystem.MVC/Scripts/jquery-ui-1.12.1.js
+
