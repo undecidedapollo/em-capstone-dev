@@ -804,7 +804,7 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
                         });
                 }
 
-                return RedirectToAction("ChooseRaters", new { penSurveyId = theModel.PendingSurveyId });
+                return RedirectToAction("Index", "UserHub");
             }
         }
 
@@ -900,7 +900,7 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
                 var viewModel = new ShowSurveyDetailsViewModel()
                 {
                     UserEmail = survey?.UserTakenBy?.Email ?? survey.Email,
-                    UserName = survey.UserTakenBy != null ? $"{survey?.UserTakenBy?.FirstName} {survey?.UserTakenBy?.LastName}" : "Rater, Unknown Name" ,
+                    UserName = $"{survey?.UserTakenBy?.FirstName?? survey?.RaterFirstName ?? "Unknown" } {survey?.UserTakenBy?.LastName ?? survey?.RaterLastName ?? "Unknown"}"  ,
                     UserForEmail = survey.UserSurveyFor.Email,
                     UserForName = $"{survey?.UserSurveyFor?.FirstName} {survey?.UserSurveyFor?.LastName}",
                     DateCompleted = survey.SurveyInstance.DateFinished ?? throw new Exception(),

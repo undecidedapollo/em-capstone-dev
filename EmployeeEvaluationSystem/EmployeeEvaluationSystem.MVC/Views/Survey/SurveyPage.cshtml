@@ -76,7 +76,6 @@
             <div class="form-group">
                 <div class="col-md-9">@(Model.Questions[i].Question.DisplayText) @if (Model.Questions[i].Question.IsRequired) { <text><span style="color:red;">*</span></text>}</div>
                 <div class="col-md-3">
-                    @(Model.Questions[i].Question.Id)
                     @*@Html.HiddenFor(model => model.Questions[i].Question.Id)*@
                     <input data-val="true" data-val-number="The field Id must be a number." data-val-required="The Id field is required." id="@($"Questions_{i}__Question_Id")" name="@($"Questions[{i}].Question.Id")" type="hidden" value="@(Model.Questions[i].Question.Id)">
 
