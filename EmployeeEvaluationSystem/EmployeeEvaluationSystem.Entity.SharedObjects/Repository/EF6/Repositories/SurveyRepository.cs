@@ -287,6 +287,16 @@ namespace EmployeeEvaluationSystem.Entity.SharedObjects.Repository.EF6.Repositor
                     };
                 }).Where(x => x != null).ToList();
 
+
+            if(!validRoles.Any(x => x.ID == 1))
+            {
+                validRoles.Add(new SurveysAvailableTo
+                {
+                    UserSurveyRoleId = Convert.ToInt32(SurveyRoleEnum.SELF),
+                    Quantity = 1
+                });
+            }
+
             var theSurveyAvailable = new SurveysAvailable
             {
                 SurveyID = model.SurveyId,

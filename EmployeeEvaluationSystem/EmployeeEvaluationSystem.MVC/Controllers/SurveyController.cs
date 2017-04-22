@@ -949,7 +949,7 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
         }
 
         // POST: Survey/SurveyDelete/5
-        [HttpPost, ActionName("Delete")]
+        [HttpPost, ActionName("SurveyDelete")]
         [Authorize(Roles = "Admin")]
         public ActionResult SurveyDeleteConfirmed(int? id)
         {

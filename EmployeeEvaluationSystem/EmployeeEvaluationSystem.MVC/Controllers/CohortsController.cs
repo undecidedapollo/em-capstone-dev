@@ -353,6 +353,12 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
 
             foreach(var item in model.RoleQuantities)
             {
+                if(item == null)
+                {
+                    continue;
+                }
+
+
                 if(item.Quantity < 0)
                 {
                     ModelState.AddModelError("", "All quantities must be zero or greater.");
@@ -360,6 +366,11 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
                 }
 
                 if (item.Quantity == 0)
+                {
+                    continue;
+                }
+
+                if(item.Id == 1)
                 {
                     continue;
                 }
@@ -372,7 +383,6 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
 
                 roleModels.Add(roleModel);
             }
-
             var surveyModel = new CreateAvailableSurveyModel()
             {
                 CohortId = model.CohortID,
@@ -420,7 +430,7 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
 
 
         // GET: Cohort/Edit/5
-        [HttpPost]
+        [HttpGet]
         [ValidateAntiForgeryToken]
         public ActionResult Edit(int? id)
         {
