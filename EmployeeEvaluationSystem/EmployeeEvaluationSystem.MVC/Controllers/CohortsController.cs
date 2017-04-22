@@ -353,6 +353,17 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
 
             foreach(var item in model.RoleQuantities)
             {
+                if(item.Quantity < 0)
+                {
+                    ModelState.AddModelError("", "All quantities must be zero or greater.");
+                    return View(model);
+                }
+
+                if (item.Quantity == 0)
+                {
+                    continue;
+                }
+
                 var roleModel = new CreateAvailableSurveyRolesModel()
                 {
                     RoleId = item.Id,
@@ -407,7 +418,26 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
             } 
         }
 
-        
+
+        // GET: Cohort/Edit/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Edit(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+
+            var userId = User?.Identity?.GetUserId();
+
+            using (var unitOfWork = new UnitOfWork())
+            {
+                var newCohort = unitOfWork.Cohorts.GetCohort(userId, id.Value);
+
+                return View(newCohort);
+            }
+        }
 
         // POST: Cohort/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 

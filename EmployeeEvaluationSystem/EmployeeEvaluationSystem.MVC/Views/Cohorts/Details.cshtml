@@ -40,53 +40,63 @@
     @Html.ActionLink("Back to Cohorts", "Index")
 </p>
 
-<table class="table">
-    <tr>
-        <th>
-            <strong>Id</strong>
-        </th>
-        <th>
-            <strong>Survey Name</strong>
-        </th>
-        <th>
-            <strong>Survey Type</strong>
-        </th>
-        <th>
-            <strong>Date Opened</strong>
-        </th>
-        <th>
-            <strong>Date Closed</strong>
-        </th>
-        <th>
+@if (Model.Surveys != null && Model.Surveys.Count != 0)
+{
+    <table class="table">
+        <tr>
+            <th>
+                <strong>Id</strong>
+            </th>
+            <th>
+                <strong>Survey Name</strong>
+            </th>
+            <th>
+                <strong>Survey Type</strong>
+            </th>
+            <th>
+                <strong>Date Opened</strong>
+            </th>
+            <th>
+                <strong>Date Closed</strong>
+            </th>
+            <th>
 
-        </th>
-    </tr>
-
-    @foreach (var item in Model.Surveys)
-    {
-
-        string selectedRow = "";
-
-        <tr class="@selectedRow">
-            <td>
-                @Html.DisplayFor(modelItem => item.Id)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.SurveyName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.SurveyType)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.DateOpened)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.DateClosed)
-            </td>
-            <td>
-                @Html.ActionLink("Details", "SurveyDetails", "Survey", new { surveyId = item.Id }, null )
-            </td>
+            </th>
         </tr>
-    }
 
-</table>
+        @foreach (var item in Model.Surveys)
+        {
+
+            string selectedRow = "";
+
+            <tr class="@selectedRow">
+                <td>
+                    @Html.DisplayFor(modelItem => item.Id)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.SurveyName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.SurveyType)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DateOpened)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DateClosed)
+                </td>
+                <td>
+                    @Html.ActionLink("Details", "SurveyDetails", "Survey", new { surveyId = item.Id }, null)
+                </td>
+            </tr>
+        }
+
+    </table>
+}
+else
+{
+    <h4>
+    No surveys currently being offered.
+</h4>
+}
+
