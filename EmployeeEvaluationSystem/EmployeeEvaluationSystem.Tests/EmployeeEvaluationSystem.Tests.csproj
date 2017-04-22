@@ -120,12 +120,24 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controllers\AccountControllerTest.cs" />
+    <Compile Include="Controllers\AspNetUsersControllerTest.cs" />
+    <Compile Include="Controllers\CohortsControllerTest.cs" />
+    <Compile Include="Controllers\ErrorPageControllerTest.cs" />
+    <Compile Include="Controllers\ManageControllerTest.cs" />
+    <Compile Include="Controllers\ReportGenerationControllerTest.cs" />
+    <Compile Include="Controllers\SurveyControllerTest.cs" />
+    <Compile Include="Controllers\UserHubControllerTest.cs" />
     <Compile Include="Infrastructure\DependencyBuilder.cs" />
     <Compile Include="Infrastructure\IUnitOfWorkBuilder.cs" />
     <Compile Include="Infrastructure\UnitOfWorkBuilder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Controllers\HomeControllerTest.cs" />
     <Compile Include="Repositories\SurveyRepositoryTests.cs" />
+    <Compile Include="Repositories\CohortRepositoryTest.cs" />
+    <Compile Include="Repositories\CohortUserRepositoryTest.cs" />
+    <Compile Include="Repositories\RepositoryTest.cs" />
+    <Compile Include="Repositories\ReportRepositoryTest.cs" />
     <Compile Include="Repositories\UserRepositoryTest.cs" />
   </ItemGroup>
   <ItemGroup>

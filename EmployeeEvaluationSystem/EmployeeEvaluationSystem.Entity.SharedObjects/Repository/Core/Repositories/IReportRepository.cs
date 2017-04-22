@@ -9,7 +9,6 @@ namespace EmployeeEvaluationSystem.Entity.SharedObjects.Repository.Core.Reposito
 {
     public interface IReportRepository : IRepository
     {
-        IEnumerable<ReportDetails> GetReportDetails();
         List<ReportRole> GetDetailsForReport(string userId, int surveyAvailableId);
     }
 }

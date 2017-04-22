@@ -44,6 +44,13 @@
                             <th style="background-color: lightgrey; border: 3px solid #ccc; font-size: 12pt;">
                                 Category: @Html.DisplayFor(m => m.Categories[i].Name)
                             </th>
+                            
+                            @for (var j = 0; j < Model.ResponseItems.Count; j++)
+                            {
+                                <th style="text-align: center; background-color: lightgrey; border: 3px solid #ccc; font-size: 12pt;">
+                                    
+                                </th>
+                            }
                         </tr>
 
 

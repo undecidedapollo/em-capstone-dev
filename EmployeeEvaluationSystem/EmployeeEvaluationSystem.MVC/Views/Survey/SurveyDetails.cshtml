@@ -73,6 +73,16 @@
             @Html.DisplayFor(model => model.TheSurvey.DateClosed)
         </dd>
 
+        <dt>
+            <strong>Delete Survey</strong>
+        </dt>
+
+        <dd>
+            @Html.ActionLink("Delete Survey", "SurveyDelete", new { id = Model.TheSurvey.Id })
+        </dd>
+
+       
+
     </dl>
 </div>
 

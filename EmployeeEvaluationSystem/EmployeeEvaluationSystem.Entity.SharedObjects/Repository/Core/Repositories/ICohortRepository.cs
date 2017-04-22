@@ -12,7 +12,7 @@ namespace EmployeeEvaluationSystem.Entity.SharedObjects.Repository.Core.Reposito
 
         IEnumerable<Cohort> GetAllCohorts(string userId);
         Cohort GetCohort(string currentUserId, int? cohortIdToGet);
-        void DeleteCohort(string currentUserId, int cohortIdToGet);
+        bool DeleteCohort(string currentUserId, int cohortIdToGet);
         Cohort EditCohort(string currentUserId, Cohort cohortToEdit);
         void AddCohortToDb(string currentUserId, Cohort cohortToAdd);
         IEnumerable<AspNetUser> GetAllUsersThatAreNotPartOfACohort(string userId);

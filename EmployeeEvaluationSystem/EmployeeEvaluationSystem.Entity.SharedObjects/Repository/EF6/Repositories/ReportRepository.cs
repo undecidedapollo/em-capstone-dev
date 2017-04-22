@@ -1,10 +1,7 @@
-﻿using Dapper;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Data.SqlClient;
-using System.Data;
 using System.Configuration;
 using System.Linq;
-using ReportDetails = EmployeeEvaluationSystem.Entity.SharedObjects.Model.Reports.ReportDetails;
 using EmployeeEvaluationSystem.Entity.SharedObjects.Model.Reports;
 using EmployeeEvaluationSystem.Entity.SharedObjects.Repository.Core.Repositories;
 
@@ -12,43 +9,11 @@ namespace EmployeeEvaluationSystem.Entity.SharedObjects.Repository.EF6.Repositor
 {
     public class ReportRepository : Repository, IReportRepository
     {
-        //To Handle connection related activities   
-        SqlConnection con;
 
         public ReportRepository(UnitOfWork unitOfWork, EmployeeDatabaseEntities dbcontext) : base(unitOfWork, dbcontext)
         {
         }
-
-        private void connection()
-        {
-            string constr = ConfigurationManager.ConnectionStrings["SqlConn"].ToString();
-            con = new SqlConnection(constr);
-        }
-
-        /// <summary>  
-        /// Get Multiple Table details  
-        /// </summary>  
-        /// <returns></returns>  
-        public IEnumerable<ReportDetails> GetReportDetails()
-        {
-            connection();
-            con.Open();
-            var objDetails = SqlMapper.QueryMultiple(con, "GetReportDetails", commandType: CommandType.StoredProcedure);
-            ReportDetails ObjMaster = new ReportDetails();
-
-            //Assigning each Multiple tables data to specific single model class              /
-            ObjMaster.EmpAvgRatings = objDetails.Read<ReportGenerationViewModel>().ToList();
-            ObjMaster.SurveyReport = objDetails.Read<SurveyReportModel>().ToList();
-            ObjMaster.UserRole = objDetails.Read<UserRoleModel>().ToList();
-
-            List<ReportDetails> ReportObj = new List<ReportDetails>();
-            //Add list of records into ReportDetails list  
-            ReportObj.Add(ObjMaster);
-            con.Close();
-
-            return ReportObj;
-        }
-
+        
         public List<ReportRole> GetDetailsForReport(string userId, int surveyAvailableId)
         {
             var results = this.dbcontext.PendingSurveys

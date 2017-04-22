@@ -79,7 +79,6 @@
     <Build Include="dbo\Stored Procedures\LockAndGetSurvey.sql" />
     <Build Include="dbo\Stored Procedures\CancelSurveyLock.sql" />
     <Build Include="dbo\Stored Procedures\CancelAllOldSurveyLocks.sql" />
-    <Build Include="dbo\Stored Procedures\GetReportDetails.sql" />
     <Build Include="HangFire\Tables\AggregatedCounter.sql" />
     <Build Include="HangFire\Tables\Hash.sql" />
     <Build Include="HangFire\Tables\Counter.sql" />
