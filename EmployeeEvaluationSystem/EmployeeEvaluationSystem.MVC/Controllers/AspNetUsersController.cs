@@ -246,7 +246,7 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
 
                         if (isError)
                         {
-                            return View("AddCSV");
+                            return View("AddCSV", table);
                         }
 
 
@@ -279,7 +279,7 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
                             ModelState.AddModelError("File", $"ERROR ON ROW {index}: There was an error trying to register this user. This can happen for numerous reasons such as an existing email, invalid data, etc. Please check your data and try again.");
                         }
 
-                        return View("AddCSV");
+                        return View();
                     }
 
                 }
@@ -359,21 +359,30 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-
-            var userId = User?.Identity?.GetUserId();
-
-            using (var unitOfWork = new UnitOfWork())
+            try
             {
-                
+                var userId = User?.Identity?.GetUserId();
+
+                using (var unitOfWork = new UnitOfWork())
+                {
+
                     var newUser = unitOfWork.Users.EditUser(userId, aspNetUser);
 
                     unitOfWork.Complete();
 
 
-                
 
-                return RedirectToAction("Index");
+
+                    return RedirectToAction("Index");
+                }
             }
+            catch(Exception e)
+            {
+                ModelState.AddModelError("", "An error occured saving your data. Please fix empty fields and try again.");
+                return View(aspNetUser);
+            }
+
+           
 
         }
 

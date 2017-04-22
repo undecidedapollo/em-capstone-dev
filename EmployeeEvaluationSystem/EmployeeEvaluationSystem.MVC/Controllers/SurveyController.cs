@@ -928,15 +928,16 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
             }
         }
 
+        // GET: Survey/SurveyDelete/5
         [HttpGet]
         [Authorize(Roles = "Admin")]
-        public ActionResult SurveyDelete(int id)
+        public ActionResult SurveyDelete(int? id)
         {
             var userId = User?.Identity?.GetUserId() ?? throw new UnauthorizedAccessException();
 
             using (var unitOfWork = new UnitOfWork())
             {
-                var surv = unitOfWork.Surveys.GetAnAvailableSurveyForCohort(userId, id);
+                var surv = unitOfWork.Surveys.GetAnAvailableSurveyForCohort(userId, id.Value);
 
                 if(surv == null)
                 {
@@ -947,33 +948,44 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
             }
         }
 
-        [HttpPost]
+        // POST: Survey/SurveyDelete/5
+        [HttpPost, ActionName("Delete")]
         [Authorize(Roles = "Admin")]
-        public ActionResult SurveyDelete(int? id)
+        public ActionResult SurveyDeleteConfirmed(int? id)
         {
             var userId = User?.Identity?.GetUserId() ?? throw new UnauthorizedAccessException();
 
-            using (var unitOfWork = new UnitOfWork())
+            try
             {
-                var surv = unitOfWork.Surveys.GetAnAvailableSurveyForCohort(userId, id.Value);
-                var result = unitOfWork.Surveys.DeleteSurveyAvailable(userId, id.Value);
-
-                if (!result)
+                using (var unitOfWork = new UnitOfWork())
                 {
-                    ModelState.AddModelError("", "You cannot delete a survey if a user has already started taking the survey.");
+                    var surv = unitOfWork.Surveys.GetAnAvailableSurveyForCohort(userId, id.Value);
+                    var result = unitOfWork.Surveys.DeleteSurveyAvailable(userId, id.Value);
 
-                    if (surv == null)
+                    if (!result)
                     {
-                        return HttpNotFound();
+                        ModelState.AddModelError("", "You cannot delete a survey if a user has already started taking the survey.");
+
+                        if (surv == null)
+                        {
+                            return HttpNotFound();
+                        }
+
+                        return View(new SurveysViewModel { DateClosed = surv.DateClosed, DateOpened = surv.DateOpen, SurveyName = surv.Survey.Name, SurveyType = surv.SurveyType.Name });
                     }
 
-                    return View(new SurveysViewModel { DateClosed = surv.DateClosed, DateOpened = surv.DateOpen, SurveyName = surv.Survey.Name, SurveyType = surv.SurveyType.Name});
+                    unitOfWork.Complete();
+
+                    return RedirectToAction("Details", "Cohorts", new { id = surv.CohortID });
                 }
-
-                unitOfWork.Complete();
-
-                return RedirectToAction("Details", "Cohorts", new { id = surv.CohortID });
             }
+            catch (Exception)
+            {
+                ModelState.AddModelError("", "An error occured trying to delete your survey. Please try again!");
+
+                return RedirectToAction("Index", "Cohorts");
+            }
+           
         }
 
         [Authorize(Roles = "Admin")]
