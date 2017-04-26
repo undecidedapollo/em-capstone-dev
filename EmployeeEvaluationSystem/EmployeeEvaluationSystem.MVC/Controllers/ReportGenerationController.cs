@@ -1,8 +1,6 @@
 ﻿using System.Linq;
 using System.Web.Mvc;
-using EmployeeEvaluationSystem.Entity;
 using EmployeeEvaluationSystem.Entity.SharedObjects.Repository.EF6;
-using System.Data;
 using EmployeeEvaluationSystem.MVC.Models.Report;
 
 namespace EmployeeEvaluationSystem.MVC.Controllers
