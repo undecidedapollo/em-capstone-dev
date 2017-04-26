@@ -8,12 +8,10 @@ using System.Linq;
 using System.Collections.Generic;
 using System;
 using EmployeeEvaluationSystem.MVC.Models.Authentication;
-<<<<<<< HEAD
-=======
 using System.Web.Routing;
 using EmployeeEvaluationSystem.Entity.SharedObjects.Repository.EF6;
 using EmployeeEvaluationSystem.Entity.SharedObjects.Repository.Core;
->>>>>>> a3bcaf5df315eceb597a24d03ddcf6e29fb284ae
+using Microsoft.Owin.Security;
 
 namespace EmployeeEvaluationSystem.MVC.Controllers
 {
@@ -470,8 +468,6 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
 
             base.Dispose(disposing);
         }
-<<<<<<< HEAD
-=======
 
         #region Helpers
 
@@ -547,6 +543,5 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
         }
 
         #endregion
->>>>>>> a3bcaf5df315eceb597a24d03ddcf6e29fb284ae
     }
 }

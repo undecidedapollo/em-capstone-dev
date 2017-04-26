@@ -14,6 +14,7 @@ using EmployeeEvaluationSystem.SharedObjects.Enums;
 using EmployeeEvaluationSystem.MVC.Models.Survey;
 using EmployeeEvaluationSystem.Entity.SharedObjects.Model.Survey;
 using EmployeeEvaluationSystem.Entity.SharedObjects.Repository.Core;
+using Microsoft.AspNet.Identity.Owin;
 
 namespace EmployeeEvaluationSystem.MVC.Controllers
 {
@@ -42,13 +43,6 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
             this.passedInRequest = request;
         }
 
-<<<<<<< HEAD
-=======
-
-
-
-
->>>>>>> a3bcaf5df315eceb597a24d03ddcf6e29fb284ae
         // GET: Cohort
         public ActionResult Index(int? id)
         {
