@@ -22,6 +22,21 @@
             xhttp.send();
         };
 
+        SurveyDetailsPage.MarkFinished = function (id) {
+            var xhttp = new XMLHttpRequest();
+            xhttp.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
+
+                    alert("Marked finished successfully");
+                    location.reload();
+                } else if (this.readyState == 4) {
+                    alert("Unable to mark finished");
+                }
+            };
+            xhttp.open("GET", "/Survey/MarkFinished?id=" + id, true);
+            xhttp.send();
+        };
+
 
     })();
 
@@ -85,6 +100,16 @@
 
     </dl>
 </div>
+
+@if (!Model.TheSurvey.IsFinished)
+{
+    <button class="btn btn-xs btn-success" type="button" onclick="SurveyDetailsPage.MarkFinished('@(Model.TheSurvey.Id)')">Mark As Finished</button>
+}
+
+@if (Model.CanShowAllReport)
+{
+    @Html.ActionLink("View Report", "ReportPage", "ReportGeneration", new { survAvailId = Model.TheSurvey.Id }, new { @class = "btn btn-primary btn-sm" })
+}
 
 
 @foreach (var user in Model.UserGroups)

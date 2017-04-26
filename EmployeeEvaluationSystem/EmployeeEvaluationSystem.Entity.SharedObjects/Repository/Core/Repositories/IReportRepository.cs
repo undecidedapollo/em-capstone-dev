@@ -10,5 +10,7 @@ namespace EmployeeEvaluationSystem.Entity.SharedObjects.Repository.Core.Reposito
     public interface IReportRepository : IRepository
     {
         List<ReportRole> GetDetailsForReport(string userId, int surveyAvailableId);
+
+        List<ReportRole> GetDetailsForReport(int surveyAvailableId);
     }
 }

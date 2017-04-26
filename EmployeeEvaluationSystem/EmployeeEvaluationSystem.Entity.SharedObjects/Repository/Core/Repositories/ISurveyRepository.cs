@@ -10,16 +10,16 @@ namespace EmployeeEvaluationSystem.Entity.SharedObjects.Repository.Core.Reposito
 {
     public interface ISurveyRepository : IRepository
     {
-        bool CanExistingUserTakeSurvey(string userId, Guid pendingSurveyId);
-        bool CanGuestUserTakeSurvey(string userEmail, Guid pendingSurveyId);
+        bool CanExistingUserTakeSurvey(string userId, Guid pendingSurveyId); //
 
-        PendingSurvey CreatePendingSurveyForExistingUser(string userId, int userRoleId, int surveyAvailableId);
+        bool CanGuestUserTakeSurvey(string userEmail, Guid pendingSurveyId); //
 
-        PendingSurvey CreatePendingSurveyForGuestUser(string userEmail, int userRoleId, int surveyAvailableId);
+        PendingSurvey CreatePendingSurveyForExistingUser(string userId, int userRoleId, int surveyAvailableId); //
 
-        PendingSurvey GetPendingSurvey(string userId, Guid pendingSurveyId);
 
-        ICollection<Survey> GetAllSurveys(string currentUserID);
+        PendingSurvey GetPendingSurvey(string userId, Guid pendingSurveyId); //
+
+        ICollection<Survey> GetAllSurveys(string currentUserID); //
 
         ICollection<PendingSurvey> GetAllSurveysForUser(string userId);
 
@@ -33,11 +33,11 @@ namespace EmployeeEvaluationSystem.Entity.SharedObjects.Repository.Core.Reposito
 
         ICollection<PendingSurvey> GetFinishedSurveysForUser(string userId);
 
-        PendingSurvey GetPendingSurveySYSTEM(Guid pendingSurveyId);
+        PendingSurvey GetPendingSurveySYSTEM(Guid pendingSurveyId); //
 
         ICollection<UserSurveyRole> GetUserSurveyRoles();
 
-        UserSurveyRole GetUserSurveyRole(int roleID);
+        UserSurveyRole GetUserSurveyRole(int roleID); //
 
         Survey GetSurvey(string userId, int surveyId);
 
@@ -118,5 +118,7 @@ namespace EmployeeEvaluationSystem.Entity.SharedObjects.Repository.Core.Reposito
         List<RaterOBJ> GetMostRecentRatersForUser(string userId, int count);
 
         SurveysAvailable GetPreviousSurveyForCohort(int cohortId, int currentAvailableId);
+
+        void TryMarkAsFinished(int survAvailId);
     }
 }

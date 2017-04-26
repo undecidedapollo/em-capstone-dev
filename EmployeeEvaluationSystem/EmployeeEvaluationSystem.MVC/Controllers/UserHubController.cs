@@ -1,17 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Data.Entity;
-using System.Linq;
-using System.Net;
-using System.Web;
 using System.Web.Mvc;
-using EmployeeEvaluationSystem.Entity;
 using EmployeeEvaluationSystem.Entity.SharedObjects.Model.Authentication;
 using EmployeeEvaluationSystem.Entity.SharedObjects.Repository.EF6;
 using Microsoft.AspNet.Identity;
 using EmployeeEvaluationSystem.Entity.SharedObjects.Repository.Core;
 using Microsoft.AspNet.Identity.Owin;
+using System.Web;
 
 namespace EmployeeEvaluationSystem.MVC.Controllers
 {

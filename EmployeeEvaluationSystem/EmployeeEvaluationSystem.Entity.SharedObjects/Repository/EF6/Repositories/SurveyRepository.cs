@@ -171,10 +171,6 @@ namespace EmployeeEvaluationSystem.Entity.SharedObjects.Repository.EF6.Repositor
             return this.CreatePendingSurvey(userId, userRoleId, surveyAvailableId, true);
         }
 
-        public PendingSurvey CreatePendingSurveyForGuestUser(string userEmail, int userRoleId, int surveyAvailableId)
-        {
-            return this.CreatePendingSurvey(userEmail, userRoleId, surveyAvailableId, false);
-        }
 
 
         public SurveysAvailable CreateAnAvailableSurveyForCohort(string currentUserID, CreateAvailableSurveyModel model)
@@ -762,6 +758,15 @@ namespace EmployeeEvaluationSystem.Entity.SharedObjects.Repository.EF6.Repositor
                 lastName = x.RaterLastName,
                 RoleId = x.UserSurveyRoleID
             }).ToList();
+        }
+
+        public void TryMarkAsFinished(int survAvailId)
+        {
+            var survAvail = this.GetAnAvailableSurveyForCohortSYSTEM(survAvailId);
+
+            survAvail.IsCompleted = true;
+            survAvail.DateCompleted = DateTime.UtcNow;
+
         }
     }
 }
