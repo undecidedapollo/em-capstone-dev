@@ -15,12 +15,37 @@ using System.IO;
 using LumenWorks.Framework.IO.Csv;
 using EmployeeEvaluationSystem.MVC.Models;
 using Microsoft.AspNet.Identity.Owin;
+using EmployeeEvaluationSystem.Entity.SharedObjects.Repository.Core;
 
 namespace EmployeeEvaluationSystem.MVC.Controllers
 {
+
+
+
+
     [Authorize(Roles = "Admin")]
     public class AspNetUsersController : Controller
     {
+
+        private IUnitOfWorkCreator creator;
+
+        public IUnitOfWorkCreator Creator
+        {
+            get { return creator ?? HttpContext.GetOwinContext().Get<IUnitOfWorkCreator>(); }
+            private set { creator = value; }
+        }
+
+        public AspNetUsersController()
+        {
+        }
+
+        public AspNetUsersController(IUnitOfWorkCreator creator)
+        {
+            this.creator = creator;
+        }
+
+
+
 
         [Authorize]
         // GET: AspNetUsers
@@ -257,7 +282,7 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
                     var sm = HttpContext.GetOwinContext().Get<ApplicationSignInManager>();
 
 
-                    var accController = new AccountController(um, sm, this.Request);
+                    var accController = new AccountController(um, sm, this.Creator, this.Request);
 
                     var result = await accController.RegisterMultipleUsers(usersToRegister);
 
@@ -303,7 +328,7 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
 
             var userId = User?.Identity?.GetUserId();
 
-            using (var unitOfWork = new UnitOfWork())
+            using (var unitOfWork = this.Creator.Create())
             {
                 AspNetUser aspNetUser = unitOfWork.Users.GetUser(userId, id);
 
@@ -332,7 +357,7 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
 
             var userId = User?.Identity?.GetUserId();
 
-            using (var unitOfWork = new UnitOfWork())
+            using (var unitOfWork = this.Creator.Create())
             {
                 AspNetUser aspNetUser = unitOfWork.Users.GetUser(userId, id);
 
@@ -363,7 +388,7 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
             {
                 var userId = User?.Identity?.GetUserId();
 
-                using (var unitOfWork = new UnitOfWork())
+                using (var unitOfWork = this.Creator.Create())
                 {
 
                     var newUser = unitOfWork.Users.EditUser(userId, aspNetUser);
@@ -396,7 +421,7 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
 
             var userId = User?.Identity?.GetUserId();
 
-            using (var unitOfWork = new UnitOfWork())
+            using (var unitOfWork = this.Creator.Create())
             {
                 AspNetUser aspNetUser = unitOfWork.Users.GetUser(userId, id);
 
@@ -423,7 +448,7 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
 
             var userId = User?.Identity?.GetUserId();
 
-            using (var unitOfWork = new UnitOfWork())
+            using (var unitOfWork = this.Creator.Create())
             {
                 unitOfWork.Users.DeleteUser(userId, id);
 

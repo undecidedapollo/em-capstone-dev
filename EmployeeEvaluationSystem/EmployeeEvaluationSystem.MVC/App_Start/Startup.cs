@@ -1,4 +1,6 @@
-﻿using EmployeeEvaluationSystem.MVC.Infrastructure.Hangfire;
+﻿using EmployeeEvaluationSystem.Entity.SharedObjects.Repository.Core;
+using EmployeeEvaluationSystem.Entity.SharedObjects.Repository.EF6;
+using EmployeeEvaluationSystem.MVC.Infrastructure.Hangfire;
 using Hangfire;
 using Microsoft.Owin;
 using Owin;
@@ -11,8 +13,9 @@ namespace EmployeeEvaluationSystem.MVC
     {
         public void Configuration(IAppBuilder app)
         {
+            app.CreatePerOwinContext<IUnitOfWorkCreator>(() => { return new UnitOfWorkCreator(); });
+
             ConfigureAuth(app);
-            DependencyStartup.Setup();
 
             GlobalConfiguration.Configuration.UseSqlServerStorage(ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString);
 

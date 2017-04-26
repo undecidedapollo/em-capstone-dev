@@ -12,6 +12,7 @@ using System;
 using EmployeeEvaluationSystem.MVC.Models.Authentication;
 using System.Web.Routing;
 using EmployeeEvaluationSystem.Entity.SharedObjects.Repository.EF6;
+using EmployeeEvaluationSystem.Entity.SharedObjects.Repository.Core;
 
 namespace EmployeeEvaluationSystem.MVC.Controllers
 {
@@ -21,16 +22,24 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;
         private HttpRequestBase passedInRequest;
+        private IUnitOfWorkCreator creator;
+
+        public IUnitOfWorkCreator Creator
+        {
+            get { return creator ?? HttpContext.GetOwinContext().Get<IUnitOfWorkCreator>(); }
+            private set { creator = value; }
+        }
 
         public AccountController()
         {
         }
 
-        public AccountController(ApplicationUserManager userManager, ApplicationSignInManager signInManager, HttpRequestBase request = null)
+        public AccountController(ApplicationUserManager userManager, ApplicationSignInManager signInManager, IUnitOfWorkCreator creator, HttpRequestBase request = null)
         {
             this.passedInRequest = request;
             UserManager = userManager;
             SignInManager = signInManager;
+            this.creator = creator;
         }
 
         public ApplicationSignInManager SignInManager
@@ -657,7 +666,7 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
             userId = userId ?? User?.Identity?.GetUserId();
 
 
-            using (var unitOfWork = new UnitOfWork())
+            using (var unitOfWork = this.Creator.Create())
             {
                 if (Url.IsLocalUrl(returnUrl))
                     return Redirect(returnUrl);
