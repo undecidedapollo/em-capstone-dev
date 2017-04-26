@@ -16,7 +16,7 @@ namespace EmployeeEvaluationSystem.Tests.Repositories
     {
 
         [TestMethod]
-        public void GetAllUsers3UsersReturns3Users()
+        public void GetAvailableSurveyWithOneReturnsOne()
         {
             var x = EFUnitOfWorkBuilder<EmployeeDatabaseEntities>
                 .Create()
@@ -32,6 +32,21 @@ namespace EmployeeEvaluationSystem.Tests.Repositories
 
                 Assert.IsNotNull(survey);
                 Assert.AreEqual(survey.ID, 10);
+            }
+        }
+
+        [TestMethod]
+        public void GetAvailableSurveyWithNoneReturnsNone()
+        {
+            var x = EFUnitOfWorkBuilder<EmployeeDatabaseEntities>
+                .Create();
+
+            using (var unitOfWork = new UnitOfWork(x.GetContext()))
+            {
+                var survey = unitOfWork.Surveys.GetAnAvailableSurveyForCohort(null, 10);
+
+
+                Assert.IsNull(survey);
             }
         }
     }
