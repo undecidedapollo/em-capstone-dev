@@ -171,10 +171,6 @@ namespace EmployeeEvaluationSystem.Entity.SharedObjects.Repository.EF6.Repositor
             return this.CreatePendingSurvey(userId, userRoleId, surveyAvailableId, true);
         }
 
-        public PendingSurvey CreatePendingSurveyForGuestUser(string userEmail, int userRoleId, int surveyAvailableId)
-        {
-            return this.CreatePendingSurvey(userEmail, userRoleId, surveyAvailableId, false);
-        }
 
 
         public SurveysAvailable CreateAnAvailableSurveyForCohort(string currentUserID, CreateAvailableSurveyModel model)
