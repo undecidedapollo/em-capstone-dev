@@ -212,7 +212,7 @@ namespace EmployeeEvaluationSystem.Entity.SharedObjects.Repository.EF6.Repositor
                 throw new ItemNotFoundException("Unable to find the base survey to create this survey.");
             }
 
-            var theSurveyType = this.GetSurveyType(currentUserID, model.SurveyId);
+            var theSurveyType = this.GetSurveyType(currentUserID, model.SurveyTypeId);
 
             if (theSurveyType == null)
             {

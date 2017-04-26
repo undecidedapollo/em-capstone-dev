@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
-using System.Data.Entity;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
@@ -12,10 +10,11 @@ using EmployeeEvaluationSystem.Entity.SharedObjects.Model.Authentication;
 using EmployeeEvaluationSystem.Entity.SharedObjects.Repository.EF6;
 using EmployeeEvaluationSystem.MVC.Models;
 using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.Owin;
 using EmployeeEvaluationSystem.SharedObjects.Enums;
 using EmployeeEvaluationSystem.MVC.Models.Survey;
 using EmployeeEvaluationSystem.Entity.SharedObjects.Model.Survey;
+using EmployeeEvaluationSystem.Entity.SharedObjects.Repository.Core;
+using Microsoft.AspNet.Identity.Owin;
 
 namespace EmployeeEvaluationSystem.MVC.Controllers
 {
@@ -24,27 +23,32 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
     [Authorize(Roles = "Admin")]
     public class CohortsController : Controller
     {
-
         private HttpRequestBase passedInRequest;
+
+        private IUnitOfWorkCreator creator;
+
+        public IUnitOfWorkCreator Creator
+        {
+            get { return creator ?? HttpContext.GetOwinContext().Get<IUnitOfWorkCreator>(); }
+            private set { creator = value; }
+        }
 
         public CohortsController()
         {
         }
 
-        public CohortsController( HttpRequestBase request = null)
+        public CohortsController(IUnitOfWorkCreator creator, HttpRequestBase request = null)
         {
+            this.creator = creator;
             this.passedInRequest = request;
         }
-
-
-
 
         // GET: Cohort
         public ActionResult Index(int? id)
         {
             var userId = User?.Identity?.GetUserId();
 
-            using (var unitOfWork = new UnitOfWork())
+            using (var unitOfWork = this.Creator.Create())
             {
                 var unconvertedCohorts = unitOfWork.Cohorts.GetAllCohorts(userId).Where(x => x.IsDeleted == false).ToList();
 
@@ -86,7 +90,7 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
 
             var userId = User?.Identity?.GetUserId();
 
-            using (var unitOfWork = new UnitOfWork())
+            using (var unitOfWork = this.Creator.Create())
             {
                 Cohort cohort = unitOfWork.Cohorts.GetCohort(userId, id);
 
@@ -121,7 +125,7 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
         {
             var userId = User?.Identity?.GetUserId();
 
-            using (var unitOfWork = new UnitOfWork())
+            using (var unitOfWork = this.Creator.Create())
             {
                 var unconvertedUsers = unitOfWork.Cohorts.GetAllUsersThatAreNotPartOfACohort(userId).ToList();
 
@@ -166,7 +170,7 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
 
             if (shouldReturn)
             {
-                using (var unitOfWork = new UnitOfWork())
+                using (var unitOfWork = this.Creator.Create())
                 {
                     var unconvertedUsers = unitOfWork.Cohorts.GetAllUsersThatAreNotPartOfACohort(userId).ToList();
 
@@ -185,7 +189,7 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
 
             var usersToRegister = new List<string>();
 
-            using (var unitOfWork = new UnitOfWork())
+            using (var unitOfWork = this.Creator.Create())
             {
                 var cohort = new Cohort()
                 {
@@ -233,7 +237,7 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
 
             var userId = User?.Identity?.GetUserId();
 
-            using (var unitOfWork = new UnitOfWork())
+            using (var unitOfWork = this.Creator.Create())
             {
                 var surveys = unitOfWork.Surveys.GetAllSurveys(userId);
 
@@ -283,38 +287,6 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
                         }
                     }
                 }
-
-                //foreach(var item in cohort.SurveysAvailables)
-                //{
-                //    (Survey, SurveyType, StartEvaluationViewModel.SurveyState)? assignedSurvey = null;
-
-                //    if(unitOfWork.Surveys.GetNextAvailableSurveyTypeForSurveyInCohort(item.SurveyID, cohort.ID)?.ID == 1)
-                //    {
-                //        var x = (item.Survey, unitOfWork.Surveys.GetNextAvailableSurveyTypeForSurveyInCohort(item.SurveyID, cohort.ID), StartEvaluationViewModel.SurveyState.AVAILABLE);
-
-                //        if (assignedSurveys.Contains(x))
-                //        {
-                //            continue;
-                //        }
-                //        else
-                //        {
-                //            assignedSurveys.Add(x);
-                //            continue;
-                //        }
-                //    }
-
-                //    if(item.IsCompleted && unitOfWork.Surveys.GetNextAvailableSurveyTypeForSurveyInCohort(item.SurveyID, cohort.ID)?.ID == item.SurveyTypeId + 1)
-                //    {
-                //        assignedSurvey = (item.Survey, item.SurveyType, StartEvaluationViewModel.SurveyState.COMPLETE);
-                //        assignedSurveys.Add((item.Survey, unitOfWork.Surveys.GetSurveyType(userId, item.SurveyTypeId + 1), StartEvaluationViewModel.SurveyState.AVAILABLE));
-                //    }
-                //    else
-                //    {
-                //        assignedSurvey = (item.Survey, item.SurveyType, StartEvaluationViewModel.SurveyState.IN_PROGRESS);
-                //    }
-
-                //    assignedSurveys.Add(assignedSurvey);
-                //}
 
                 var model = new StartEvaluationViewModel()
                 {
@@ -395,7 +367,7 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
 
             var userId = User?.Identity?.GetUserId();
 
-            using (var unitOfWork = new UnitOfWork())
+            using (var unitOfWork = this.Creator.Create())
             {
                 var availableSurvey = unitOfWork.Surveys.CreateAnAvailableSurveyForCohort(userId, surveyModel);
 
@@ -441,7 +413,7 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
 
             var userId = User?.Identity?.GetUserId();
 
-            using (var unitOfWork = new UnitOfWork())
+            using (var unitOfWork = this.Creator.Create())
             {
                 var newCohort = unitOfWork.Cohorts.GetCohort(userId, id.Value);
 
@@ -463,7 +435,7 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
 
             var userId = User?.Identity?.GetUserId();
 
-            using (var unitOfWork = new UnitOfWork())
+            using (var unitOfWork = this.Creator.Create())
             {
                 var newCohort = unitOfWork.Cohorts.EditCohort(userId, cohort);
 
@@ -483,7 +455,7 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
 
             var userId = User?.Identity?.GetUserId();
 
-            using (var unitOfWork = new UnitOfWork())
+            using (var unitOfWork = this.Creator.Create())
             {
                 Cohort cohort = unitOfWork.Cohorts.GetCohort(userId, id);
 
@@ -504,7 +476,7 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
         {
             var userId = User?.Identity?.GetUserId();
 
-            using (var unitOfWork = new UnitOfWork())
+            using (var unitOfWork = this.Creator.Create())
             {
                 var result = unitOfWork.Cohorts.DeleteCohort(userId, id);
 
@@ -527,40 +499,5 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
                 return RedirectToAction("Index");
             }
         }
-
-        //// GET: Cohort/StartEvaluation
-        //public ActionResult StartEvaluation()
-        //{
-        //    return View();   
-        //}
-
-        //// POST: Cohort/StartEvaluation
-        //[HttpPost, ActionName("StartEvaluation")]
-        //[ValidateAntiForgeryToken]
-        //public ActionResult StartEvaluation()
-        //{
-        //    var userId = User?.Identity?.GetUserId();
-
-        //    using (var unitOfWork = new UnitOfWork())
-        //    {
-        //        unitOfWork.Cohorts.DeleteCohort(userId, id);
-
-        //        unitOfWork.Complete();
-
-        //        return RedirectToAction("Index");
-        //    }
-        //}
-        
-
-        /*
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                db.Dispose();
-            }
-            base.Dispose(disposing);
-        }
-        */
     }
 }
