@@ -29,7 +29,6 @@ namespace EmployeeEvaluationSystem.Tests.Repositories
             {
                 var survey = unitOfWork.Surveys.GetAnAvailableSurveyForCohort(null, 10);
 
-
                 Assert.IsNotNull(survey);
                 Assert.AreEqual(survey.ID, 10);
             }
