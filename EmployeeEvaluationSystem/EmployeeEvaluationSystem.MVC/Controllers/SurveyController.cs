@@ -32,7 +32,9 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
 
         public IUnitOfWorkCreator Creator
         {
-            get { return creator ?? HttpContext.GetOwinContext().Get<IUnitOfWorkCreator>(); }
+            get {
+                return creator ?? HttpContext.GetOwinContext().Get<IUnitOfWorkCreator>();
+            }
             private set { creator = value; }
         }
 
@@ -80,7 +82,13 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
                         if (!auth) throw new UnauthorizedAccessException();
                     }
 
-                    var user = this.UserManager.FindById(userId) ?? throw new UnauthorizedAccessException();
+                    var user = this.UserManager.FindById(userId);
+                    if(user == null)
+                    {
+                        throw new UnauthorizedAccessException();
+                    }
+                        
+                        
                     this.SignInManager.SignIn(user, true, false);
                 }
                 else
@@ -1023,7 +1031,8 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
                         DateClosed = surveysAvailable.DateClosed,
                         DateOpened = surveysAvailable.DateOpen,
                         SurveyName = surveysAvailable.Survey.Name,
-                        SurveyType = surveysAvailable.SurveyType.Name
+                        SurveyType = surveysAvailable.SurveyType.Name,
+                        IsFinished = surveysAvailable.IsCompleted
                     },
                     UserGroups = new List<UserGroupSurveyStatus>()
                 };
@@ -1053,6 +1062,11 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
                         if(surv?.UserTakenBy?.FirstName != null)
                         {
                             NameOrEmail = surv?.UserTakenBy?.FirstName + " " + surv?.UserTakenBy?.LastName;
+                        }
+
+                        if(surv?.UserSurveyRoleID == 1 && isFinished)
+                        {
+                            newModel.CanShowReport = true;
                         }
 
 
@@ -1100,16 +1114,32 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
                         }
                     }
 
-                    if (newModel.UsersForSurvey.Count(x => x.DateFinished != null) == newModel.UsersForSurvey.Count())
-                    {
-                        newModel.CanShowReport = true;
-                    }
+                    
 
                     viewModel.UserGroups.Add(newModel);
                 }
 
+                if(viewModel.UserGroups.Any(x => x.CanShowReport))
+                {
+                    viewModel.CanShowAllReport = true;
+                }
+
                 return View(viewModel);
             }
+        }
+
+        [Authorize]
+        public async Task<ActionResult> MarkFinished(int id)
+        {
+            var userId = User?.Identity?.GetUserId() ?? throw new UnauthorizedAccessException();
+
+            using (var unitOfWork = this.Creator.Create())
+            {
+                unitOfWork.Surveys.TryMarkAsFinished(id);
+                unitOfWork.Complete();
+            }
+
+            return new HttpStatusCodeResult(HttpStatusCode.OK);
         }
 
     }

@@ -6,6 +6,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -22,6 +23,10 @@ namespace EmployeeEvaluationSystem.Tests.Infrastructure
         public EFUnitOfWorkBuilder()
         {
             mockContext = new Mock<T>();
+
+            var mockEntry = new Mock<DbEntityEntry>();
+            //mockContext.Setup(y => y.Entry(It.IsAny<object>())).Returns(mockEntry.Object);
+
 
             Initialize();
         }
@@ -89,7 +94,19 @@ namespace EmployeeEvaluationSystem.Tests.Infrastructure
             mockSet.As<IEnumerable>().Setup(m => m.GetEnumerator()).Returns(() => { return data.GetEnumerator(); });
 
             mockSet.As<IDbSet<T3>>().Setup(m => m.Add(It.IsAny<T3>())).Returns<T3>((a) => { data.Add(a); return a; });
-            mockContext.Setup(x).Returns(mockSet.Object);
+            mockSet.As<IDbSet<T3>>().Setup(m => m.Remove(It.IsAny<T3>())).Returns<T3>((a) => { data.Remove(a); return a; });
+            mockSet.As<IDbSet<T3>>().Setup(m => m.Attach(It.IsAny<T3>())).Returns<T3>((a) => { data.Add(a); return a; });
+            mockSet.As<IDbSet<T3>>().Setup(m => m.Find(It.IsAny<object[]>())).Throws(new NotImplementedException("Find has not yet been implemented."));
+
+
+            var mockSetObj = mockSet.Object;
+
+            
+
+            mockContext.Setup(x).Returns(mockSetObj);
+            mockContext.Setup(y => y.Set<T3>()).Returns(mockSetObj);
+
+            
 
             return this;
         }

@@ -759,5 +759,14 @@ namespace EmployeeEvaluationSystem.Entity.SharedObjects.Repository.EF6.Repositor
                 RoleId = x.UserSurveyRoleID
             }).ToList();
         }
+
+        public void TryMarkAsFinished(int survAvailId)
+        {
+            var survAvail = this.GetAnAvailableSurveyForCohortSYSTEM(survAvailId);
+
+            survAvail.IsCompleted = true;
+            survAvail.DateCompleted = DateTime.UtcNow;
+
+        }
     }
 }
