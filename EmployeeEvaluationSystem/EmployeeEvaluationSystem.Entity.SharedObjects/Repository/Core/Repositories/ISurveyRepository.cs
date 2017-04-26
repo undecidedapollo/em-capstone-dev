@@ -67,7 +67,7 @@ namespace EmployeeEvaluationSystem.Entity.SharedObjects.Repository.Core.Reposito
 
         SurveysAvailable GetAnAvailableSurveyForCohortSYSTEM(int surveyAvailableId, bool track = true);
 
-        SurveysAvailable DeleteSurveyAvailable(string userId, int surveyAvailableId);
+        bool DeleteSurveyAvailable(string userId, int surveyAvailableId);
 
         bool IsSurveyAvailableStillOpen(int surveyAvailableId);
 

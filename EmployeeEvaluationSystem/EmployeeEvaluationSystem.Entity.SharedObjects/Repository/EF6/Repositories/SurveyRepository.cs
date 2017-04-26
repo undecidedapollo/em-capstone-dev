@@ -287,6 +287,16 @@ namespace EmployeeEvaluationSystem.Entity.SharedObjects.Repository.EF6.Repositor
                     };
                 }).Where(x => x != null).ToList();
 
+
+            if(!validRoles.Any(x => x.ID == 1))
+            {
+                validRoles.Add(new SurveysAvailableTo
+                {
+                    UserSurveyRoleId = Convert.ToInt32(SurveyRoleEnum.SELF),
+                    Quantity = 1
+                });
+            }
+
             var theSurveyAvailable = new SurveysAvailable
             {
                 SurveyID = model.SurveyId,
@@ -378,7 +388,7 @@ namespace EmployeeEvaluationSystem.Entity.SharedObjects.Repository.EF6.Repositor
             return surv.DateOpen <= currentTime && currentTime <= surv.DateClosed;
         }
 
-        public SurveysAvailable DeleteSurveyAvailable(string userId, int surveyAvailableId)
+        public bool DeleteSurveyAvailable(string userId, int surveyAvailableId)
         {
             var survey = this.GetAnAvailableSurveyForCohortSYSTEM(surveyAvailableId);
 
@@ -387,11 +397,18 @@ namespace EmployeeEvaluationSystem.Entity.SharedObjects.Repository.EF6.Repositor
                 throw new ItemNotFoundException();
             }
 
+            var canDelete = !survey.PendingSurveys.Any(x => x.SurveyInstance != null);
+
+            if (!canDelete)
+            {
+                return false;
+            }
+
             survey.IsDeleted = true;
 
             survey.DateDeleted = DateTime.UtcNow;
 
-            return survey;
+            return true;
         }
 
         public UserSurveyRole GetUserSurveyRole(int roleID)

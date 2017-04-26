@@ -32,16 +32,29 @@ namespace EmployeeEvaluationSystem.Entity.SharedObjects.Repository.EF6.Repositor
             return this.dbcontext.Cohorts.FirstOrDefault(x => x.ID == cohortIdToGet && x.IsDeleted == false);
         }
 
-        public void DeleteCohort(string currentUserId, int cohortIdToGet)
+        public bool DeleteCohort(string currentUserId, int cohortIdToGet)
         {
             var cohort = this.GetCohort(currentUserId, cohortIdToGet);
+
+            
+
 
             if (cohort == null)
             {
                 throw new Exception();
             }
 
+            var canDelete = cohort.SurveysAvailables.Any(x => x.IsDeleted == false && x.DateOpen <= DateTime.UtcNow);
+
+            if (canDelete)
+            {
+                return false;
+            }
+
+
             cohort.IsDeleted = true;
+            cohort.DateDeleted = DateTime.UtcNow;
+            return true;
         }
 
         public Cohort EditCohort(string currentUserId, Cohort cohortToEdit)

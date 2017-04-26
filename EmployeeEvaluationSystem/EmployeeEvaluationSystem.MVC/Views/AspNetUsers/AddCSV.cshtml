@@ -8,11 +8,12 @@
 
 @using (Html.BeginForm("AddCSV", "AspNetUsers", null, FormMethod.Post, new { enctype = "multipart/form-data" }))
 {
+    @Html.ValidationSummary()
 
     if (Model == null)
     {
         @Html.AntiForgeryToken()
-        @Html.ValidationSummary()
+       
 
         <div class="form-group">
             <input type="file" id="dataFile" name="upload" />
