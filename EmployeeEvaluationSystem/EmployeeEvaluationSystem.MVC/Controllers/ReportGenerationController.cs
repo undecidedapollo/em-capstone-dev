@@ -2,11 +2,32 @@
 using System.Web.Mvc;
 using EmployeeEvaluationSystem.Entity.SharedObjects.Repository.EF6;
 using EmployeeEvaluationSystem.MVC.Models.Report;
+using EmployeeEvaluationSystem.Entity.SharedObjects.Repository.Core;
+using System.Web;
+using Microsoft.AspNet.Identity.Owin;
 
 namespace EmployeeEvaluationSystem.MVC.Controllers
 {
     public class ReportGenerationController : Controller
     {
+
+
+        private IUnitOfWorkCreator creator;
+
+        public IUnitOfWorkCreator Creator
+        {
+            get { return creator ?? HttpContext.GetOwinContext().Get<IUnitOfWorkCreator>(); }
+            private set { creator = value; }
+        }
+
+        public ReportGenerationController()
+        {
+        }
+
+        public ReportGenerationController(IUnitOfWorkCreator creator)
+        {
+            this.creator = creator;
+        }
 
         // GET: ReportGeneration
         public ActionResult Index()
@@ -16,7 +37,7 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
         
         public ActionResult ReportPage(string userId, int survAvailId)
         {
-            using(var unitOfWork = new UnitOfWork())
+            using(var unitOfWork = this.Creator.Create())
             {
                 var reportDetails = unitOfWork.Reports.GetDetailsForReport(userId, survAvailId);
                 var sa = unitOfWork.Surveys.GetAnAvailableSurveyForCohortSYSTEM(survAvailId);

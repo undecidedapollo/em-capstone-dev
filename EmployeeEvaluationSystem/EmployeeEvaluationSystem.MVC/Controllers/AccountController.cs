@@ -8,6 +8,12 @@ using System.Linq;
 using System.Collections.Generic;
 using System;
 using EmployeeEvaluationSystem.MVC.Models.Authentication;
+<<<<<<< HEAD
+=======
+using System.Web.Routing;
+using EmployeeEvaluationSystem.Entity.SharedObjects.Repository.EF6;
+using EmployeeEvaluationSystem.Entity.SharedObjects.Repository.Core;
+>>>>>>> a3bcaf5df315eceb597a24d03ddcf6e29fb284ae
 
 namespace EmployeeEvaluationSystem.MVC.Controllers
 {
@@ -17,16 +23,24 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;
         private HttpRequestBase passedInRequest;
+        private IUnitOfWorkCreator creator;
+
+        public IUnitOfWorkCreator Creator
+        {
+            get { return creator ?? HttpContext.GetOwinContext().Get<IUnitOfWorkCreator>(); }
+            private set { creator = value; }
+        }
 
         public AccountController()
         {
         }
 
-        public AccountController(ApplicationUserManager userManager, ApplicationSignInManager signInManager, HttpRequestBase request = null)
+        public AccountController(ApplicationUserManager userManager, ApplicationSignInManager signInManager, IUnitOfWorkCreator creator, HttpRequestBase request = null)
         {
             this.passedInRequest = request;
             UserManager = userManager;
             SignInManager = signInManager;
+            this.creator = creator;
         }
 
         public ApplicationSignInManager SignInManager
@@ -456,5 +470,83 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
 
             base.Dispose(disposing);
         }
+<<<<<<< HEAD
+=======
+
+        #region Helpers
+
+        // Used for XSRF protection when adding external logins
+        private const string XsrfKey = "XsrfId";
+
+        private IAuthenticationManager AuthenticationManager
+        {
+            get { return HttpContext.GetOwinContext().Authentication; }
+        }
+
+        private void AddErrors(IdentityResult result)
+        {
+            foreach (var error in result.Errors)
+                ModelState.AddModelError("", error);
+        }
+
+        [Authorize]
+        public ActionResult RedirectToAppropriatePage(string userId, string returnUrl)
+        {
+            var user = userId ?? User.Identity.GetUserId();
+
+            return RedirectToLocal(userId, returnUrl);
+        }
+
+
+        public ActionResult RedirectToLocal(string userId, string returnUrl)
+        {
+
+            userId = userId ?? User?.Identity?.GetUserId();
+
+
+            using (var unitOfWork = this.Creator.Create())
+            {
+                if (Url.IsLocalUrl(returnUrl))
+                    return Redirect(returnUrl);
+                if (unitOfWork.Users.isUserAdmin(userId))
+                {
+                    return RedirectToAction("Index", "Cohorts");
+                }
+                else
+                {
+                    return RedirectToAction("Index", "UserHub");
+                }
+            }
+        }
+
+        internal class ChallengeResult : HttpUnauthorizedResult
+        {
+            public ChallengeResult(string provider, string redirectUri)
+                : this(provider, redirectUri, null)
+            {
+            }
+
+            public ChallengeResult(string provider, string redirectUri, string userId)
+            {
+                LoginProvider = provider;
+                RedirectUri = redirectUri;
+                UserId = userId;
+            }
+
+            public string LoginProvider { get; set; }
+            public string RedirectUri { get; set; }
+            public string UserId { get; set; }
+
+            public override void ExecuteResult(ControllerContext context)
+            {
+                var properties = new AuthenticationProperties {RedirectUri = RedirectUri};
+                if (UserId != null)
+                    properties.Dictionary[XsrfKey] = UserId;
+                context.HttpContext.GetOwinContext().Authentication.Challenge(properties, LoginProvider);
+            }
+        }
+
+        #endregion
+>>>>>>> a3bcaf5df315eceb597a24d03ddcf6e29fb284ae
     }
 }

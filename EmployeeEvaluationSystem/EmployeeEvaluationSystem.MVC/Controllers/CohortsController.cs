@@ -13,6 +13,7 @@ using Microsoft.AspNet.Identity;
 using EmployeeEvaluationSystem.SharedObjects.Enums;
 using EmployeeEvaluationSystem.MVC.Models.Survey;
 using EmployeeEvaluationSystem.Entity.SharedObjects.Model.Survey;
+using EmployeeEvaluationSystem.Entity.SharedObjects.Repository.Core;
 
 namespace EmployeeEvaluationSystem.MVC.Controllers
 {
@@ -23,21 +24,37 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
     {
         private HttpRequestBase passedInRequest;
 
+        private IUnitOfWorkCreator creator;
+
+        public IUnitOfWorkCreator Creator
+        {
+            get { return creator ?? HttpContext.GetOwinContext().Get<IUnitOfWorkCreator>(); }
+            private set { creator = value; }
+        }
+
         public CohortsController()
         {
         }
 
-        public CohortsController( HttpRequestBase request = null)
+        public CohortsController(IUnitOfWorkCreator creator, HttpRequestBase request = null)
         {
+            this.creator = creator;
             this.passedInRequest = request;
         }
 
+<<<<<<< HEAD
+=======
+
+
+
+
+>>>>>>> a3bcaf5df315eceb597a24d03ddcf6e29fb284ae
         // GET: Cohort
         public ActionResult Index(int? id)
         {
             var userId = User?.Identity?.GetUserId();
 
-            using (var unitOfWork = new UnitOfWork())
+            using (var unitOfWork = this.Creator.Create())
             {
                 var unconvertedCohorts = unitOfWork.Cohorts.GetAllCohorts(userId).Where(x => x.IsDeleted == false).ToList();
 
@@ -79,7 +96,7 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
 
             var userId = User?.Identity?.GetUserId();
 
-            using (var unitOfWork = new UnitOfWork())
+            using (var unitOfWork = this.Creator.Create())
             {
                 Cohort cohort = unitOfWork.Cohorts.GetCohort(userId, id);
 
@@ -114,7 +131,7 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
         {
             var userId = User?.Identity?.GetUserId();
 
-            using (var unitOfWork = new UnitOfWork())
+            using (var unitOfWork = this.Creator.Create())
             {
                 var unconvertedUsers = unitOfWork.Cohorts.GetAllUsersThatAreNotPartOfACohort(userId).ToList();
 
@@ -159,7 +176,7 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
 
             if (shouldReturn)
             {
-                using (var unitOfWork = new UnitOfWork())
+                using (var unitOfWork = this.Creator.Create())
                 {
                     var unconvertedUsers = unitOfWork.Cohorts.GetAllUsersThatAreNotPartOfACohort(userId).ToList();
 
@@ -178,7 +195,7 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
 
             var usersToRegister = new List<string>();
 
-            using (var unitOfWork = new UnitOfWork())
+            using (var unitOfWork = this.Creator.Create())
             {
                 var cohort = new Cohort()
                 {
@@ -226,7 +243,7 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
 
             var userId = User?.Identity?.GetUserId();
 
-            using (var unitOfWork = new UnitOfWork())
+            using (var unitOfWork = this.Creator.Create())
             {
                 var surveys = unitOfWork.Surveys.GetAllSurveys(userId);
 
@@ -356,7 +373,7 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
 
             var userId = User?.Identity?.GetUserId();
 
-            using (var unitOfWork = new UnitOfWork())
+            using (var unitOfWork = this.Creator.Create())
             {
                 var availableSurvey = unitOfWork.Surveys.CreateAnAvailableSurveyForCohort(userId, surveyModel);
 
@@ -402,7 +419,7 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
 
             var userId = User?.Identity?.GetUserId();
 
-            using (var unitOfWork = new UnitOfWork())
+            using (var unitOfWork = this.Creator.Create())
             {
                 var newCohort = unitOfWork.Cohorts.GetCohort(userId, id.Value);
 
@@ -424,7 +441,7 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
 
             var userId = User?.Identity?.GetUserId();
 
-            using (var unitOfWork = new UnitOfWork())
+            using (var unitOfWork = this.Creator.Create())
             {
                 var newCohort = unitOfWork.Cohorts.EditCohort(userId, cohort);
 
@@ -444,7 +461,7 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
 
             var userId = User?.Identity?.GetUserId();
 
-            using (var unitOfWork = new UnitOfWork())
+            using (var unitOfWork = this.Creator.Create())
             {
                 Cohort cohort = unitOfWork.Cohorts.GetCohort(userId, id);
 
@@ -465,7 +482,7 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
         {
             var userId = User?.Identity?.GetUserId();
 
-            using (var unitOfWork = new UnitOfWork())
+            using (var unitOfWork = this.Creator.Create())
             {
                 var result = unitOfWork.Cohorts.DeleteCohort(userId, id);
 

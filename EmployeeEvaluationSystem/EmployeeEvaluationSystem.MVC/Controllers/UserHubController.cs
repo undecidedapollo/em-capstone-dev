@@ -3,6 +3,8 @@ using System.Web.Mvc;
 using EmployeeEvaluationSystem.Entity.SharedObjects.Model.Authentication;
 using EmployeeEvaluationSystem.Entity.SharedObjects.Repository.EF6;
 using Microsoft.AspNet.Identity;
+using EmployeeEvaluationSystem.Entity.SharedObjects.Repository.Core;
+using Microsoft.AspNet.Identity.Owin;
 
 namespace EmployeeEvaluationSystem.MVC.Controllers
 {
@@ -10,12 +12,30 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
     public class UserHubController : Controller
     {
 
+
+        private IUnitOfWorkCreator creator;
+
+        public IUnitOfWorkCreator Creator
+        {
+            get { return creator ?? HttpContext.GetOwinContext().Get<IUnitOfWorkCreator>(); }
+            private set { creator = value; }
+        }
+
+        public UserHubController()
+        {
+        }
+
+        public UserHubController(IUnitOfWorkCreator creator)
+        {
+            this.creator = creator;
+        }
+
         // GET: UserHub
         public ActionResult Index(Guid? pendingSurveyID, int? categoryID)
         {
             var userId = User?.Identity?.GetUserId();
 
-            using (var unitOfWork = new UnitOfWork())
+            using (var unitOfWork = this.Creator.Create())
             {
                 var viewModel = new UserHubIndexViewModel()
                 {

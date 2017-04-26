@@ -6,6 +6,7 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using EmployeeEvaluationSystem.MVC.Models;
+using EmployeeEvaluationSystem.Entity.SharedObjects.Repository.Core;
 
 namespace EmployeeEvaluationSystem.MVC.Controllers
 {
@@ -15,14 +16,24 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;
 
+        private IUnitOfWorkCreator creator;
+
+        public IUnitOfWorkCreator Creator
+        {
+            get { return creator ?? HttpContext.GetOwinContext().Get<IUnitOfWorkCreator>(); }
+            private set { creator = value; }
+        }
+
+
         public ManageController()
         {
         }
 
-        public ManageController(ApplicationUserManager userManager, ApplicationSignInManager signInManager)
+        public ManageController(ApplicationUserManager userManager, ApplicationSignInManager signInManager, IUnitOfWorkCreator creator)
         {
             UserManager = userManager;
             SignInManager = signInManager;
+            this.creator = creator;
         }
 
         public ApplicationSignInManager SignInManager

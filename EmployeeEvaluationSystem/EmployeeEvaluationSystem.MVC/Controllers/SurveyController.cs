@@ -1,6 +1,7 @@
 ﻿using EmployeeEvaluationSystem.Entity;
 using EmployeeEvaluationSystem.Entity.SharedObjects.Helpers.Locks;
 using EmployeeEvaluationSystem.Entity.SharedObjects.Model.Survey;
+using EmployeeEvaluationSystem.Entity.SharedObjects.Repository.Core;
 using EmployeeEvaluationSystem.Entity.SharedObjects.Repository.EF6;
 using EmployeeEvaluationSystem.MVC.Infrastructure.Hangfire;
 using EmployeeEvaluationSystem.MVC.Models.Survey;
@@ -27,14 +28,23 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
         private ApplicationUserManager _userManager;
         private HttpRequestBase passedInRequest;
 
+        private IUnitOfWorkCreator creator;
+
+        public IUnitOfWorkCreator Creator
+        {
+            get { return creator ?? HttpContext.GetOwinContext().Get<IUnitOfWorkCreator>(); }
+            private set { creator = value; }
+        }
+
         public SurveyController()
         {
         }
 
-        public SurveyController(ApplicationUserManager userManager, ApplicationSignInManager signInManager, HttpRequestBase request = null)
+        public SurveyController(ApplicationUserManager userManager, ApplicationSignInManager signInManager, IUnitOfWorkCreator creator, HttpRequestBase request = null)
         {
             this.passedInRequest = request;
             UserManager = userManager;
+            this.creator = creator;
             SignInManager = signInManager;
         }
 
@@ -63,7 +73,7 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
                 }
                 else if (userId != null && email == null)
                 {
-                    using (var unitOfWork = new UnitOfWork())
+                    using (var unitOfWork = this.Creator.Create())
                     {
                         var auth = unitOfWork.Surveys.CanExistingUserTakeSurvey(userId, pendingSurveyId);
 
@@ -86,7 +96,7 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
 
             bool guestMode = userId == null;
 
-            using (var unitOfWork = new UnitOfWork())
+            using (var unitOfWork = this.Creator.Create())
             {
                 bool canTake = guestMode ? unitOfWork.Surveys.CanGuestUserTakeSurvey(email, pendingSurveyId) : unitOfWork.Surveys.CanExistingUserTakeSurvey(userId, pendingSurveyId);
 
@@ -122,7 +132,7 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
 
             bool guestMode = userId == null;
 
-            using (var unitOfWork = new UnitOfWork())
+            using (var unitOfWork = this.Creator.Create())
             {
                 bool canTake = guestMode ? unitOfWork.Surveys.CanGuestUserTakeSurvey(email, pendingSurveyId) : unitOfWork.Surveys.CanExistingUserTakeSurvey(userId, pendingSurveyId);
 
@@ -234,7 +244,7 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
         [HttpPost]
         public ActionResult SurveyPage(SurveyPageViewModel model)
         {
-            using (var unitOfWork = new UnitOfWork())
+            using (var unitOfWork = this.Creator.Create())
             {
                 var theSurvey = unitOfWork.Surveys.LockAndGetSurvey(model.PendingSurveyId, model.StatusGuid);
 
@@ -352,7 +362,7 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
         //[Route("Survey/SurveyPage/{SurveyInstanceId}/{pendingSurveyId}/{statGuid}")]
         public ActionResult SurveyPage(int SurveyInstanceId, Guid penSurveyId, Guid statGuid)
         {
-            using (var unitOfWork = new UnitOfWork())
+            using (var unitOfWork = this.Creator.Create())
             {
                 var theSurvey = unitOfWork.Surveys.LockAndGetSurvey(penSurveyId, statGuid);
 
@@ -434,7 +444,7 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
 
             try
             {
-                using (var unitOfWork = new UnitOfWork())
+                using (var unitOfWork = this.Creator.Create())
                 {
 
 
@@ -490,7 +500,7 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
         {
             var userId = User?.Identity?.GetUserId() ?? throw new UnauthorizedAccessException();
 
-            using (var unitOfWork = new UnitOfWork())
+            using (var unitOfWork = this.Creator.Create())
             {
 
                 var pendingSurvey = unitOfWork.Surveys.GetPendingSurvey(userId, penSurveyId);
@@ -639,7 +649,7 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
         {
             var userId = User?.Identity?.GetUserId() ?? throw new UnauthorizedAccessException();
 
-            using (var unitOfWork = new UnitOfWork())
+            using (var unitOfWork = this.Creator.Create())
             {
 
                 var pendingSurvey = unitOfWork.Surveys.GetPendingSurvey(userId, theModel.PendingSurveyId);
@@ -813,7 +823,7 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
         {
             var userId = User?.Identity?.GetUserId() ?? throw new UnauthorizedAccessException();
 
-            using (var unitOfWork = new UnitOfWork())
+            using (var unitOfWork = this.Creator.Create())
             {
 
                 var pendingSurvey = unitOfWork.Surveys.GetPendingSurvey(userId, id);
@@ -858,7 +868,7 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
 
         public ActionResult Test(int surveyId, int cohortId)
         {
-            using (var unitOfWork = new UnitOfWork())
+            using (var unitOfWork = this.Creator.Create())
             {
                 var nextSuveyType = unitOfWork.Surveys.GetNextAvailableSurveyTypeForSurveyInCohort(surveyId, cohortId);
 
@@ -872,7 +882,7 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
 
             var isAdmin = User.IsInRole("Admin");
 
-            using (var unitOfWork = new UnitOfWork())
+            using (var unitOfWork = this.Creator.Create())
             {
                 ViewBag.PendingSurveyID = pendingSurveyId;
                 var survey = unitOfWork.Surveys.GetPendingSurvey(userId, pendingSurveyId);
@@ -935,7 +945,7 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
         {
             var userId = User?.Identity?.GetUserId() ?? throw new UnauthorizedAccessException();
 
-            using (var unitOfWork = new UnitOfWork())
+            using (var unitOfWork = this.Creator.Create())
             {
                 var surv = unitOfWork.Surveys.GetAnAvailableSurveyForCohort(userId, id.Value);
 
@@ -957,7 +967,7 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
 
             try
             {
-                using (var unitOfWork = new UnitOfWork())
+                using (var unitOfWork = this.Creator.Create())
                 {
                     var surv = unitOfWork.Surveys.GetAnAvailableSurveyForCohort(userId, id.Value);
                     var result = unitOfWork.Surveys.DeleteSurveyAvailable(userId, id.Value);
@@ -993,7 +1003,7 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
         {
             var userId = User?.Identity?.GetUserId() ?? throw new UnauthorizedAccessException();
 
-            using (var unitOfWork = new UnitOfWork())
+            using (var unitOfWork = this.Creator.Create())
             {
                 var surveysAvailable = unitOfWork.Surveys.GetAnAvailableSurveyForCohort(userId, surveyId);
 
