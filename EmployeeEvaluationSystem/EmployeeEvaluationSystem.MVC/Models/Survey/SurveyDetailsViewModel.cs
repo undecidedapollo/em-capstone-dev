@@ -11,6 +11,8 @@ namespace EmployeeEvaluationSystem.MVC.Models.Survey
 
         public IList<UserGroupSurveyStatus> UserGroups { get; set; }
 
+        public bool CanShowAllReport { get; set; }
+
 
     }
 }

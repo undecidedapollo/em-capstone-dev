@@ -17,5 +17,8 @@ namespace EmployeeEvaluationSystem.MVC.Models.Survey
 
         public DateTime DateClosed { get; set; }
 
+        public bool IsFinished { get; set; }
+
+
     }
 }

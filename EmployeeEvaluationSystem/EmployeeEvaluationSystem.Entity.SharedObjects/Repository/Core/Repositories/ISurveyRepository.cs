@@ -118,5 +118,7 @@ namespace EmployeeEvaluationSystem.Entity.SharedObjects.Repository.Core.Reposito
         List<RaterOBJ> GetMostRecentRatersForUser(string userId, int count);
 
         SurveysAvailable GetPreviousSurveyForCohort(int cohortId, int currentAvailableId);
+
+        void TryMarkAsFinished(int survAvailId);
     }
 }
