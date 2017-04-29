@@ -24,5 +24,10 @@ namespace EmployeeEvaluationSystem.Tests.Infrastructure
         {
             Assert.IsTrue(items != null && !items.Any(x => x == false));
         }
+
+        public static void IsDeleted(params bool[] items)
+        {
+            Assert.IsTrue(items != null && items.Any(x => x == true));
+        }
     }
 }
