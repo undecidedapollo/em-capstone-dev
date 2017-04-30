@@ -58,8 +58,8 @@ namespace EmployeeEvaluationSystem.Entity
         public virtual DbSet<Schema> Schemata { get; set; }
         public virtual DbSet<Server> Servers { get; set; }
         public virtual DbSet<Set> Sets { get; set; }
-        public virtual DbSet<State> States { get; set; }
-    
+        public virtual DbSet<State> States { get; set; }       
+            
         public virtual int CancelAllOldSurveyLocks()
         {
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("CancelAllOldSurveyLocks");
