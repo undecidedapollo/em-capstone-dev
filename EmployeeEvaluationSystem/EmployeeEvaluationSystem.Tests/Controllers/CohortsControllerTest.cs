@@ -75,7 +75,15 @@ namespace EmployeeEvaluationSystem.Tests.Controllers
                     SurveyTypeId = 1,
                     DateOpen = DateTime.Now,
                     DateClosed = DateTime.Now.AddHours(1),
-                    IsDeleted = false
+                    IsDeleted = false,
+                    Survey = new Survey
+                    {
+                        Name = "123"
+                    },
+                    SurveyType = new SurveyType
+                    {
+                        Name = "123"
+                    }
                 },
                 new SurveysAvailable
                 {
@@ -85,7 +93,15 @@ namespace EmployeeEvaluationSystem.Tests.Controllers
                     SurveyTypeId = 2,
                     DateOpen = DateTime.Now,
                     DateClosed = DateTime.Now.AddHours(1),
-                    IsDeleted = false
+                    IsDeleted = false,
+                    Survey = new Survey
+                    {
+                        Name = "123"
+                    },
+                    SurveyType = new SurveyType
+                    {
+                        Name = "123"
+                    }
                 }
             }).InitializeOne(y => y.SurveyTypes, new List<SurveyType>
             {
@@ -116,5 +132,6 @@ namespace EmployeeEvaluationSystem.Tests.Controllers
                 modelResult.Surveys.Count() == 2
                 );
         }
+        
     }
 }
