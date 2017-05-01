@@ -1008,6 +1008,7 @@ namespace EmployeeEvaluationSystem.Tests.Controllers
 
         }
 
+        #region GoBack Survey Page Region
         [TestMethod]
         public void GetGBSurveyHasLastReturnsView()
         {
@@ -1164,6 +1165,9 @@ namespace EmployeeEvaluationSystem.Tests.Controllers
                 routeResult.RouteValues.Any(y => y.Key == "action" && y.Value.ToString() == "SurveyError")
                 );
         }
+
+        #endregion
+
 
 
 
