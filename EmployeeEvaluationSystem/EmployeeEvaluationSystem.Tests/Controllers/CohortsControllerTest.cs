@@ -132,6 +132,61 @@ namespace EmployeeEvaluationSystem.Tests.Controllers
                 modelResult.Surveys.Count() == 2
                 );
         }
-        
+
+        [TestMethod]
+        public void CreateCohortGetActionTest()
+        {
+            var x = EFUnitOfWorkBuilder<EmployeeDatabaseEntities>
+            .Create()
+            .InitializeOne(y => y.AspNetUsers, new List<AspNetUser>
+            {
+                new AspNetUser
+                {
+                    Id = "1"
+                }
+            });
+
+            var ctrl = new CohortsController(x.GetCreator());
+
+            var result = ctrl.Create();
+
+            var routeResult = UTH.CheckIsTypeNotNullAndGetObj<ViewResult>(result);
+            var modelResult = UTH.CheckIsTypeNotNullAndGetObj<CreateCohortViewModel>(routeResult.Model);
+            Assert.IsNotNull(modelResult?.Users);
+            Assert.IsNotNull(modelResult?.Cohort);
+
+            UTH.IsTrue(
+                modelResult.Users.Any(y => y.Id.Equals("1")),
+                modelResult.Users.Count() == 1
+                );
+        }
+
+        [TestMethod]
+        public void CreateCohortPostActionTest()
+        {
+            var x = EFUnitOfWorkBuilder<EmployeeDatabaseEntities>
+            .Create()
+            .InitializeOne(y => y.AspNetUsers, new List<AspNetUser>
+            {
+                new AspNetUser
+                {
+                    Id = "1"
+                }
+            });
+
+            var ctrl = new CohortsController(x.GetCreator());
+
+            var result = ctrl.Create();
+
+            var routeResult = UTH.CheckIsTypeNotNullAndGetObj<ViewResult>(result);
+            var modelResult = UTH.CheckIsTypeNotNullAndGetObj<CreateCohortViewModel>(routeResult.Model);
+            Assert.IsNotNull(modelResult?.Users);
+            Assert.IsNotNull(modelResult?.Cohort);
+
+            UTH.IsTrue(
+                modelResult.Users.Any(y => y.Id.Equals("1")),
+                modelResult.Users.Count() == 1
+                );
+        }
     }
 }
