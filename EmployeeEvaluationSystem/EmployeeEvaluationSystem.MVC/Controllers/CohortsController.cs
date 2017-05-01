@@ -145,7 +145,6 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        [ValidateAntiForgeryToken]
         public ActionResult Create(CreateCohortViewModel model, List<string> ids)
         {
             var userId = User?.Identity?.GetUserId();
@@ -403,7 +402,6 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
 
         // GET: Cohort/Edit/5
         [HttpGet]
-        [ValidateAntiForgeryToken]
         public ActionResult Edit(int? id)
         {
             if (id == null)
@@ -425,7 +423,6 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        [ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = "ID,Name,Description,IsDeleted,DateDeleted,DateCreated")] Cohort cohort)
         {
             if (cohort == null)
