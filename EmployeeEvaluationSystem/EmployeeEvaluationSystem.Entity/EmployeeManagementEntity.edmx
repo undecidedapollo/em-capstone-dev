@@ -692,6 +692,7 @@
           <Parameter Name="pendingSurveyId" Type="uniqueidentifier" Mode="In" />
           <Parameter Name="statusGuid" Type="uniqueidentifier" Mode="In" />
         </Function>
+        <Function Name="SetExpiredSurveysAvailableAsFinished" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
         <Function Name="UpdateLockedSurveyTime" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="pendingSurveyId" Type="uniqueidentifier" Mode="In" />
         </Function>
@@ -990,6 +991,7 @@
             <End Role="Job" EntitySet="Jobs" />
             <End Role="State" EntitySet="States" />
           </AssociationSet>
+          <FunctionImport Name="SetExpiredSurveysAvailableAsFinished" />
           </EntityContainer>
         <EntityType Name="C__MigrationHistory">
           <Key>
@@ -2104,6 +2106,7 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="SetExpiredSurveysAvailableAsFinished" FunctionName="EmployeeEvaluationSystem.Entity.EntityModel.Store.SetExpiredSurveysAvailableAsFinished" />
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

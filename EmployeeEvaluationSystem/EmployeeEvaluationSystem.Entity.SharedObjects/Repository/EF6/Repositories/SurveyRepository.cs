@@ -704,6 +704,31 @@ namespace EmployeeEvaluationSystem.Entity.SharedObjects.Repository.EF6.Repositor
             return true;
         }
 
+        public virtual bool CheckHaveAllSelfEvaluationSurveysBeenCompleted(int cohortId, int surveyAvailableToId)
+        {
+            var surveyAvailable = this.dbcontext.SurveysAvailables.Include(x => x.SurveysAvailableToes).FirstOrDefault(x => x.ID == surveyAvailableToId && x.CohortID == cohortId && x.IsDeleted == false);
+
+            if (surveyAvailable.IsCompleted)
+            {
+                return true;
+            }
+
+            var isFinished = this.dbcontext.PendingSurveys
+                .Where(x => x.SurveyAvailToMeID == surveyAvailableToId && x.IsDeleted == false && x.SurveyInstance != null && x.SurveyInstance.DateFinished != null && x.UserTakenById == x.UserSurveyForId && x.UserSurveyRoleID == 1)
+                .GroupBy(x => x.UserTakenById).Select(x => x.FirstOrDefault()).Count() == this.dbcontext.CohortUsers.Where(x => x.CohortID == cohortId).Count();
+
+            if (!isFinished)
+            {
+                return false;
+            }
+
+            surveyAvailable.IsCompleted = true;
+            surveyAvailable.DateCompleted = DateTime.UtcNow;
+
+            return true;
+
+        }
+
         public virtual ICollection<PendingSurvey> GetPendingSurveysOfRatersForUser(string userId, Guid pendingSurveyId)
         {
             var originalPendingSurvey = this.GetPendingSurvey(userId, pendingSurveyId);
@@ -767,6 +792,11 @@ namespace EmployeeEvaluationSystem.Entity.SharedObjects.Repository.EF6.Repositor
             survAvail.IsCompleted = true;
             survAvail.DateCompleted = DateTime.UtcNow;
 
+        }
+
+        public void SetDoneEvaluationsToFinished()
+        {
+            this.dbcontext.SetExpiredSurveysAvailableAsFinished();
         }
     }
 }

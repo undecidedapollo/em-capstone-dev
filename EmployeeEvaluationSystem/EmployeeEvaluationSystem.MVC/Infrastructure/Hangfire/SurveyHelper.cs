@@ -13,7 +13,7 @@ namespace EmployeeEvaluationSystem.MVC.Infrastructure.Hangfire
         {
             using (var unitOfWork = new UnitOfWork())
             {
-                var result = unitOfWork.Surveys.CheckHaveAllSurveysBeenCompleted(cohortId, surveysAvailableID);
+                var result = unitOfWork.Surveys.CheckHaveAllSelfEvaluationSurveysBeenCompleted(cohortId, surveysAvailableID);
 
                 if (result)
                 {
@@ -27,6 +27,15 @@ namespace EmployeeEvaluationSystem.MVC.Infrastructure.Hangfire
             using (var unitOfWork = new UnitOfWork())
             {
                 unitOfWork.Surveys.CancelAllOldSurveyLocks();
+            }
+        }
+
+
+        public static void SetExpiredSurveysToCompleted()
+        {
+            using (var unitOfWork = new UnitOfWork())
+            {
+                unitOfWork.Surveys.SetDoneEvaluationsToFinished();
             }
         }
     }

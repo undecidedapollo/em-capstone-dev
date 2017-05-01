@@ -109,6 +109,8 @@ namespace EmployeeEvaluationSystem.Entity.SharedObjects.Repository.Core.Reposito
 
         bool CheckHaveAllSurveysBeenCompleted(int cohortId, int surveyAvailableToId);
 
+        bool CheckHaveAllSelfEvaluationSurveysBeenCompleted(int cohortId, int surveyAvailableToId);
+
         void TryRemovePendingSurveysSYSTEM(ICollection<PendingSurvey> surveys);
 
         void TryToAddPendingSurveysSYSTEM(ICollection<PendingSurvey> surveys);
@@ -120,5 +122,7 @@ namespace EmployeeEvaluationSystem.Entity.SharedObjects.Repository.Core.Reposito
         SurveysAvailable GetPreviousSurveyForCohort(int cohortId, int currentAvailableId);
 
         void TryMarkAsFinished(int survAvailId);
+
+        void SetDoneEvaluationsToFinished();
     }
 }
