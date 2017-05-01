@@ -14,6 +14,7 @@ using System.Web.Mvc;
 using System.Web.UI.WebControls;
 using Moq;
 using EmployeeEvaluationSystem.Entity.SharedObjects.Repository.EF6.Repositories;
+using EmployeeEvaluationSystem.MVC.Models.Report;
 
 
 namespace EmployeeEvaluationSystem.Tests.Controllers
@@ -67,11 +68,11 @@ namespace EmployeeEvaluationSystem.Tests.Controllers
 
             //var model = new ReportDetailsViewModel
             //{
-            //    ResponseItems = {QuestionId = 1},
-            //    Categories = {CategoryId = 1, Name = "Test Category"},
+            //    ResponseItems = { QuestionId = 1 },
+            //    Categories = { CategoryId = 1, Name = "Test Category" },
             //    Header = "Title One",
             //    Header2 = "Title Two"
-                
+
             //};
 
 
