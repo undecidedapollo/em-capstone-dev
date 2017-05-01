@@ -119,8 +119,8 @@ namespace EmployeeEvaluationSystem.MVC.Controllers.Tests
             Assert.IsNotNull(modelResult?.PendingSurveys);
 
 
-            UTH.IsDeleted(                
-                modelResult.PendingSurveys.Any(y => y.IsDeleted == true),
+            UTH.IsTrue(                
+                !modelResult.PendingSurveys.Any(y => y.IsDeleted == true),
                 modelResult.PendingSurveys.Any(y => y.SurveyInstanceID == 1)              
             );
         }

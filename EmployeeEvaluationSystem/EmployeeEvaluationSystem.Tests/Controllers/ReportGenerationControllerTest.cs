@@ -23,69 +23,43 @@ namespace EmployeeEvaluationSystem.Tests.Controllers
     public class ReportGenerationControllerTest
     {       
 
-        [TestMethod]
-        public void ReportGenerationIndexReturnsViewResult()
-        {
-            ReportGenerationController reportController = new ReportGenerationController();
-            ActionResult result = reportController.Index();
-            Assert.IsInstanceOfType(result, typeof(ViewResult));
-        }
+        //[TestMethod]
+        //public void ReportGenerationControllerUserId()
+        //{
+        //    var guid = Guid.NewGuid();
+        //    var userId = "1a";
+        //    int surveyAvail = 1;
+        //    var x = EFUnitOfWorkBuilder<EmployeeDatabaseEntities>
+        //    .Create()
+        //    .InitializeOne(y => y.PendingSurveys, new List<PendingSurvey>
+        //    {
+        //                    new PendingSurvey{Id = guid,  Email = "123", SurveyAvailToMeID = surveyAvail, IsDeleted = false, UserSurveyForId = userId}
 
-        [TestMethod]
-        public void ReportGenerationIndexWillReturnDynamicViewResult()
-        {
-            ReportGenerationController reportController = new ReportGenerationController();
-            dynamic result = reportController.Index();
-            Assert.AreEqual("", result.ViewName);
-        }
-
-        [TestMethod]
-        public void ReportGenerationControllerIsNotNull()
-        {   
-            var ctrl = new ReportGenerationController();            
-            var result = ctrl.Index();
-           
-            var routeResult = UTH.CheckIsTypeNotNullAndGetObj<ViewResult>(result);
-            Assert.IsNotNull(routeResult);           
-        }
-
-        [TestMethod]
-        public void ReportGenerationControllerUserId()
-        {
-            var guid = Guid.NewGuid();
-            var userId = "1a";
-            int surveyAvail = 1;
-            var x = EFUnitOfWorkBuilder<EmployeeDatabaseEntities>
-            .Create()
-            .InitializeOne(y => y.PendingSurveys, new List<PendingSurvey>
-            {
-                            new PendingSurvey{Id = guid,  Email = "123", SurveyAvailToMeID = surveyAvail, IsDeleted = false, UserSurveyForId = userId}
-
-            });
+        //    });
             
-            var ctrl = new ReportGenerationController(x.GetCreator());
-            var result = ctrl.Index();
+        //    var ctrl = new ReportGenerationController(x.GetCreator());
+        //    var result = ctrl.Index();
 
-            //var model = new ReportDetailsViewModel
-            //{
-            //    ResponseItems = { QuestionId = 1 },
-            //    Categories = { CategoryId = 1, Name = "Test Category" },
-            //    Header = "Title One",
-            //    Header2 = "Title Two"
+        //    //var model = new ReportDetailsViewModel
+        //    //{
+        //    //    ResponseItems = { QuestionId = 1 },
+        //    //    Categories = { CategoryId = 1, Name = "Test Category" },
+        //    //    Header = "Title One",
+        //    //    Header2 = "Title Two"
 
-            //};
+        //    //};
 
 
-            using (var unitOfWork = new UnitOfWork(x.GetContext()))
-            {
-                //var page = unitOfWork.Reports.GetDetailsForReport(userId, surveyAvail);
-            }
+        //    using (var unitOfWork = new UnitOfWork(x.GetContext()))
+        //    {
+        //        //var page = unitOfWork.Reports.GetDetailsForReport(userId, surveyAvail);
+        //    }
 
                
             
-            //var routeResult = UTH.CheckIsTypeNotNullAndGetObj<ViewResult>(result);
-            //Assert.IsNotNull(routeResult);
-        }
+        //    //var routeResult = UTH.CheckIsTypeNotNullAndGetObj<ViewResult>(result);
+        //    //Assert.IsNotNull(routeResult);
+        //}
     }
 }
 

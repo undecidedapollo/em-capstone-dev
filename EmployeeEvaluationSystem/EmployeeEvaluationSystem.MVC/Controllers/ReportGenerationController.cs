@@ -28,12 +28,6 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
         {
             this.creator = creator;
         }
-
-        // GET: ReportGeneration
-        public ActionResult Index()
-        { 
-            return View();
-        }
         
         public ActionResult ReportPage(string userId, int survAvailId)
         {
