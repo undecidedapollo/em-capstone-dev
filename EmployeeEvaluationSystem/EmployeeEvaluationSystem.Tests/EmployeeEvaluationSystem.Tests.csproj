@@ -139,6 +139,7 @@
     <Compile Include="Controllers\UserHubControllerTest.cs" />
     <Compile Include="Infrastructure\DependencyBuilder.cs" />
     <Compile Include="Infrastructure\IUnitOfWorkBuilder.cs" />
+    <Compile Include="Infrastructure\PreExistingUnitOfWorkCreator.cs" />
     <Compile Include="Infrastructure\TestUnitOfWorkCreator.cs" />
     <Compile Include="Infrastructure\UnitOfWorkBuilder.cs" />
     <Compile Include="Infrastructure\UnitTestHelpers.cs" />

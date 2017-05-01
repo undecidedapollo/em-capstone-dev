@@ -17,29 +17,29 @@ namespace EmployeeEvaluationSystem.Entity.SharedObjects.Repository.EF6.Repositor
 
         }
 
-        public int GetNumberOfUsers()
+        public virtual int GetNumberOfUsers()
         {
             return this.dbcontext.AspNetUsers.Count();
         }
 
-        public IEnumerable<AspNetUser> GetAllUsers(string userId)
+        public virtual IEnumerable<AspNetUser> GetAllUsers(string userId)
         {
             return this.dbcontext.AspNetUsers;
         }
 
-        public AspNetUser GetUser(string currentUserId, string userIdToGet)
+        public virtual AspNetUser GetUser(string currentUserId, string userIdToGet)
         {
             return this.dbcontext.AspNetUsers.FirstOrDefault(x => x.Id == userIdToGet);
         }
 
-        public bool isUserAdmin(string userId)
+        public virtual bool isUserAdmin(string userId)
         {
             var user = this.dbcontext.AspNetUsers.Include(x => x.AspNetRoles).FirstOrDefault(x => x.Id == userId);
 
             return user?.AspNetRoles?.Any(x => x.Id == "37e8b937-35a0-49fa-9492-1ac0d29c2227") ?? false;
         }
 
-        public void DeleteUser(string currentUserId, string userIdToGet)
+        public virtual void DeleteUser(string currentUserId, string userIdToGet)
         {
             var user = this.GetUser(currentUserId, userIdToGet);
 
@@ -51,7 +51,7 @@ namespace EmployeeEvaluationSystem.Entity.SharedObjects.Repository.EF6.Repositor
             //TODO Add is deleted.
         }
 
-        public AspNetUser EditUser(string currentUserId, PersonalAspNetUserViewModel userToEdit)
+        public virtual AspNetUser EditUser(string currentUserId, PersonalAspNetUserViewModel userToEdit)
         {
             if (userToEdit == null)
             {

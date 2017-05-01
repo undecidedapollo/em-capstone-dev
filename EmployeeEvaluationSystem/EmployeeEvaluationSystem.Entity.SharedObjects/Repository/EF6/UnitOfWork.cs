@@ -35,11 +35,11 @@ namespace EmployeeEvaluationSystem.Entity.SharedObjects.Repository.EF6
         }
 
 
-        public IUserRepository Users { get; private set; }
-        public ICohortRepository Cohorts { get; private set; }
-        public ICohortUserRepository CohortUsers { get; private set; }
-        public ISurveyRepository Surveys { get; private set; }
-        public IReportRepository Reports { get; private set; }
+        public virtual IUserRepository Users { get; private set; }
+        public virtual ICohortRepository Cohorts { get; private set; }
+        public virtual ICohortUserRepository CohortUsers { get; private set; }
+        public virtual ISurveyRepository Surveys { get; private set; }
+        public virtual IReportRepository Reports { get; private set; }
 
         public void Dispose()
         {
