@@ -17,22 +17,22 @@ namespace EmployeeEvaluationSystem.Entity.SharedObjects.Repository.EF6.Repositor
 
         }
 
-        public int GetNumberOfCohorts()
+        public virtual int GetNumberOfCohorts()
         {
             return this.dbcontext.Cohorts.Count();
         }
 
-        public IEnumerable<Cohort> GetAllCohorts(string userId)
+        public virtual IEnumerable<Cohort> GetAllCohorts(string userId)
         {
             return this.dbcontext.Cohorts;
         }
 
-        public Cohort GetCohort(string currentUserId, int? cohortIdToGet)
+        public virtual Cohort GetCohort(string currentUserId, int? cohortIdToGet)
         {
             return this.dbcontext.Cohorts.FirstOrDefault(x => x.ID == cohortIdToGet && x.IsDeleted == false);
         }
 
-        public bool DeleteCohort(string currentUserId, int cohortIdToGet)
+        public virtual bool DeleteCohort(string currentUserId, int cohortIdToGet)
         {
             var cohort = this.GetCohort(currentUserId, cohortIdToGet);
 
@@ -57,7 +57,7 @@ namespace EmployeeEvaluationSystem.Entity.SharedObjects.Repository.EF6.Repositor
             return true;
         }
 
-        public Cohort EditCohort(string currentUserId, Cohort cohortToEdit)
+        public virtual Cohort EditCohort(string currentUserId, Cohort cohortToEdit)
         {
             if (cohortToEdit == null)
             {
@@ -77,7 +77,7 @@ namespace EmployeeEvaluationSystem.Entity.SharedObjects.Repository.EF6.Repositor
             return cohort;
         }
 
-        public IEnumerable<AspNetUser> GetAllUsersThatAreNotPartOfACohort(string currentUserId)
+        public virtual IEnumerable<AspNetUser> GetAllUsersThatAreNotPartOfACohort(string currentUserId)
         {
             var theCU = dbcontext.CohortUsers.Where(x => x.Cohort.IsDeleted == false).Select(x => x.AspNetUser).Distinct();
 
@@ -89,7 +89,7 @@ namespace EmployeeEvaluationSystem.Entity.SharedObjects.Repository.EF6.Repositor
             //return users;
         }
 
-        public void AddCohortToDb(string currentUserId, Cohort cohortToAdd)
+        public virtual void AddCohortToDb(string currentUserId, Cohort cohortToAdd)
         {
             this.dbcontext.Cohorts.Add(cohortToAdd);
         }
