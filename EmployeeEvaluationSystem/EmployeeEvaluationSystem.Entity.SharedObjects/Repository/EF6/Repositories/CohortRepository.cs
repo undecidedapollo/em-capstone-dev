@@ -71,8 +71,18 @@ namespace EmployeeEvaluationSystem.Entity.SharedObjects.Repository.EF6.Repositor
                 throw new Exception();
             }
 
-            cohort.Name = cohortToEdit.Name;
-            cohort.Description = cohortToEdit.Description;
+
+            if(!string.IsNullOrWhiteSpace(cohortToEdit.Name))
+            {
+                cohort.Name = cohortToEdit.Name;
+            }
+
+            if(!string.IsNullOrWhiteSpace(cohortToEdit.Description))
+            {
+
+                cohort.Description = cohortToEdit.Description;
+            }
+           
 
             return cohort;
         }
