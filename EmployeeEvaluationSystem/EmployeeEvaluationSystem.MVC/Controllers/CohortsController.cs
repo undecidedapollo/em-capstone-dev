@@ -415,6 +415,11 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
             {
                 var newCohort = unitOfWork.Cohorts.GetCohort(userId, id.Value);
 
+                if(newCohort == null)
+                {
+                    return HttpNotFound();
+                }
+
                 return View(newCohort);
             }
         }
