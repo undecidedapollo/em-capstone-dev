@@ -13,22 +13,22 @@ namespace EmployeeEvaluationSystem.Entity.SharedObjects.Repository.EF6.Repositor
         {
 
         }
-        public int GetNumberOfCohortUsers()
+        public virtual int GetNumberOfCohortUsers()
         {
             return this.dbcontext.CohortUsers.Count();
         }
 
-        public IEnumerable<CohortUser> GetAllCohortUsers(string userId)
+        public virtual IEnumerable<CohortUser> GetAllCohortUsers(string userId)
         {
             return this.dbcontext.CohortUsers;
         }
 
-        public CohortUser GetCohortUser(string currentUserId, string cohortUserIdToGet)
+        public virtual CohortUser GetCohortUser(string currentUserId, string cohortUserIdToGet)
         {
             return this.dbcontext.CohortUsers.FirstOrDefault(x => x.UserID.Equals(cohortUserIdToGet));
         }
 
-        public void DeleteCohortUser(string currentUserId, string cohortUserIdToDelete)
+        public virtual void DeleteCohortUser(string currentUserId, string cohortUserIdToDelete)
         {
             var cohortUser = this.GetCohortUser(currentUserId, cohortUserIdToDelete);
 
@@ -40,14 +40,14 @@ namespace EmployeeEvaluationSystem.Entity.SharedObjects.Repository.EF6.Repositor
             //TODO : Delete CohortUser
         }
 
-        public CohortUser EditCohortUser(string currentUserId, CohortUser cohortUserToEdit)
+        public virtual CohortUser EditCohortUser(string currentUserId, CohortUser cohortUserToEdit)
         {
             //TODO : Edit CohortUser
 
             return null;
         }
 
-        public void AddCohortUserToDb(string currentUserId, CohortUser cohortUserToAdd)
+        public virtual void AddCohortUserToDb(string currentUserId, CohortUser cohortUserToAdd)
         {
             this.dbcontext.CohortUsers.Add(cohortUserToAdd);
         }

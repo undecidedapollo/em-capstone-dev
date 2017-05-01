@@ -139,16 +139,15 @@
     <Compile Include="Controllers\UserHubControllerTest.cs" />
     <Compile Include="Infrastructure\DependencyBuilder.cs" />
     <Compile Include="Infrastructure\IUnitOfWorkBuilder.cs" />
+    <Compile Include="Infrastructure\PreExistingUnitOfWorkCreator.cs" />
     <Compile Include="Infrastructure\TestUnitOfWorkCreator.cs" />
     <Compile Include="Infrastructure\UnitOfWorkBuilder.cs" />
     <Compile Include="Infrastructure\UnitTestHelpers.cs" />
     <Compile Include="Infrastructure\UserManagerGenerator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Repositories\ReportRepositoryTests.cs" />
     <Compile Include="Repositories\SurveyRepositoryTests.cs" />
     <Compile Include="Repositories\CohortRepositoryTest.cs" />
-    <Compile Include="Repositories\CohortUserRepositoryTest.cs" />
-    <Compile Include="Repositories\RepositoryTest.cs" />
-    <Compile Include="Repositories\ReportRepositoryTest.cs" />
     <Compile Include="Repositories\UserRepositoryTest.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -24,5 +24,7 @@ namespace EmployeeEvaluationSystem.Tests.Infrastructure
         {
             Assert.IsTrue(items != null && !items.Any(x => x == false));
         }
+
+        
     }
 }

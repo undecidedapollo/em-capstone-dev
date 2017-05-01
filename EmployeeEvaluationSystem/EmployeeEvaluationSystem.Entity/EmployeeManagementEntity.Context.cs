@@ -95,5 +95,10 @@ namespace EmployeeEvaluationSystem.Entity
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("UpdateLockedSurveyTime", pendingSurveyIdParameter);
         }
+    
+        public virtual int SetExpiredSurveysAvailableAsFinished()
+        {
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("SetExpiredSurveysAvailableAsFinished");
+        }
     }
 }

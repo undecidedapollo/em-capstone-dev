@@ -22,7 +22,8 @@ namespace EmployeeEvaluationSystem.MVC
             app.UseHangfireDashboard();
             app.UseHangfireServer();
 
-            RecurringJob.AddOrUpdate(() => SurveyHelper.CancelOldSurveyLocks(), "*/2 * * * *");   
+            RecurringJob.AddOrUpdate(() => SurveyHelper.CancelOldSurveyLocks(), "*/2 * * * *");
+            RecurringJob.AddOrUpdate(() => SurveyHelper.SetExpiredSurveysToCompleted(), Cron.MinuteInterval(10));
         }
     }
 }

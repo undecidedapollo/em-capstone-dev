@@ -91,6 +91,7 @@
     <Build Include="HangFire\Tables\Job.sql" />
     <Build Include="HangFire\Tables\Schema.sql" />
     <Build Include="Security\HangFire.sql" />
+    <Build Include="dbo\Stored Procedures\SetExpiredSurveysAvailableAsFinished.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="employee-evaluation-system.refactorlog" />

@@ -52,7 +52,7 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
         {
             var userId = User?.Identity?.GetUserId();
 
-            using (var unitOfWork = new UnitOfWork())
+            using (var unitOfWork = this.Creator.Create())
             {
                 var unconvertedUsers = unitOfWork.Users.GetAllUsers(userId).ToList();
 
@@ -410,52 +410,6 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
 
         }
 
-        // GET: AspNetUsers/Delete/5
-        public async Task<ActionResult> Delete(string id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
 
-            var userId = User?.Identity?.GetUserId();
-
-            using (var unitOfWork = this.Creator.Create())
-            {
-                AspNetUser aspNetUser = unitOfWork.Users.GetUser(userId, id);
-
-                if (aspNetUser == null)
-                {
-                    return HttpNotFound();
-                }
-
-                var returnUser = PersonalAspNetUserViewModel.Convert(aspNetUser);
-
-                return View(returnUser);
-            }
-        }
-
-        // POST: AspNetUsers/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> DeleteConfirmed(string id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-
-            var userId = User?.Identity?.GetUserId();
-
-            using (var unitOfWork = this.Creator.Create())
-            {
-                unitOfWork.Users.DeleteUser(userId, id);
-
-                unitOfWork.Complete();
-
-                return RedirectToAction("Index");
-            }
-            
-        }
     }
 }

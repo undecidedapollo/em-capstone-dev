@@ -78,7 +78,6 @@
     <Compile Include="Model\Authentication\PersonalAspNetUserViewModel.cs" />
     <Compile Include="Model\Authentication\PersonalCohortViewModel.cs" />
     <Compile Include="Model\Authentication\UserHubIndexViewModel.cs" />
-    <Compile Include="Model\Reports\ReportDetails.cs" />
     <Compile Include="Model\Reports\ReportGenerationViewModel.cs" />
     <Compile Include="Model\Reports\ReportQuestionAverage.cs" />
     <Compile Include="Model\Reports\ReportRole.cs" />

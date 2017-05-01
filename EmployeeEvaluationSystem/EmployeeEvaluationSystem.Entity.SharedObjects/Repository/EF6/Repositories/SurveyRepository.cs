@@ -20,7 +20,7 @@ namespace EmployeeEvaluationSystem.Entity.SharedObjects.Repository.EF6.Repositor
 
         }
 
-        public bool CanExistingUserTakeSurvey(string userId, Guid pendingSurveyId)
+        public virtual bool CanExistingUserTakeSurvey(string userId, Guid pendingSurveyId)
         {
             var survey = this.GetPendingSurveySYSTEM(pendingSurveyId);
 
@@ -42,7 +42,7 @@ namespace EmployeeEvaluationSystem.Entity.SharedObjects.Repository.EF6.Repositor
             return true;
         }
 
-        public bool CanGuestUserTakeSurvey(string userEmail, Guid pendingSurveyId)
+        public virtual bool CanGuestUserTakeSurvey(string userEmail, Guid pendingSurveyId)
         {
             var survey = this.GetPendingSurveySYSTEM(pendingSurveyId);
 
@@ -87,17 +87,17 @@ namespace EmployeeEvaluationSystem.Entity.SharedObjects.Repository.EF6.Repositor
             return instance;
         }
 
-        public SurveyInstance CreateSurveyInstanceForExistingUser(string userIdTakingSurvey, Guid pendingSurveyId)
+        public virtual SurveyInstance CreateSurveyInstanceForExistingUser(string userIdTakingSurvey, Guid pendingSurveyId)
         {
             return this.CreateSurveyInstance(userIdTakingSurvey, pendingSurveyId, true);
         }
 
-        public SurveyInstance CreateSurveyInstanceForGuestUser(string userIdTakingSurvey, Guid pendingSurveyId)
+        public virtual SurveyInstance CreateSurveyInstanceForGuestUser(string userIdTakingSurvey, Guid pendingSurveyId)
         {
             return this.CreateSurveyInstance(userIdTakingSurvey, pendingSurveyId, false);
         }
 
-        public bool DoesSurveyInstanceAlreadyExistSYSTEM(Guid pendingSurveyId)
+        public virtual bool DoesSurveyInstanceAlreadyExistSYSTEM(Guid pendingSurveyId)
         {
             var survey = this.GetPendingSurveySYSTEM(pendingSurveyId);
 
@@ -109,19 +109,19 @@ namespace EmployeeEvaluationSystem.Entity.SharedObjects.Repository.EF6.Repositor
             return survey.SurveyInstanceID != null;
         }
 
-        public PendingSurvey GetPendingSurvey(string userId, Guid pendingSurveyId)
+        public virtual PendingSurvey GetPendingSurvey(string userId, Guid pendingSurveyId)
         {
             return this.GetPendingSurveySYSTEM(pendingSurveyId);
         }
 
-        public SurveyInstance GetPendingSurveyInstance(Guid pendingSurveyId)
+        public virtual SurveyInstance GetPendingSurveyInstance(Guid pendingSurveyId)
         {
             var survey = this.GetPendingSurveySYSTEM(pendingSurveyId);
 
             return survey?.SurveyInstance;
         }
 
-        public PendingSurvey GetPendingSurveySYSTEM(Guid pendingSurveyId)
+        public virtual PendingSurvey GetPendingSurveySYSTEM(Guid pendingSurveyId)
         {
             return this.dbcontext.PendingSurveys.FirstOrDefault(x => x.Id == pendingSurveyId && x.IsDeleted == false);
         }
@@ -166,14 +166,14 @@ namespace EmployeeEvaluationSystem.Entity.SharedObjects.Repository.EF6.Repositor
             return newPendingSurvey;
         }
 
-        public PendingSurvey CreatePendingSurveyForExistingUser(string userId, int userRoleId, int surveyAvailableId)
+        public virtual PendingSurvey CreatePendingSurveyForExistingUser(string userId, int userRoleId, int surveyAvailableId)
         {
             return this.CreatePendingSurvey(userId, userRoleId, surveyAvailableId, true);
         }
 
 
 
-        public SurveysAvailable CreateAnAvailableSurveyForCohort(string currentUserID, CreateAvailableSurveyModel model)
+        public virtual SurveysAvailable CreateAnAvailableSurveyForCohort(string currentUserID, CreateAvailableSurveyModel model)
         {
             if (model == null)
             {
@@ -332,32 +332,32 @@ namespace EmployeeEvaluationSystem.Entity.SharedObjects.Repository.EF6.Repositor
             return theSurveyAvailable;
         }
 
-        public SurveysAvailable GetAnAvailableSurveyForCohort(string currentUserID, int surveyAvailableId, bool track = true)
+        public virtual SurveysAvailable GetAnAvailableSurveyForCohort(string currentUserID, int surveyAvailableId, bool track = true)
         {
             return this.GetAnAvailableSurveyForCohortSYSTEM(surveyAvailableId, track);
         }
 
-        public Survey GetSurvey(string userId, int surveyId)
+        public virtual Survey GetSurvey(string userId, int surveyId)
         {
             return this.GetSurveySYSTEM(surveyId);
         }
 
-        public Survey GetSurveySYSTEM(int surveyId)
+        public virtual Survey GetSurveySYSTEM(int surveyId)
         {
             return this.dbcontext.Surveys.FirstOrDefault(x => x.ID == surveyId && x.IsDeleted == false);
         }
 
-        public SurveyType GetSurveyType(string userId, int surveyTypeId)
+        public virtual SurveyType GetSurveyType(string userId, int surveyTypeId)
         {
             return this.GetSurveyTypeSYSTEM(surveyTypeId);
         }
 
-        public SurveyType GetSurveyTypeSYSTEM(int surveyTypeId)
+        public virtual SurveyType GetSurveyTypeSYSTEM(int surveyTypeId)
         {
             return this.dbcontext.SurveyTypes.FirstOrDefault(x => x.ID == surveyTypeId && x.IsDeleted == false);
         }
 
-        public SurveysAvailable GetAnAvailableSurveyForCohortSYSTEM(int surveyAvailableId, bool track = true)
+        public virtual SurveysAvailable GetAnAvailableSurveyForCohortSYSTEM(int surveyAvailableId, bool track = true)
         {
             if (track)
             {
@@ -370,7 +370,7 @@ namespace EmployeeEvaluationSystem.Entity.SharedObjects.Repository.EF6.Repositor
             
         }
 
-        public bool IsSurveyAvailableStillOpen(int surveyAvailableId)
+        public virtual bool IsSurveyAvailableStillOpen(int surveyAvailableId)
         {
             var surv = this.GetAnAvailableSurveyForCohortSYSTEM(surveyAvailableId);
 
@@ -384,7 +384,7 @@ namespace EmployeeEvaluationSystem.Entity.SharedObjects.Repository.EF6.Repositor
             return surv.DateOpen <= currentTime && currentTime <= surv.DateClosed;
         }
 
-        public bool DeleteSurveyAvailable(string userId, int surveyAvailableId)
+        public virtual bool DeleteSurveyAvailable(string userId, int surveyAvailableId)
         {
             var survey = this.GetAnAvailableSurveyForCohortSYSTEM(surveyAvailableId);
 
@@ -407,17 +407,17 @@ namespace EmployeeEvaluationSystem.Entity.SharedObjects.Repository.EF6.Repositor
             return true;
         }
 
-        public UserSurveyRole GetUserSurveyRole(int roleID)
+        public virtual UserSurveyRole GetUserSurveyRole(int roleID)
         {
             return this.dbcontext.UserSurveyRoles.FirstOrDefault(x => x.ID == roleID && x.IsDeleted == false);
         }
 
-        public ICollection<UserSurveyRole> GetUserSurveyRoles()
+        public virtual ICollection<UserSurveyRole> GetUserSurveyRoles()
         {
             return this.dbcontext.UserSurveyRoles.Where(x => x.IsDeleted == false).ToList();
         }
 
-        public AnswerInstance AddAnswerInstanceToSurveyInstance(Guid pendingSurveyId, int questionId, CreateAnswerInstanceModel model)
+        public virtual AnswerInstance AddAnswerInstanceToSurveyInstance(Guid pendingSurveyId, int questionId, CreateAnswerInstanceModel model)
         {
             var theId = this.GetPendingSurveySYSTEM(pendingSurveyId);
 
@@ -429,7 +429,7 @@ namespace EmployeeEvaluationSystem.Entity.SharedObjects.Repository.EF6.Repositor
             return this.AddAnswerInstanceToSurveyInstance(theId.SurveyInstanceID ?? -1, questionId, model);
         }
 
-        public AnswerInstance AddAnswerInstanceToSurveyInstance(int surveyInstanceId, int questionId, CreateAnswerInstanceModel model)
+        public virtual AnswerInstance AddAnswerInstanceToSurveyInstance(int surveyInstanceId, int questionId, CreateAnswerInstanceModel model)
         {
             if (model == null)
             {
@@ -493,99 +493,99 @@ namespace EmployeeEvaluationSystem.Entity.SharedObjects.Repository.EF6.Repositor
             }
         }
 
-        public Category GetCategory(int categoryId)
+        public virtual Category GetCategory(int categoryId)
         {
             return this.dbcontext.Categories.FirstOrDefault(x => x.ID == categoryId && x.IsDeleted == false);
         }
 
-        public Question GetQuestion(int questionId)
+        public virtual Question GetQuestion(int questionId)
         {
             return this.dbcontext.Questions.FirstOrDefault(x => x.ID == questionId && x.IsDeleted == false);
         }
 
-        public bool IsQuestionInSurvey(int questionId, int surveyId)
+        public virtual bool IsQuestionInSurvey(int questionId, int surveyId)
         {
             return this.dbcontext.Questions.Any(x => x.ID == questionId && x.Category.SurveyID == surveyId && x.IsDeleted == false && x.Category.IsDeleted == false && x.Category.Survey.IsDeleted == false);
         }
 
-        public QuestionType GetQuestionType(int questionTypeId)
+        public virtual QuestionType GetQuestionType(int questionTypeId)
         {
             return this.dbcontext.QuestionTypes.FirstOrDefault(x => x.ID == questionTypeId);
         }
 
-        public QuestionType GetQuestionTypeOfQuestion(int questionId)
+        public virtual QuestionType GetQuestionTypeOfQuestion(int questionId)
         {
             return this.dbcontext.Questions.Where(x => x.ID == questionId && x.IsDeleted == false).Take(1).Select(x => x.QuestionType).FirstOrDefault();
         }
 
-        public SurveyInstance GetSurveyInstanceById(string userIdTakingSurvey, int surveyInstanceId)
+        public virtual SurveyInstance GetSurveyInstanceById(string userIdTakingSurvey, int surveyInstanceId)
         {
             return this.GetSurveyInstanceByIdSYSTEM(surveyInstanceId);
         }
 
-        public SurveyInstance GetSurveyInstanceByIdSYSTEM(int surveyInstanceId)
+        public virtual SurveyInstance GetSurveyInstanceByIdSYSTEM(int surveyInstanceId)
         {
             return this.dbcontext.SurveyInstances.FirstOrDefault(x => x.ID == surveyInstanceId);
         }
 
-        public LockAndGetSurvey_Result LockAndGetSurvey(Guid pendingSurveyId, Guid? statusGuid = default(Guid?))
+        public virtual LockAndGetSurvey_Result LockAndGetSurvey(Guid pendingSurveyId, Guid? statusGuid = default(Guid?))
         {
             return this.dbcontext.LockAndGetSurvey(pendingSurveyId, statusGuid).FirstOrDefault();
         }
 
-        public int CancelSurveyLock(Guid pendingSurveyId)
+        public virtual int CancelSurveyLock(Guid pendingSurveyId)
         {
             return this.dbcontext.CancelSurveyLock(pendingSurveyId);
         }
 
-        public int UpdateSurveyLockTime(Guid pendingSurveyId)
+        public virtual int UpdateSurveyLockTime(Guid pendingSurveyId)
         {
             return this.dbcontext.UpdateLockedSurveyTime(pendingSurveyId);
         }
 
-        public Category GetFirstCategory(int surveyId)
+        public virtual Category GetFirstCategory(int surveyId)
         {
             return this.dbcontext.Categories.Where(x => x.SurveyID == surveyId).OrderBy(x => x.ID).FirstOrDefault();
         }
 
-        public Category GetNextCategory(int categoryId)
+        public virtual Category GetNextCategory(int categoryId)
         {
             return this.dbcontext.Categories.Where(x => x.ID == categoryId).Select(x => x.Survey.Categories.Where(y => y.ID > categoryId).OrderBy(y => y.ID).FirstOrDefault()).FirstOrDefault();
         }
 
-        public Category GetPreviousCategory(int categoryId)
+        public virtual Category GetPreviousCategory(int categoryId)
         {
             return this.dbcontext.Categories.Where(x => x.ID == categoryId).Select(x => x.Survey.Categories.Where(y => y.ID < categoryId).OrderByDescending(y => y.ID).FirstOrDefault()).FirstOrDefault();
         }
 
-        public Category GetLastCategory(int surveyId)
+        public virtual Category GetLastCategory(int surveyId)
         {
             return this.dbcontext.Categories.Where(x => x.SurveyID == surveyId).OrderByDescending(x => x.ID).FirstOrDefault();
         }
 
-        public ICollection<Tuple<Question, AnswerInstance>> GetQuestionsAndPreviousResponsesForCategoryInSurveyInstance(int categoryId, int surveyInstanceId)
+        public virtual ICollection<Tuple<Question, AnswerInstance>> GetQuestionsAndPreviousResponsesForCategoryInSurveyInstance(int categoryId, int surveyInstanceId)
         {
             return this.dbcontext.Questions.Where(x => x.CategoryID == categoryId)
                 .GroupJoin(this.dbcontext.AnswerInstances.Where(x => x.SurveyInstanceId == surveyInstanceId), x => x.ID, x => x.QuestionID, (q, a) => new { Question = q, Answer = a.FirstOrDefault() })
                 .ToList().Select(x => Tuple.Create(x.Question, x.Answer)).ToList();
         }
 
-        public ICollection<Survey> GetAllSurveys(string currentUserID)
+        public virtual ICollection<Survey> GetAllSurveys(string currentUserID)
         {
             return this.dbcontext.Surveys.ToList();
         }
 
-        public ICollection<PendingSurvey> GetAllSurveysForUser(string userId)
+        public virtual ICollection<PendingSurvey> GetAllSurveysForUser(string userId)
         {
             return this.dbcontext.PendingSurveys.Where(x => x.UserTakenById == userId && x.IsDeleted == false).ToList();
         }
 
-        public ICollection<SurveyType> GetAllSurveyTypes(string currentUserID)
+        public virtual ICollection<SurveyType> GetAllSurveyTypes(string currentUserID)
         {
             return this.dbcontext.SurveyTypes.ToList();
         }
 
-        public ICollection<PendingSurvey> GetPendingSurveysForUser(string userId)
+        public virtual ICollection<PendingSurvey> GetPendingSurveysForUser(string userId)
         {
             return this.dbcontext.PendingSurveys.Where(x => x.UserTakenById == userId && x.IsDeleted == false && (x.SurveyInstance == null || x.SurveyInstance.DateFinished == null))
                 .Include(x => x.SurveysAvailable)
@@ -595,7 +595,7 @@ namespace EmployeeEvaluationSystem.Entity.SharedObjects.Repository.EF6.Repositor
                 .ToList();
         }
 
-        public ICollection<PendingSurvey> GetFinishedSurveysForUser(string userId)
+        public virtual ICollection<PendingSurvey> GetFinishedSurveysForUser(string userId)
         {
             return this.dbcontext.PendingSurveys.Where(x => x.UserTakenById == userId && x.IsDeleted == false && x.SurveyInstance != null && x.SurveyInstance.DateFinished != null)
                                 .Include(x => x.SurveysAvailable)
@@ -605,12 +605,12 @@ namespace EmployeeEvaluationSystem.Entity.SharedObjects.Repository.EF6.Repositor
                                 .ToList();
         }
 
-        public bool IsQuestionRequired(int questionId)
+        public virtual bool IsQuestionRequired(int questionId)
         {
             return this.dbcontext.Questions.Any(x => x.ID == questionId && x.IsRequired == true);
         }
 
-        public bool FinishSurvey(int surveyInstanceId, Guid? statusGuid = default(Guid?))
+        public virtual bool FinishSurvey(int surveyInstanceId, Guid? statusGuid = default(Guid?))
         {
             var pendingSurvey = this.dbcontext.SurveyInstances.FirstOrDefault(x => x.ID == surveyInstanceId);
 
@@ -628,7 +628,7 @@ namespace EmployeeEvaluationSystem.Entity.SharedObjects.Repository.EF6.Repositor
             return true;
         }
 
-        public SurveyType GetNextAvailableSurveyTypeForSurveyInCohort(int surveyId, int cohortId)
+        public virtual SurveyType GetNextAvailableSurveyTypeForSurveyInCohort(int surveyId, int cohortId)
         {
             var lastSurvey = this.dbcontext.SurveysAvailables.Where(x => x.SurveyID == surveyId && x.CohortID == cohortId && x.IsDeleted == false).OrderByDescending(x => x.ID).FirstOrDefault();
 
@@ -649,7 +649,7 @@ namespace EmployeeEvaluationSystem.Entity.SharedObjects.Repository.EF6.Repositor
             return theType;
         }
 
-        public bool CheckHaveAllSurveysBeenCompleted(int cohortId, int surveyAvailableToId)
+        public virtual bool CheckHaveAllSurveysBeenCompleted(int cohortId, int surveyAvailableToId)
         {
             var surveyAvailable = this.dbcontext.SurveysAvailables.Include(x => x.SurveysAvailableToes).FirstOrDefault(x => x.ID == surveyAvailableToId && x.CohortID == cohortId && x.IsDeleted == false);
 
@@ -704,7 +704,32 @@ namespace EmployeeEvaluationSystem.Entity.SharedObjects.Repository.EF6.Repositor
             return true;
         }
 
-        public ICollection<PendingSurvey> GetPendingSurveysOfRatersForUser(string userId, Guid pendingSurveyId)
+        public virtual bool CheckHaveAllSelfEvaluationSurveysBeenCompleted(int cohortId, int surveyAvailableToId)
+        {
+            var surveyAvailable = this.dbcontext.SurveysAvailables.Include(x => x.SurveysAvailableToes).FirstOrDefault(x => x.ID == surveyAvailableToId && x.CohortID == cohortId && x.IsDeleted == false);
+
+            if (surveyAvailable.IsCompleted)
+            {
+                return true;
+            }
+
+            var isFinished = this.dbcontext.PendingSurveys
+                .Where(x => x.SurveyAvailToMeID == surveyAvailableToId && x.IsDeleted == false && x.SurveyInstance != null && x.SurveyInstance.DateFinished != null && x.UserTakenById == x.UserSurveyForId && x.UserSurveyRoleID == 1)
+                .GroupBy(x => x.UserTakenById).Select(x => x.FirstOrDefault()).Count() == this.dbcontext.CohortUsers.Where(x => x.CohortID == cohortId).Count();
+
+            if (!isFinished)
+            {
+                return false;
+            }
+
+            surveyAvailable.IsCompleted = true;
+            surveyAvailable.DateCompleted = DateTime.UtcNow;
+
+            return true;
+
+        }
+
+        public virtual ICollection<PendingSurvey> GetPendingSurveysOfRatersForUser(string userId, Guid pendingSurveyId)
         {
             var originalPendingSurvey = this.GetPendingSurvey(userId, pendingSurveyId);
 
@@ -713,20 +738,20 @@ namespace EmployeeEvaluationSystem.Entity.SharedObjects.Repository.EF6.Repositor
             return this.dbcontext.PendingSurveys.Where(x => x.SurveyAvailToMeID == theId && x.IsDeleted == false && x.UserSurveyForId == userId).Include(x => x.SurveyInstance).Include(x => x.SurveysAvailable).Include(x => x.UserSurveyRole).ToList();
         }
 
-        public ICollection<PendingSurvey> GetPendingSurveysOfRatersForUser(string userId, int SurveysAvailableToId)
+        public virtual ICollection<PendingSurvey> GetPendingSurveysOfRatersForUser(string userId, int SurveysAvailableToId)
         {
             return this.dbcontext.PendingSurveys.Where(x => x.SurveyAvailToMeID == SurveysAvailableToId && x.UserSurveyForId == userId && x.IsDeleted == false).Include(x => x.SurveyInstance).Include(x => x.SurveysAvailable).Include(x => x.UserSurveyRole).ToList();
         }
 
-        public void TryRemovePendingSurveysSYSTEM(ICollection<PendingSurvey> surveys)
+        public virtual void TryRemovePendingSurveysSYSTEM(ICollection<PendingSurvey> surveys)
         {
             foreach(var survey in surveys)
             {
                 this.dbcontext.PendingSurveys.Remove(survey);
             }
         }
-
-        public void TryToAddPendingSurveysSYSTEM(ICollection<PendingSurvey> surveys)
+ 
+        public virtual void TryToAddPendingSurveysSYSTEM(ICollection<PendingSurvey> surveys)
         {
             foreach (var survey in surveys)
             {
@@ -734,22 +759,22 @@ namespace EmployeeEvaluationSystem.Entity.SharedObjects.Repository.EF6.Repositor
             }
         }
 
-        public ICollection<SurveysAvailable> GetAllOfferedSurveysForCohort(string currentUserID, int cohortId)
+        public virtual ICollection<SurveysAvailable> GetAllOfferedSurveysForCohort(string currentUserID, int cohortId)
         {
             return this.dbcontext.SurveysAvailables.Where(x => x.CohortID == cohortId && x.IsDeleted == false).ToList();
         }
-
-        public int CancelAllOldSurveyLocks()
+         
+        public virtual int CancelAllOldSurveyLocks()
         {
             return this.dbcontext.CancelAllOldSurveyLocks();
         }
 
-        public SurveysAvailable GetPreviousSurveyForCohort(int cohortId, int currentAvailableId)
+        public virtual SurveysAvailable GetPreviousSurveyForCohort(int cohortId, int currentAvailableId)
         {
             throw new NotImplementedException();
         }
 
-        public List<RaterOBJ> GetMostRecentRatersForUser(string userId, int count)
+        public virtual List<RaterOBJ> GetMostRecentRatersForUser(string userId, int count)
         {
             return this.dbcontext.PendingSurveys.Where(x => x.UserSurveyForId == userId && x.IsDeleted == false && x.Email != null).GroupBy(x => x.Email).Select(x => x.FirstOrDefault()).Where(x => x != null).OrderByDescending(x => x.DateSent).Take(count).ToList().Select(x => new RaterOBJ
             {
@@ -760,13 +785,18 @@ namespace EmployeeEvaluationSystem.Entity.SharedObjects.Repository.EF6.Repositor
             }).ToList();
         }
 
-        public void TryMarkAsFinished(int survAvailId)
+        public virtual void TryMarkAsFinished(int survAvailId)
         {
             var survAvail = this.GetAnAvailableSurveyForCohortSYSTEM(survAvailId);
 
             survAvail.IsCompleted = true;
             survAvail.DateCompleted = DateTime.UtcNow;
 
+        }
+
+        public void SetDoneEvaluationsToFinished()
+        {
+            this.dbcontext.SetExpiredSurveysAvailableAsFinished();
         }
     }
 }

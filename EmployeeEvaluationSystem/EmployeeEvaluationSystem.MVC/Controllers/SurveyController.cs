@@ -155,7 +155,6 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
                 if (lockPendingSurvey == null)
                 {
                     return RedirectToAction("SurveyLocked");
-                    throw new DBLockException();
                 }
 
                 if (lockPendingSurvey.StatusGuid == null)
@@ -203,7 +202,7 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
 
                     unitOfWork.Complete();
 
-                    theInstance = unitOfWork.Surveys.GetSurveyInstanceByIdSYSTEM(theInstance.ID); //Need to get categories.
+                    theInstance = unitOfWork.Surveys.GetSurveyInstanceByIdSYSTEM(theInstance.ID) ?? theInstance; //Need to get categories.
                 }
                 else if (instanceSurvey.DateFinished == null)
                 {
@@ -212,7 +211,6 @@ namespace EmployeeEvaluationSystem.MVC.Controllers
                 else
                 {
                     return RedirectToAction("SurveyDone");
-                    throw new Exception(); //The survey is already finished.
                 }
 
                 var firstCategory = unitOfWork.Surveys.GetFirstCategory(theInstance.SurveyID);

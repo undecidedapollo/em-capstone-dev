@@ -15,7 +15,7 @@ namespace EmployeeEvaluationSystem.Entity.SharedObjects.Repository.EF6.Repositor
         {
         }
         
-        public List<ReportRole> GetDetailsForReport(string userId, int surveyAvailableId)
+        public virtual List<ReportRole> GetDetailsForReport(string userId, int surveyAvailableId)
         {
             var results = this.dbcontext.PendingSurveys
                 .Where(x => x.IsDeleted == false && x.SurveyAvailToMeID == surveyAvailableId && x.UserSurveyForId == userId)
@@ -85,7 +85,7 @@ namespace EmployeeEvaluationSystem.Entity.SharedObjects.Repository.EF6.Repositor
             return newResults;
         }
 
-        public List<ReportRole> GetDetailsForReport(int surveyAvailableId)
+        public virtual List<ReportRole> GetDetailsForReport(int surveyAvailableId)
         {
             var results = this.dbcontext.PendingSurveys
                 .Where(x => x.IsDeleted == false && x.SurveyAvailToMeID == surveyAvailableId)
